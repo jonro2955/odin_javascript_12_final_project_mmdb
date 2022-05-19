@@ -1,70 +1,60 @@
-# Getting Started with Create React App
+### Next:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Set up HomePage card rows using the fetched data with fields:
+Popular: title, year, image, cast, video, rating
+comingSoon: title, releaseDate, image, cast, video
+boxOffice: title, year, image, worldwide gross in $billion
+topRated: title, year, image, cast, imdbRating
 
-## Available Scripts
+In App.js, fetch user's firestore data and pass it to homepage as a prop, then use that to make user lists appear in homepage.
 
-In the project directory, you can run:
+Allow user to toggle homepage user lists on or off in account settings page. Also Make it so that in the settings you can make move sub list divs up and down to change their order. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
 
-### `npm start`
+Make sure to attribute flaticons and API providers
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### react-router-dom
+npm install react-router-dom
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### How to set up Firebase backend for this app:
 
-### `npm test`
+1. Sign in to firebase.google.com and create a new project.
+2. Click the web tag icon </> to register a web app in the new project, and check the box ‘Also set up Firebase Hosting for this app’
+3. Now firebase will show you your project's unique config object that looks like below. Paste it somewhere in your in your CRA project's root component like App.js or in a separate file called firebaseConfig.js and use it by exporting/importing it. The firebase webpage will then show a list of steps to do next, but ignore these for now. We’ll complete them in a different order as we go through the steps below:
+   const config = {
+   apiKey: 'AIzaSyCpi0KMk3uxJQOZCpQdXGrwIWRLtYj8uNI',
+   authDomain: 'friendlychat-76d8e.firebaseapp.com',
+   projectId: 'friendlychat-76d8e',
+   storageBucket: 'friendlychat-76d8e.appspot.com',
+   messagingSenderId: '638858031859',
+   appId: '1:638858031859:web:bccf0ab7669ed7946a7d86',
+   };
+4. Configure the authentication providers: In the Build section at the left panel of Firebase console, click Authentication, then click the Sign-in method tab. Enable the sign-in providers you want to use for your site.
+5. Enable Firestore database to save JSON data collections for each user: In the Build section at the left panel, click Firestore Database. Click Create. Select "Start in test mode" so we can freely write to the database during development. Select your region.
+6. Install the Firebase command-line interface:
+   npm -g install firebase-tools
+7. Verify firebase cli has been installed by checking the version is 4.1.0 or later, and log into firebase from your cli
+   firebase --version
+   firebase login
+8. Initialize firebase: run 'firebase init' or ‘firebase init hosting’ or ‘firebase init firestore’. The latter will try to insert a copy of the online firestore rules file in your local directory and a firestore.indexes.json, which is required to sync your local project with firestore. Just press enter/yes to both queries.
+9. Hosting: Firebase will want access to the hosting configuration from your local directory. To allow this, sync your local app with Firebase hosting by running the below command. This will prompt you to select your Project ID and give your project an alias. An alias is useful when you have multiple environments like production, staging, etc. Just use a general alias of 'default' in this case. Follow remaining instructions on the command line.
+   firebase use --add
+10. Install Firebase SDK locally: Run the below command and then use webpack to import, only the required SDK functions into individual js files for speed.
+    npm install firebase
+11. Initialize Firebase at the root component of your app such as in App.js:
+    import { initializeApp } from 'firebase/app';
+    const config = {
+    apiKey: 'AIzaSyCpi0KMk3uxJQOZCpQdXGrwIWRLtYj8uNI',
+    authDomain: 'friendlychat-76d8e.firebaseapp.com',
+    projectId: 'friendlychat-76d8e',
+    storageBucket: 'friendlychat-76d8e.appspot.com',
+    messagingSenderId: '638858031859',
+    appId: '1:638858031859:web:bccf0ab7669ed7946a7d86',
+    };
+    initializeApp(config);
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### To deploy your site to Firebase hosting:
 
-### `npm run build`
+1. Run 'npm run build' to update the contents of the /build output folder with webpack-bundled code containing the recent changes.
+2. Run 'firebase deploy' to replace the currently hosted files in firebase with the new /build folder files. Hosted site url: https://mmdb-5e9fd.web.app/
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

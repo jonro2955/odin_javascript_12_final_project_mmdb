@@ -1,61 +1,44 @@
-// import { Link } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
-export default function Navbar() {
+export default function MyNavbar() {
+  //on mount
+  useEffect(() => {
+    // Selection of HTML objects
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('.nav');
+    // Defining a function
+    function toggleNav() {
+      burger.classList.toggle('fa-bars');
+      burger.classList.toggle('fa-times');
+      nav.classList.toggle('nav-active');
+    }
+    // Calling the function after click event occurs
+    burger.addEventListener('click', function () {
+      toggleNav();
+    });
+  }, []);
+
   return (
-    <header className='border-b border-4 shadow-xl md:flex md:items-center md:justify-between p-4 pb-0  md:pb-4'>
-      {/* <!-- Logo text or image --> */}
-      <div className='flex items-center justify-between mb-4 md:mb-0'>
-        <h1 className='leading-none text-2xl text-grey-darkest font-bold'>
-          <Link to='/'>MMDB</Link>
-        </h1>
+    <header>
+      <h1 className='logo'>MMDB</h1>
+      <ul className='nav'>
+        <li className='navlink'>
+          <a href='#!'>Home</a>
+        </li>
+        <li className='navlink'>
+          <a href='#!'>About</a>
+        </li>
+        <li className='navlink'>
+          <a href='#!'>Projects</a>
+        </li>
+        <li className='navlink'>
+          <a href='#!'>Contact</a>
+        </li>
+      </ul>
+      <div className='burger'>
+        <i className='fas fa-bars'></i>
       </div>
-      {/* <!-- END Logo text or image --> */}
-
-      {/* <!-- Search field --> */}
-      <form className='mb-4 w-full md:mb-0 md:w-1/4 '>
-        <label className='hidden' htmlFor='search-htmlForm'>
-          Search
-        </label>
-        <input
-          className=' border-2 border-indigo-500/50  p-2 rounded-lg shadow-inner w-full'
-          placeholder='Search movies'
-          type='text'
-        />
-        <button className='hidden'>Submit</button>
-      </form>
-      {/* <!-- END Search field --> */}
-
-      {/* <!-- Global navigation --> */}
-      <nav>
-        <ul className='list-reset md:flex md:items-center'>
-          <li className='md:ml-4'>
-            <a
-              className='block no-underline hover:underline py-2 text-grey-darkest hover:text-black md:border-none md:p-0'
-              href='#!'
-            >
-              Products
-            </a>
-          </li>
-          <li className='md:ml-4'>
-            <a
-              className='border-t block no-underline hover:underline py-2 text-grey-darkest hover:text-black md:border-none md:p-0'
-              href='#!'
-            >
-              About
-            </a>
-          </li>
-          <li className='md:ml-4'>
-            <a
-              className='border-t block no-underline hover:underline py-2 text-grey-darkest hover:text-black md:border-none md:p-0'
-              href='#!'
-            >
-              Contact
-            </a>
-          </li>
-        </ul>
-      </nav>
-      {/* <!-- END Global navigation --> */}
     </header>
   );
 }

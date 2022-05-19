@@ -51,21 +51,19 @@ export default function App() {
     <>
       <HashRouter basename='/'>
         <Navbar />
-        <div className='flex flex-col items-center mt-6'>
-          <Routes>
-            <Route
-              path='/'
-              element={
-                <HomePage
-                  mostPopularList={mostPopularList}
-                  comingSoonList={comingSoonList}
-                  nowPlayingList={nowPlayingList}
-                  topRatedList={topRatedList}
-                />
-              }
-            />
-          </Routes>
-        </div>
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <HomePage
+                mostPopularList={mostPopularList}
+                comingSoonList={comingSoonList}
+                nowPlayingList={nowPlayingList}
+                topRatedList={topRatedList}
+              />
+            }
+          />
+        </Routes>
       </HashRouter>
     </>
   );
