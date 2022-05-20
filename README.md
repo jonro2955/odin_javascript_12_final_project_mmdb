@@ -1,3 +1,173 @@
+/*
+TMDB: 'ee3bf23ca6ee40ece5d8b91daed50a29'
+
+Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
+
+Image request rules: https://developers.themoviedb.org/3/getting-started/images
+Image request format: https://image.tmdb.org/t/p/original/{the_poster_path}
+
+Cast info: Cast names are not provided in movie list packets. 
+But you can get cast info for specific movie ids that you obtain from the lists. 
+See https://developers.themoviedb.org/3/movies/get-movie-credits
+
+Get a list of recommended movies for a movie id: 
+https://developers.themoviedb.org/3/movies/get-movie-recommendations
+
+Using movie ids, You can also request info like reviews for a movie, 
+similar movies, lists a movie belings to,
+recommendations, and even post your own review into TMDB.
+
+Get the official youtube trailer url: Get the "official Trailer" "key" from
+https://developers.themoviedb.org/3/movies/get-movie-videos (make sure to access
+the "official Trailer" key as there are many other keys. And put the key into
+this url https://www.youtube.com/watch?v={key}.
+
+
+
+const tmdbAPIKey = 'ee3bf23ca6ee40ece5d8b91daed50a29';
+
+https://api.themoviedb.org/3/movie/popular?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+
+let mostPopular = {
+  page: 1,
+  results: [
+    {
+      adult: false,
+      backdrop_path: '/egoyMDLqCxzjnSrWOz50uLlJWmD.jpg',
+      genre_ids: [28, 878, 35, 10751, 12],
+      id: 675353,
+      original_language: 'en',
+      original_title: 'Sonic the Hedgehog 2',
+      overview:
+        'After settling in Green Hills, Sonic is eager to prove he has what it takes to be a true hero. His test comes when Dr. Robotnik returns, this time with a new partner, Knuckles, in search for an emerald that has the power to destroy civilizations. Sonic teams up with his own sidekick, Tails, and together they embark on a globe-trotting journey to find the emerald before it falls into the wrong hands.',
+      popularity: 10050.323,
+      poster_path: '/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg',
+      release_date: '2022-03-30',
+      title: 'Sonic the Hedgehog 2',
+      video: false,
+      vote_average: 7.7,
+      vote_count: 1222,
+    },
+  ],
+  total_pages: 33530,
+  total_results: 670593,
+};
+
+//https://api.themoviedb.org/3/movie/now_playing?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+let nowPlaying = {
+  dates: { maximum: '2022-05-18', minimum: '2022-03-31' },
+  page: 1,
+  results: [
+    {
+      adult: false,
+      backdrop_path: '/egoyMDLqCxzjnSrWOz50uLlJWmD.jpg',
+      genre_ids: [28, 878, 35, 10751, 12],
+      id: 675353,
+      original_language: 'en',
+      original_title: 'Sonic the Hedgehog 2',
+      overview:
+        'After settling in Green Hills, Sonic is eager to prove he has what it takes to be a true hero. His test comes when Dr. Robotnik returns, this time with a new partner, Knuckles, in search for an emerald that has the power to destroy civilizations. Sonic teams up with his own sidekick, Tails, and together they embark on a globe-trotting journey to find the emerald before it falls into the wrong hands.',
+      popularity: 10050.323,
+      poster_path: '/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg',
+      release_date: '2022-03-30',
+      title: 'Sonic the Hedgehog 2',
+      video: false,
+      vote_average: 7.7,
+      vote_count: 1222,
+    },
+  ],
+  total_pages: 67,
+  total_results: 1324,
+};
+
+//https://api.themoviedb.org/3/movie/top_rated?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+let topRated = {
+  page: 1,
+  results: [
+    {
+      adult: false,
+      backdrop_path: '/iNh3BivHyg5sQRPP1KOkzguEX0H.jpg',
+      genre_ids: [18, 80],
+      id: 278,
+      original_language: 'en',
+      original_title: 'The Shawshank Redemption',
+      overview:
+        'Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.',
+      popularity: 63.965,
+      poster_path: '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
+      release_date: '1994-09-23',
+      title: 'The Shawshank Redemption',
+      video: false,
+      vote_average: 8.7,
+      vote_count: 21381,
+    },
+  ],
+  total_pages: 498,
+  total_results: 9942,
+};
+
+//https://api.themoviedb.org/3/movie/upcoming?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+let comingSoon = {
+  dates: { maximum: '2022-06-07', minimum: '2022-05-19' },
+  page: 1,
+  results: [
+    {
+      adult: false,
+      backdrop_path: '/2n95p9isIi1LYTscTcGytlI4zYd.jpg',
+      genre_ids: [18, 53, 80],
+      id: 799876,
+      original_language: 'en',
+      original_title: 'The Outfit',
+      overview:
+        'Leonard is an English tailor who used to craft suits on London’s world-famous Savile Row. After a personal tragedy, he’s ended up in Chicago, operating a small tailor shop in a rough part of town where he makes beautiful clothes for the only people around who can afford them: a family of vicious gangsters.',
+      popularity: 1732.509,
+      poster_path: '/lZa5EB6PVJBT5mxhgZS5ftqdAm6.jpg',
+      release_date: '2022-02-25',
+      title: 'The Outfit',
+      video: false,
+      vote_average: 7,
+      vote_count: 191,
+    },
+  ],
+  total_pages: 15,
+  total_results: 293,
+};
+
+let cast = {
+  id: 675353,
+  cast: [
+    {
+      adult: false,
+      gender: 2,
+      id: 222121,
+      known_for_department: 'Acting',
+      name: 'Ben Schwartz',
+      original_name: 'Ben Schwartz',
+      popularity: 16.204,
+      profile_path: '/5vV52TSEIhe4ZZLWwv3i7nfv8we.jpg',
+      cast_id: 1,
+      character: 'Sonic the Hedgehog (voice)',
+      credit_id: '5e4fc66735811d001952f273',
+      order: 0,
+    },
+    {
+      adult: false,
+      gender: 2,
+      id: 17605,
+      known_for_department: 'Acting',
+      name: 'Idris Elba',
+      original_name: 'Idris Elba',
+      popularity: 19.854,
+      profile_path: '/be1bVF7qGX91a6c5WeRPs5pKXln.jpg',
+      cast_id: 27,
+      character: 'Knuckles the Echidna (voice)',
+      credit_id: '6112d21db046050045900a8f',
+      order: 1,
+    },
+  ],
+};
+
+
 ### Next:
 
 Set up HomePage card rows using the fetched data with fields:

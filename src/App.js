@@ -15,6 +15,7 @@ export default function App() {
       );
       const json = await packet.json();
       const array = json.results;
+      console.log(array);
       setMostPopularList(array);
       // console.log('Popular', array);
     })();

@@ -1,44 +1,42 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export default function MyNavbar() {
-  //on mount
-  useEffect(() => {
-    // Selection of HTML objects
-    const burger = document.querySelector('.burger');
-    const nav = document.querySelector('.nav');
-    // Defining a function
-    function toggleNav() {
-      burger.classList.toggle('fa-bars');
-      burger.classList.toggle('fa-times');
-      nav.classList.toggle('nav-active');
+  const [collapsible, setCollapsible] = useState({ right: '-100%' });
+
+  function toggleMenu() {
+    if (collapsible) {
+      setCollapsible();
+    } else {
+      setCollapsible({ display: 'flex' });
     }
-    // Calling the function after click event occurs
-    burger.addEventListener('click', function () {
-      toggleNav();
-    });
-  }, []);
+  }
 
   return (
-    <header>
-      <h1 className='logo'>MMDB</h1>
-      <ul className='nav'>
-        <li className='navlink'>
-          <a href='#!'>Home</a>
-        </li>
-        <li className='navlink'>
-          <a href='#!'>About</a>
-        </li>
-        <li className='navlink'>
-          <a href='#!'>Projects</a>
-        </li>
-        <li className='navlink'>
-          <a href='#!'>Contact</a>
-        </li>
-      </ul>
-      <div className='burger'>
-        <i className='fas fa-bars'></i>
+    <nav>
+      <div className='navContainer'>
+        <div className='logo'>
+          <Link to='/'>MMDB</Link>
+        </div>
+        <form className='searchForm'>
+          <input id='searchInput' type='text'></input>
+          <button>Search</button>
+        </form>
+        <ul className='linkContainer' style={collapsible}>
+          <li className='navlink'>
+            <a href='#!'>Home</a>
+          </li>
+          <li className='navlink'>
+            <a href='#!'>Lists</a>
+          </li>
+          <li className='navlink'>
+            <a href='#!'>Profile</a>
+          </li>
+        </ul>
+        <div className='burger' onClick={toggleMenu}>
+          <i className='fas fa-bars'></i>
+        </div>
       </div>
-    </header>
+    </nav>
   );
 }
