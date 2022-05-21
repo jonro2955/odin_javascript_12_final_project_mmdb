@@ -8,43 +8,40 @@ export default function App() {
   const [comingSoonList, setComingSoonList] = useState([]);
   const [nowPlayingList, setNowPlayingList] = useState([]);
   const [topRatedList, setTopRatedList] = useState([]);
+
   useEffect(() => {
     (async function fetchPopular() {
       const packet = await fetch(
         'https://api.themoviedb.org/3/movie/popular?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1'
       );
       const json = await packet.json();
-      const array = json.results;
-      console.log(array);
-      setMostPopularList(array);
-      // console.log('Popular', array);
+      const results = json.results;
+      setMostPopularList(results);
+      // console.log('popular:', results);
     })();
     (async function fetchComingSoon() {
       const packet = await fetch(
         'https://api.themoviedb.org/3/movie/upcoming?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1'
       );
       const json = await packet.json();
-      const array = json.results;
-      setComingSoonList(array);
-      // console.log('Coming Soon', array);
+      const results = json.results;
+      setComingSoonList(results);
     })();
     (async function fetchBoxOffice() {
       const packet = await fetch(
         'https://api.themoviedb.org/3/movie/now_playing?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1'
       );
       const json = await packet.json();
-      const array = json.results;
-      setNowPlayingList(array);
-      // console.log('Box office', array);
+      const results = json.results;
+      setNowPlayingList(results);
     })();
     (async function fetchTopRated() {
       const packet = await fetch(
         'https://api.themoviedb.org/3/movie/top_rated?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1'
       );
       const json = await packet.json();
-      const array = json.results;
-      setTopRatedList(array);
-      // console.log('Top rated', array);
+      const results = json.results;
+      setTopRatedList(results);
     })();
   }, []);
 

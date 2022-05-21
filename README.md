@@ -1,12 +1,12 @@
 /*
-TMDB: 'ee3bf23ca6ee40ece5d8b91daed50a29'
+key: 'ee3bf23ca6ee40ece5d8b91daed50a29'
 
 Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
 
 Image request rules: https://developers.themoviedb.org/3/getting-started/images
 Image request format: https://image.tmdb.org/t/p/original/{the_poster_path}
 
-Cast info: Cast names are not provided in movie list packets. 
+Cast: Cast names are not provided in movie list packets. 
 But you can get cast info for specific movie ids that you obtain from the lists. 
 See https://developers.themoviedb.org/3/movies/get-movie-credits
 

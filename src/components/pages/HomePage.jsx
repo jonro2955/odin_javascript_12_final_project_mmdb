@@ -1,4 +1,8 @@
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faStar,
+  faAngleLeft,
+  faAngleRight,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 async function getCast(movieId) {
@@ -11,6 +15,13 @@ async function getCast(movieId) {
   return [array[0].name, array[1].name];
 }
 
+function scrollRight(id) {
+  document.getElementById(id).scrollLeft += 1300;
+}
+function scrollLeft(id) {
+  document.getElementById(id).scrollLeft -= 1300;
+}
+
 export default function HomePage({
   mostPopularList,
   comingSoonList,
@@ -19,10 +30,8 @@ export default function HomePage({
 }) {
   return (
     <div id='HomePage' className='page'>
-      <h1></h1>
-
       <h1 className='homeListTitle'>Most Popular</h1>
-      <div className='carousel'>
+      <div id='popularCarousel' className='carousel'>
         {mostPopularList.map((movie, i) => (
           <div className='card' key={movie.id}>
             <img
@@ -38,35 +47,100 @@ export default function HomePage({
               <FontAwesomeIcon icon={faStar} />
               {movie.vote_average}
             </div>
+            <div>{i}</div>
           </div>
         ))}
       </div>
+      <div class='centeredRow'>
+        <FontAwesomeIcon
+          icon={faAngleLeft}
+          onClick={() => {
+            scrollLeft('popularCarousel');
+          }}
+          className='scrollArrow'
+        />
+        <FontAwesomeIcon
+          icon={faAngleRight}
+          onClick={() => {
+            scrollRight('popularCarousel');
+          }}
+          className='scrollArrow'
+        />
+      </div>
 
       <h1 className='homeListTitle'>Coming Soon</h1>
-      <div className='carousel'>
+      <div id='comingCarousel' className='carousel'>
         {comingSoonList.map((movie) => (
           <div className='card' key={movie.id}>
             {movie.title}
           </div>
         ))}
       </div>
+      <div class='centeredRow'>
+        <FontAwesomeIcon
+          icon={faAngleLeft}
+          onClick={() => {
+            scrollLeft('comingCarousel');
+          }}
+          className='scrollArrow'
+        />
+        <FontAwesomeIcon
+          icon={faAngleRight}
+          onClick={() => {
+            scrollRight('comingCarousel');
+          }}
+          className='scrollArrow'
+        />
+      </div>
 
       <h1 className='homeListTitle'>Now Playing</h1>
-      <div className='carousel'>
+      <div id='nowCarousel' className='carousel'>
         {nowPlayingList.map((movie) => (
           <div className='card' key={movie.id}>
             {movie.title}
           </div>
         ))}
       </div>
+      <div class='centeredRow'>
+        <FontAwesomeIcon
+          icon={faAngleLeft}
+          onClick={() => {
+            scrollLeft('nowCarousel');
+          }}
+          className='scrollArrow'
+        />
+        <FontAwesomeIcon
+          icon={faAngleRight}
+          onClick={() => {
+            scrollRight('nowCarousel');
+          }}
+          className='scrollArrow'
+        />
+      </div>
 
       <h1 className='homeListTitle'>Top Rated</h1>
-      <div className='carousel'>
+      <div id='topCarousel' className='carousel'>
         {topRatedList.map((movie) => (
           <div className='card' key={movie.id}>
             {movie.title}
           </div>
         ))}
+      </div>
+      <div class='centeredRow'>
+        <FontAwesomeIcon
+          icon={faAngleLeft}
+          onClick={() => {
+            scrollLeft('topCarousel');
+          }}
+          className='scrollArrow'
+        />
+        <FontAwesomeIcon
+          icon={faAngleRight}
+          onClick={() => {
+            scrollRight('topCarousel');
+          }}
+          className='scrollArrow'
+        />
       </div>
     </div>
   );
