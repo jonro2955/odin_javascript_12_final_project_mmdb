@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function MyNavbar() {
   const [collapsible, setCollapsible] = useState({ right: '-100%' });
@@ -16,15 +18,18 @@ export default function MyNavbar() {
     <nav>
       <div className='navContainer'>
         <div className='logo'>
-          <Link to='/'>MMDB</Link>
+          <Link className='logoLink' to='/'>
+            MMDB
+          </Link>
+          <div>My Movie Database</div>
         </div>
         <form className='searchForm'>
           <input id='searchInput' type='text'></input>
-          <button>Search</button>
+          <FontAwesomeIcon className='searchBtn' icon={faSearch} />
         </form>
         <ul className='linkContainer' style={collapsible}>
           <li className='navlink'>
-            <a href='#!'>Home</a>
+            <Link to='/'>Home</Link>
           </li>
           <li className='navlink'>
             <a href='#!'>Lists</a>

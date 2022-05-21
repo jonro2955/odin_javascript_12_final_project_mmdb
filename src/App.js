@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './components/pages/HomePage';
+import MoviePage from './components/pages/MoviePage';
 
 export default function App() {
   const [mostPopularList, setMostPopularList] = useState([]);
@@ -61,6 +62,7 @@ export default function App() {
               />
             }
           />
+          <Route path='/:movieID' element={<MoviePage />} />
         </Routes>
       </HashRouter>
     </>
