@@ -47,9 +47,6 @@ body {
   overflow: hidden;
   color: aliceblue;
 }
-.homeListTitle {
-  color: aliceblue;
-}
 .flexCenteredColumn {
   display: flex;
   flex-direction: column;
@@ -59,14 +56,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-}
-.searchBtn {
-  border: white solid 1px;
-  border-radius: 5px;
-  margin: auto auto auto 0;
-  height: 25px;
-  padding: 10px;
-  cursor: pointer;
+  color: aliceblue;
 }
 .arrowRow {
   display: flex;
@@ -74,11 +64,14 @@ body {
   align-items: center;
   gap: 50px;
 }
-.scrollArrow {
+.carouselScrollArrow {
   color: #b30000;
   font-size: 35px;
   cursor: pointer;
-  padding: 10px 20px 20px 20px;
+  /* border:aliceblue 1px solid; */
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
+  padding: 10px 20px 10px 20px;
 }
 nav {
   width: 100%;
@@ -93,30 +86,39 @@ nav {
   display: grid;
   grid-template-columns: auto auto auto;
   background: #000000;
-  color: #ccc;
+  color: aliceblue;
   /* border: 1px solid white; */
 }
 .searchForm {
   display: grid;
   grid-template-columns: auto 20%;
-  height: 40px;
   /* border: 1px solid white; */
 }
-.logo {
+.searchBtn {
+  border: white solid 3px;
+  border-radius: 5px;
+  margin: auto auto auto 0;
+  height: 25px;
+  padding: 10px;
+  cursor: pointer;
+}
+.logoBox {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  color: aliceblue;
+  /* border: 1px solid white; */
 }
-.cardLink{
-    text-decoration: none;
+.cardLink {
+  text-decoration: none;
 }
 .logoLink {
-  text-decoration: none;
   font-size: 2.5em;
-  color: #b30000;
+  font-weight: bold;
 }
-.linkContainer {
+.navLinksContainer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -134,7 +136,7 @@ nav {
   font-size: 1.2em;
 }
 .burger {
-  font-size: 2em;
+  font-size: 3em;
   display: none;
 }
 @media screen and (max-width: 768px) {
@@ -145,24 +147,31 @@ nav {
   }
   .navContainer {
     width: 100%;
+    /* border: 1px solid white; */
   }
-  .linkContainer {
+  .logoText {
+    display: none;
+  }
+  .logoLink {
+    font-size: 2em;
+    font-weight: bold;
+  }
+  .navLinksContainer {
     margin: 0;
-    background: #343434;
+    background: #464646;
     position: absolute;
     display: none;
     top: 70px;
-    right: 0;
     flex-direction: column;
     padding: 20px;
     gap: 20px;
-    transition: all 400ms;
+    transition: all 500ms;
   }
   .navlink {
     text-align: center;
   }
-  .linkContainer-active {
-    background-color: #ccc;
+  .navLinksContainer-active {
+    background-color: rgb(182, 34, 34);
     right: -100%;
   }
   .carousel::-webkit-scrollbar {

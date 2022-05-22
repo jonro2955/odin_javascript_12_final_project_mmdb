@@ -1,11 +1,13 @@
-/\*
-Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
+
+TMDB API Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
 
 List request format: https://api.themoviedb.org/3/movie/{list_name}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
 
-Image request format: https://image.tmdb.org/t/p/original/{the_poster_path}
+Movie details: https://api.themoviedb.org/3/movie/{movie_id}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
 
-Cast req format: https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
+Movie poster image: https://image.tmdb.org/t/p/original/{the_poster_path}
+
+Cast: https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
 
 Recommended movies for a movie: https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
 

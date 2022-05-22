@@ -23,14 +23,14 @@ export default function Carousel({ id, list }) {
           onClick={() => {
             scrollLeft(id);
           }}
-          className='scrollArrow'
+          className='carouselScrollArrow'
         />
         <FontAwesomeIcon
           icon={faAngleRight}
           onClick={() => {
             scrollRight(id);
           }}
-          className='scrollArrow'
+          className='carouselScrollArrow'
         />
       </div>
     </div>

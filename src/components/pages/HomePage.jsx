@@ -1,4 +1,4 @@
-import Carousel from "../Carousel";
+import Carousel from '../Carousel';
 
 export default function HomePage({
   mostPopularList,
@@ -8,13 +8,13 @@ export default function HomePage({
 }) {
   return (
     <div id='HomePage' className='page'>
-      <h1 className='homeListTitle'>Most Popular</h1>
+      <h1>Most Popular</h1>
       <Carousel list={mostPopularList} id='mostPopularList' />
-      <h1 className='homeListTitle'>Coming Soon</h1>
+      <h1>Coming Soon</h1>
       <Carousel list={comingSoonList} id='comingSoonList' />
-      <h1 className='homeListTitle'>Now Playing</h1>
+      <h1>Now Playing</h1>
       <Carousel list={nowPlayingList} id='nowPlayingList' />
-      <h1 className='homeListTitle'>Top Rated</h1>
+      <h1>Top Rated</h1>
       <Carousel list={topRatedList} id='topRatedList' />
     </div>
   );

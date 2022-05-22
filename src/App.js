@@ -62,7 +62,7 @@ export default function App() {
               />
             }
           />
-          <Route path='/:movieID' element={<MoviePage />} />
+          <Route path='/:movieId' element={<MoviePage />} />
         </Routes>
       </HashRouter>
     </>
