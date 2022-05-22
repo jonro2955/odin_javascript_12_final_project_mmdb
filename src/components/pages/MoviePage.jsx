@@ -1,10 +1,15 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import Carousel from '../Carousel';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
   const [details, setDetails] = useState();
   const [cast, setCast] = useState();
+  const [recommendedList, setRecommendedList] = useState();
+  const [similarList, setSimilarList] = useState();
+  const [videoKeys, setVideoKeys] = useState();
+
   useEffect(() => {
     (async () => {
       const detailsPacket = await fetch(
@@ -13,60 +18,85 @@ export default function MoviePage() {
       const castPacket = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US`
       );
+      const recommendedPacket = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/recommendations?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1`
+      );
+      const similarPacket = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1`
+      );
+      const videoPacket = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US`
+      );
       const detailsJson = await detailsPacket.json();
       const castJson = await castPacket.json();
+      const recommendedJson = await recommendedPacket.json();
+      const similarJson = await similarPacket.json();
+      const videoJson = await videoPacket.json();
       setDetails(detailsJson);
       setCast(castJson.cast);
+      setRecommendedList(recommendedJson.results);
+      setSimilarList(similarJson.results);
+      setVideoKeys(videoJson.results);
+      // console.log(videoJson);
     })();
   }, [movieId]);
 
   return (
-    <div id='MoviePage' className='page'>
-      <h1 className=''>Title: {details ? details.title : ''}</h1>
-      <h1 className=''>
-        Cast:
-        {cast && (
-          <div>
-            <div>{cast[0].name}</div>
-            <div>{cast[1].name}</div>
-            <div>{cast[3].name}</div>
+    details &&
+    cast && (
+      <div
+        id='MoviePage'
+        className='page'
+        style={{
+          // backgroundImage: `url('https://image.tmdb.org/t/p/original${details.backdrop_path}')`,
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className='flexCenteredColumn movieContainer70W'>
+          <h1 className=''>{details.title}</h1>
+          <div>Release Date: {details.release_date}</div>
+          <div style={{ width: '100%' }}>
+            <img
+              src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
+              alt={details.title + 'poster'}
+              width='20%'
+              className='moviePagePoster'
+            ></img>
+            <iframe
+              width='753'
+              height='380'
+              src={`https://www.youtube.com/embed/${videoKeys[0].key}`}
+              frameBorder='0'
+              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+              allowFullScreen
+              title='Embedded youtube'
+            />
+            <div>Tagline: {details.tagline}</div>
+            <div>Overview: {details.overview}</div>
+            <div>
+              <h3>Stars</h3>
+              <div>{cast[0].name}</div>
+              <div>{cast[1].name}</div>
+              <div>{cast[2].name}</div>
+            </div>
+            {recommendedList.length > 0 && (
+              <>
+                <h1>Recommended</h1>
+                <Carousel list={recommendedList} id='recommendedList' />
+              </>
+            )}
+            {similarList.length > 0 && (
+              <>
+                <h1>Similar Movies</h1>
+                <Carousel list={similarList} id='similarList' />
+              </>
+            )}
           </div>
-        )}
-      </h1>
-    </div>
+        </div>
+      </div>
+    )
   );
 }
-
-let castListExample = [
-  {
-    adult: false,
-    cast_id: 1,
-    character: 'Loretta Sage / Angela',
-    credit_id: '5f847ef725b9550036290f5f',
-    gender: 1,
-    id: 18277,
-    known_for_department: 'Acting',
-    name: 'Sandra Bullock',
-    order: 0,
-    original_name: 'Sandra Bullock',
-    popularity: 34.677,
-    profile_path: '/u2tnZ0L2dwrzFKevVANYT5Pb1nE.jpg',
-  },
-  {
-    adult: false,
-    cast_id: 9,
-    character: 'Alan / Dash',
-    credit_id: '5fea496ea14e10003e1791d3',
-    gender: 2,
-    id: 38673,
-    known_for_department: 'Acting',
-    name: 'Channing Tatum',
-    order: 1,
-    original_name: 'Channing Tatum',
-    popularity: 34.71,
-    profile_path: '/bhTmp6FA8fOQnGlNk75tdmj2bpu.jpg',
-  },
-];
 
 let movieDetailsExample = {
   adult: false,
@@ -144,3 +174,34 @@ let movieDetailsExample = {
   vote_average: 7.8,
   vote_count: 1522,
 };
+
+let castListExample = [
+  {
+    adult: false,
+    cast_id: 1,
+    character: 'Loretta Sage / Angela',
+    credit_id: '5f847ef725b9550036290f5f',
+    gender: 1,
+    id: 18277,
+    known_for_department: 'Acting',
+    name: 'Sandra Bullock',
+    order: 0,
+    original_name: 'Sandra Bullock',
+    popularity: 34.677,
+    profile_path: '/u2tnZ0L2dwrzFKevVANYT5Pb1nE.jpg',
+  },
+  {
+    adult: false,
+    cast_id: 9,
+    character: 'Alan / Dash',
+    credit_id: '5fea496ea14e10003e1791d3',
+    gender: 2,
+    id: 38673,
+    known_for_department: 'Acting',
+    name: 'Channing Tatum',
+    order: 1,
+    original_name: 'Channing Tatum',
+    popularity: 34.71,
+    profile_path: '/bhTmp6FA8fOQnGlNk75tdmj2bpu.jpg',
+  },
+];

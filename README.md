@@ -1,4 +1,3 @@
-
 TMDB API Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
 
 List request format: https://api.themoviedb.org/3/movie/{list_name}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
@@ -15,8 +14,8 @@ Using the movie ID, You can also request: reviews for a movie,
 similar movies, lists the movie belings to, and even post your own review of it into TMDB.
 
 To get the official trailer youtube url, use the movie ID to get the "official Trailer" "key" from
-https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US 
-Make sure to access the "official Trailer" key from the resulting json object as there are many other keys. And put the key into https://www.youtube.com/watch?v={key}
+https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
+Then access the "official Trailer" key from the resulting json object and put the key into: https://www.youtube.com/watch?v={key}
 
 const tmdbAPIKey = 'ee3bf23ca6ee40ece5d8b91daed50a29';
 
@@ -81,11 +80,9 @@ order: 1,
 
 ### Next:
 
-Set up HomePage card rows using the fetched data with fields:
-Popular: title, year, image, cast, video, rating
-comingSoon: title, releaseDate, image, cast, video
-boxOffice: title, year, image, worldwide gross in $billion
-topRated: title, year, image, cast, imdbRating
+Display only the 'official' trailer
+
+List top 10 cast
 
 In App.js, fetch user's firestore data and pass it to homepage as a prop, then use that to make user lists appear in homepage.
 
