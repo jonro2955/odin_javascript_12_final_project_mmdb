@@ -11,28 +11,26 @@ function scrollLeft(id) {
 
 export default function Carousel({ id, list }) {
   return (
-    <div className='flexCenteredColumn'>
+    <div className='flexCenteredRow'>
+      <FontAwesomeIcon
+        icon={faAngleLeft}
+        onClick={() => {
+          scrollLeft(id);
+        }}
+        className='carouselScrollArrow'
+      />
       <div id={id} className='carousel'>
         {list.map((movie) => (
           <Card key={movie.id} movie={movie} />
         ))}
       </div>
-      <div className='arrowRow'>
-        <FontAwesomeIcon
-          icon={faAngleLeft}
-          onClick={() => {
-            scrollLeft(id);
-          }}
-          className='carouselScrollArrow'
-        />
-        <FontAwesomeIcon
-          icon={faAngleRight}
-          onClick={() => {
-            scrollRight(id);
-          }}
-          className='carouselScrollArrow'
-        />
-      </div>
+      <FontAwesomeIcon
+        icon={faAngleRight}
+        onClick={() => {
+          scrollRight(id);
+        }}
+        className='carouselScrollArrow'
+      />
     </div>
   );
 }

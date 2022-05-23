@@ -80,9 +80,11 @@ order: 1,
 
 ### Next:
 
-Display only the 'official' trailer
+Scroll to top whenever user navigates to a new <Link/>, but not when they go back to a previously opened page
 
-List top 10 cast
+If a cast member's image is not avilable, display an avatar image
+
+make a link to "All cast and crew" on the movie page
 
 In App.js, fetch user's firestore data and pass it to homepage as a prop, then use that to make user lists appear in homepage.
 

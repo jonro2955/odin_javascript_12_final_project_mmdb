@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Carousel from '../Carousel';
 
@@ -8,6 +8,7 @@ export default function MoviePage() {
   const [cast, setCast] = useState();
   const [recommendedList, setRecommendedList] = useState();
   const [similarList, setSimilarList] = useState();
+  const [trailerKey, setTrailerKey] = useState();
   const [videoKeys, setVideoKeys] = useState();
 
   useEffect(() => {
@@ -41,6 +42,15 @@ export default function MoviePage() {
     })();
   }, [movieId]);
 
+  useEffect(() => {
+    if (videoKeys) {
+      let trailerKey = videoKeys.find((key) => {
+        return key.type === 'Trailer';
+      });
+      setTrailerKey(trailerKey.key);
+    }
+  }, [videoKeys]);
+
   return (
     details &&
     cast && (
@@ -53,50 +63,290 @@ export default function MoviePage() {
         }}
       >
         <div className='flexCenteredColumn movieContainer70W'>
-          <h1 className=''>{details.title}</h1>
-          <div>Release Date: {details.release_date}</div>
+          <h1>{details.title}</h1>
+          {details.tagline && <h3>"{details.tagline}"</h3>}
+          <div style={{ marginBottom: '10px' }}>
+            Release Date: {details.release_date}
+          </div>
           <div style={{ width: '100%' }}>
-            <img
-              src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
-              alt={details.title + 'poster'}
-              width='20%'
-              className='moviePagePoster'
-            ></img>
-            <iframe
-              width='753'
-              height='380'
-              src={`https://www.youtube.com/embed/${videoKeys[0].key}`}
-              frameBorder='0'
-              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-              allowFullScreen
-              title='Embedded youtube'
-            />
-            <div>Tagline: {details.tagline}</div>
-            <div>Overview: {details.overview}</div>
-            <div>
-              <h3>Stars</h3>
-              <div>{cast[0].name}</div>
-              <div>{cast[1].name}</div>
-              <div>{cast[2].name}</div>
+            <div className='visualsContainer'>
+              <img
+                src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
+                alt={details.title + 'poster'}
+                height='400'
+                className='moviePagePoster'
+              ></img>
+              <iframe
+                width='773'
+                height='400'
+                src={`https://www.youtube.com/embed/${trailerKey}`}
+                frameBorder='0'
+                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                allowFullScreen
+                title='Embedded youtube'
+              />
             </div>
-            {recommendedList.length > 0 && (
-              <>
-                <h1>Recommended</h1>
-                <Carousel list={recommendedList} id='recommendedList' />
-              </>
-            )}
-            {similarList.length > 0 && (
-              <>
-                <h1>Similar Movies</h1>
-                <Carousel list={similarList} id='similarList' />
-              </>
-            )}
+            <div className='overview'>{details.overview}</div>
+            <div>
+              <h3>Top Cast</h3>
+              <div className='castRow'>
+                {cast.map((star, i) => {
+                  if (i < 5)
+                    return (
+                      <div>
+                        <img
+                          key={i}
+                          width='100'
+                          alt={star.name}
+                          src={`https://image.tmdb.org/t/p/original${star.profile_path}`}
+                        ></img>
+                        <div>{star.name}</div>
+                      </div>
+                    );
+                })}
+              </div>
+            </div>
+            <Link to='/'>All cast and crew</Link>
           </div>
         </div>
+        {recommendedList.length > 0 && (
+          <>
+            <h1>Recommended</h1>
+            <Carousel list={recommendedList} id='recommendedList' />
+          </>
+        )}
+        {similarList.length > 0 && (
+          <>
+            <h1>Similar Movies</h1>
+            <Carousel list={similarList} id='similarList' />
+          </>
+        )}
       </div>
     )
   );
 }
+
+let videoResults = {
+  id: 675353,
+  results: [
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Knuckle Down Featurette',
+      key: '9djAMds545g',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Featurette',
+      official: true,
+      published_at: '2022-04-06T13:03:17.000Z',
+      id: '625f56d80792e10177d1f049',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Put A Ring On It Clip',
+      key: 'RHSU0SJv33A',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Clip',
+      official: true,
+      published_at: '2022-04-04T15:00:44.000Z',
+      id: '625f56c9d4cc8e0051a2ea47',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Kid Cudi',
+      key: 'YkZ1aAPApAc',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-04-03T16:00:58.000Z',
+      id: '624abb4d84591c0064898ed3',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'No Spoilers',
+      key: 'UXWwYfvJ7BA',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-03-29T16:00:58.000Z',
+      id: '625f56b7a5046e00a473d13c',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Bigger, Bluer, Better',
+      key: 'Xr-VlbaJvcA',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Featurette',
+      official: true,
+      published_at: '2022-03-28T13:03:21.000Z',
+      id: '625f52e7db952d004f89d2a6',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Meet Knuckles Clip',
+      key: 'LF64NG_NJQw',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Clip',
+      official: true,
+      published_at: '2022-03-28T13:03:01.000Z',
+      id: '625f52b8e61e6d0050f7f638',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: '"I Make This Look Good" Clip',
+      key: 'qdJfgKGgHP4',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Clip',
+      official: true,
+      published_at: '2022-03-25T13:00:36.000Z',
+      id: '62413ad9706e5600481793ca',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Final Trailer',
+      key: '47r8FXYZWNU',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Trailer',
+      official: true,
+      published_at: '2022-03-14T13:02:25.000Z',
+      id: '622f6e2e9c24fc0044921909',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Madness',
+      key: 'F5uv5XiNHAs',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-03-13T19:00:19.000Z',
+      id: '6269b877c613ce006684544b',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Fastest Trailer',
+      key: 'HCzqO6SPgnk',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Featurette',
+      official: true,
+      published_at: '2022-03-13T16:00:32.000Z',
+      id: '622f6e5098f1f1007808f169',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: '"Blue Justice"',
+      key: 'sEOrfwBCxYI',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-03-02T14:08:12.000Z',
+      id: '62384a38db4ed6001b06107f',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Choose Your Team',
+      key: '7NVMZWV_vTg',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-02-13T17:01:52.000Z',
+      id: '62094453cb8028009c0204c0',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Big Game Spot',
+      key: 'uVj6vs-738o',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-02-11T14:07:53.000Z',
+      id: '62068d96f48b340097c51eb0',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Rings',
+      key: '9-PbLuusH44',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-02-10T17:01:06.000Z',
+      id: '62068e0fefd3c2001cde1b88',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: '"The Real Competition Begins"',
+      key: 'vxdzRz6gUD4',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2022-02-07T17:22:36.000Z',
+      id: '623849dc9ee0ef0046da27bb',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: '"Red Quill or Blue Quill"',
+      key: 'S8qRuGm2E_I',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2021-12-22T19:56:51.000Z',
+      id: '61d223311684f7001ca74c6c',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Official Trailer',
+      key: 'G5kzUpWAusI',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Trailer',
+      official: true,
+      published_at: '2021-12-10T01:41:15.000Z',
+      id: '61b2b31b38e510008aee0361',
+    },
+    {
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+      name: 'Title Announcement',
+      key: 'sQuoffM1y-w',
+      site: 'YouTube',
+      size: 1080,
+      type: 'Teaser',
+      official: true,
+      published_at: '2021-02-10T15:00:33.000Z',
+      id: '602416bcc2b9df003ea481d4',
+    },
+  ],
+};
 
 let movieDetailsExample = {
   adult: false,
