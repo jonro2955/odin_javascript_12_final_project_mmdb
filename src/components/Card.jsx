@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export default function Card({ movie }) {
   return (
     <div className='card'>
-      <Link to={`/${movie.id}`} className='cardLink'>
+      <Link to={`/movie/${movie.id}`} className='cardLink'>
         <img
           className='posterImg'
           alt={movie.title}

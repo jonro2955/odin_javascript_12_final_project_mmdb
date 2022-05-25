@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Carousel from '../Carousel';
+import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/user.png';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
@@ -38,18 +39,22 @@ export default function MoviePage() {
       setRecommendedList(recommendedJson.results);
       setSimilarList(similarJson.results);
       setVideoKeys(videoJson.results);
-      // console.log(videoJson);
+      // console.log(videoPacket);
     })();
   }, [movieId]);
 
   useEffect(() => {
     if (videoKeys) {
+      // console.log('Number of Video Keys:', Object.keys(videoKeys).length);
       let trailerKey = videoKeys.find((key) => {
         return key.type === 'Trailer';
       });
       setTrailerKey(trailerKey.key);
     }
   }, [videoKeys]);
+
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
   return (
     details &&
@@ -90,23 +95,27 @@ export default function MoviePage() {
             <div>
               <h3>Top Cast</h3>
               <div className='castRow'>
-                {cast.map((star, i) => {
-                  if (i < 5)
-                    return (
-                      <div>
+                {cast.slice(0, 10).map((actor, i) => {
+                  return (
+                    <Link key={i} to={`/actor/${actor.id}`}>
+                      <div key={i}>
                         <img
-                          key={i}
                           width='100'
-                          alt={star.name}
-                          src={`https://image.tmdb.org/t/p/original${star.profile_path}`}
+                          height='150'
+                          alt={actor.name}
+                          src={
+                            actor.profile_path
+                              ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
+                              : avatar
+                          }
                         ></img>
-                        <div>{star.name}</div>
+                        <div>{actor.name}</div>
                       </div>
-                    );
+                    </Link>
+                  );
                 })}
               </div>
             </div>
-            <Link to='/'>All cast and crew</Link>
           </div>
         </div>
         {recommendedList.length > 0 && (
