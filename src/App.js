@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import HomePage from './components/pages/HomePage';
 import MoviePage from './components/pages/MoviePage';
 import ActorPage from './components/pages/ActorPage';
+import PosterPage from './components/pages/PosterPage';
 
 export default function App() {
   const [mostPopularList, setMostPopularList] = useState([]);
@@ -64,6 +65,7 @@ export default function App() {
             }
           />
           <Route path='/movie/:movieId' element={<MoviePage />} />
+          <Route path='/poster/:movieId' element={<PosterPage />} />
           <Route path='/actor/:actorId' element={<ActorPage />} />
         </Routes>
       </HashRouter>

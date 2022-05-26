@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function Card({ movie }) {
+export default function MovieCard({ movie }) {
   return (
     <div className='card'>
       <Link to={`/movie/${movie.id}`} className='cardLink'>

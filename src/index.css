@@ -33,9 +33,6 @@ body {
   border-radius: 5px; */
   padding: 10px 20px 10px 20px;
 }
-.carousel::-webkit-scrollbar {
-  display: none;
-}
 
 .card {
   min-width: 200px;
@@ -83,7 +80,7 @@ body {
   color: aliceblue;
   /* border:aliceblue 1px solid; */
 }
-.movieContainer70W {
+.container70W {
   width: 70%;
   margin: auto;
   /* border: aliceblue 1px solid; */
@@ -100,7 +97,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 5%;
+  gap: 2%;
   justify-content: center;
 }
 .visualsContainer {
@@ -112,8 +109,8 @@ body {
   margin: 15px auto;
   padding: 15px;
   width: 80%;
-  /* border: 1px solid aliceblue;
-  border-radius: 15px; */
+  /* border: 1px solid aliceblue; */
+  border-radius: 15px;
   text-align: center;
 }
 nav {
@@ -138,21 +135,21 @@ nav {
   /* border: 1px solid white; */
 }
 .searchBtn {
-  border: white solid 3px;
+  border: white solid 2px;
   border-radius: 5px;
   margin: auto auto auto 0;
-  height: 25px;
+  height: 23px;
   padding: 10px;
   cursor: pointer;
 }
 .logoBox {
+  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   color: aliceblue;
-  /* border: 1px solid white; */
 }
 .cardLink {
   text-decoration: none;
@@ -181,6 +178,9 @@ nav {
 .burger {
   font-size: 3em;
   display: none;
+}
+.actorLink{
+  color: #b30000;
 }
 @media screen and (max-width: 768px) {
   .burger {
@@ -224,7 +224,7 @@ nav {
 
 /* scrollbar width */
 .carousel::-webkit-scrollbar {
-  height: 25px;
+  height: 20px;
 }
 /* scrollbar Track */
 .carousel::-webkit-scrollbar-track {

@@ -1,16 +1,18 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Carousel from '../Carousel';
-import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/user.png';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import MovieCarousel from '../MovieCarousel';
+import ActorCarousel from '../ActorCarousel';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
   const [details, setDetails] = useState();
+  const [videoKeys, setVideoKeys] = useState();
   const [cast, setCast] = useState();
   const [recommendedList, setRecommendedList] = useState();
   const [similarList, setSimilarList] = useState();
   const [trailerKey, setTrailerKey] = useState();
-  const [videoKeys, setVideoKeys] = useState();
 
   useEffect(() => {
     (async () => {
@@ -39,48 +41,51 @@ export default function MoviePage() {
       setRecommendedList(recommendedJson.results);
       setSimilarList(similarJson.results);
       setVideoKeys(videoJson.results);
-      // console.log(videoPacket);
+      console.log(details);
     })();
   }, [movieId]);
 
   useEffect(() => {
     if (videoKeys) {
-      // console.log('Number of Video Keys:', Object.keys(videoKeys).length);
       let trailerKey = videoKeys.find((key) => {
         return key.type === 'Trailer';
       });
       setTrailerKey(trailerKey.key);
+      // console.log(trailerKey);
     }
+    //Scroll to top everytime this component mounts
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   }, [videoKeys]);
-
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
   return (
     details &&
+    videoKeys &&
     cast && (
       <div
         id='MoviePage'
         className='page'
-        style={{
-          // backgroundImage: `url('https://image.tmdb.org/t/p/original${details.backdrop_path}')`,
-          backgroundRepeat: 'no-repeat',
-        }}
       >
-        <div className='flexCenteredColumn movieContainer70W'>
+        <div className='flexCenteredColumn container70W'>
           <h1>{details.title}</h1>
+          <div>
+            <FontAwesomeIcon icon={faStar} />
+            {details.vote_average}
+          </div>
           {details.tagline && <h3>"{details.tagline}"</h3>}
           <div style={{ marginBottom: '10px' }}>
             Release Date: {details.release_date}
           </div>
           <div style={{ width: '100%' }}>
             <div className='visualsContainer'>
-              <img
-                src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
-                alt={details.title + 'poster'}
-                height='400'
-                className='moviePagePoster'
-              ></img>
+              <Link to={`/poster/${movieId}`}>
+                <img
+                  src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
+                  alt={details.title}
+                  height='400'
+                  className='moviePagePoster'
+                ></img>
+              </Link>
               <iframe
                 width='773'
                 height='400'
@@ -93,41 +98,21 @@ export default function MoviePage() {
             </div>
             <div className='overview'>{details.overview}</div>
             <div>
-              <h3>Top Cast</h3>
-              <div className='castRow'>
-                {cast.slice(0, 10).map((actor, i) => {
-                  return (
-                    <Link key={i} to={`/actor/${actor.id}`}>
-                      <div key={i}>
-                        <img
-                          width='100'
-                          height='150'
-                          alt={actor.name}
-                          src={
-                            actor.profile_path
-                              ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
-                              : avatar
-                          }
-                        ></img>
-                        <div>{actor.name}</div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
+              <h3>Top 10 Cast</h3>
+              <ActorCarousel id='ActorCarousel' actorList={cast.slice(0, 10)} />
             </div>
           </div>
         </div>
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>
-            <Carousel list={recommendedList} id='recommendedList' />
+            <MovieCarousel movieList={recommendedList} id='recommendedList' />
           </>
         )}
         {similarList.length > 0 && (
           <>
-            <h1>Similar Movies</h1>
-            <Carousel list={similarList} id='similarList' />
+            <h1>Similar</h1>
+            <MovieCarousel movieList={similarList} id='similarList' />
           </>
         )}
       </div>
