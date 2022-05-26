@@ -1,6 +1,6 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/user.png';
+import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/avatar.png';
 
 export default function ActorPage() {
   let actorId = useParams().actorId;
@@ -38,13 +38,19 @@ export default function ActorPage() {
           <h3>Place of birth: {actor.place_of_birth}</h3>
           <div>{actor.biography}</div>
           {actor.homepage && (
-            <a className='actorLink' target='_blank' href={actor.homepage}>
+            <a
+              className='actorLink'
+              rel='noreferrer'
+              target='_blank'
+              href={actor.homepage}
+            >
               <h3>Website</h3>
             </a>
           )}
           <a
             className='actorLink'
             target='_blank'
+            rel='noreferrer'
             href={`https://www.imdb.com/name/${actor.imdb_id}`}
           >
             <h3>IMDB Profile</h3>

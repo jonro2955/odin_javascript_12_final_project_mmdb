@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/user.png';
 
 export default function PosterPage() {
   let movieId = useParams().movieId;
@@ -17,16 +16,14 @@ export default function PosterPage() {
   }, [movieId]);
 
   return (
-    <div id='PosterPage' className='page'>
-      {details ? (
+    details && (
+      <div id='PosterPage' className='page'>
         <img
           width='600'
           alt={details.poster_path}
           src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
         ></img>
-      ) : (
-        avatar
-      )}
-    </div>
+      </div>
+    )
   );
 }

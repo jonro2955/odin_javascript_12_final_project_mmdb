@@ -1,6 +1,8 @@
 TMDB API Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
 
-List request format: https://api.themoviedb.org/3/movie/{list_name}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+My TMDB API Key = ee3bf23ca6ee40ece5d8b91daed50a29
+
+Movie list request format: https://api.themoviedb.org/3/movie/{list_name}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
 
 Movie details: https://api.themoviedb.org/3/movie/{movie_id}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
 
@@ -8,23 +10,17 @@ Movie poster image: https://image.tmdb.org/t/p/original/{the_poster_path}
 
 Cast: https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
 
-Recommended movies for a movie: https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+Recommended movies: https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
 
 Using the movie ID, You can also request: reviews for a movie,
 similar movies, lists the movie belings to, and even post your own review of it into TMDB.
 
-To get the official trailer youtube url, use the movie ID to get the "official Trailer" "key" from
+To embed the official trailer onto a page, use the movie ID to get the "official Trailer" "key" from
 https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
-Then access the "official Trailer" key from the resulting json object and put the key into: https://www.youtube.com/watch?v={key}
-
-const tmdbAPIKey = 'ee3bf23ca6ee40ece5d8b91daed50a29';
-
-
-
+Then, access the "official Trailer" key from the resulting json object (there can be many keys) and put the key into: https://www.youtube.com/watch?v={key}.
+Then, use the youtube url as the src attribute inside of an <iframe> tag.
 
 ### Next:
-
-On movie page, display all cast in a new ActorCard, and put them in a carousel. Rename Card to MovieCard. 
 
 In App.js, fetch user's firestore data and pass it to homepage as a prop, then use that to make user lists appear in homepage.
 
@@ -40,7 +36,7 @@ npm install react-router-dom
 
 ### How to set up Firebase backend for this app:
 
-1. Sign in to firebase.google.com and create a new project.
+1. Sign in to firebase.google.com and create a new project. Do not enable analytics for this project.
 2. Click the web tag icon </> to register a web app in the new project, and check the box ‘Also set up Firebase Hosting for this app’
 3. Now firebase will show you your project's unique config object that looks like below. Paste it somewhere in your in your CRA project's root component like App.js or in a separate file called firebaseConfig.js and use it by exporting/importing it. The firebase webpage will then show a list of steps to do next, but ignore these for now. We’ll complete them in a different order as we go through the steps below:
    const config = {
