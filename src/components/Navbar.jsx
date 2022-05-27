@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function MyNavbar() {
+export default function MyNavbar({ user }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   useEffect(() => {
     document.addEventListener('click', (e) => {
@@ -36,10 +36,10 @@ export default function MyNavbar() {
             <Link to='/'>Home</Link>
           </li>
           <li className='navlink'>
-            <a href='#!'>Lists</a>
+            <Link to='/lists'>Lists</Link>
           </li>
           <li className='navlink'>
-            <a href='#!'>Profile</a>
+            <Link to='/login'>{user ? user.email : 'Login'}</Link>
           </li>
         </ul>
         <div

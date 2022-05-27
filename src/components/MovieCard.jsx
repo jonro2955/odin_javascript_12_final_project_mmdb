@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function MovieCard({ movie }) {
+export default function MovieCard({ movie, addToWatchList }) {
   return (
     <div className='card'>
       <Link to={`/movie/${movie.id}`} className='cardLink'>
@@ -20,6 +20,9 @@ export default function MovieCard({ movie }) {
         <div>
           <FontAwesomeIcon icon={faStar} />
           {movie.vote_average}
+          <button data-movieid={movie.id} onClick={addToWatchList}>
+            +
+          </button>
         </div>
       </div>
     </div>

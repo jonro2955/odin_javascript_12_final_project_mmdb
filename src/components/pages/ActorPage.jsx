@@ -16,10 +16,6 @@ export default function ActorPage() {
     })();
   }, [actorId]);
 
-  useEffect(() => {
-    console.log(actor);
-  }, [actor]);
-
   return (
     actor && (
       <div id='ActorPage' className='page'>
