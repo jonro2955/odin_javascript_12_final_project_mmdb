@@ -12,7 +12,7 @@ function scrollRight(id) {
 
 /*The id parameter is used to match the scrollLeft() and scrollRight()
 button callbacks to this particular Carousel*/
-export default function MovieCarousel({ id, movieList , addToWatchList}) {
+export default function MovieCarousel({ id, movieList }) {
   return (
     <div className='flexCenteredRow'>
       <FontAwesomeIcon
@@ -24,7 +24,7 @@ export default function MovieCarousel({ id, movieList , addToWatchList}) {
       />
       <div id={id} className='carousel'>
         {movieList.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} addToWatchList={addToWatchList} />
+          <MovieCard key={movie.id} movie={movie}  />
         ))}
       </div>
       <FontAwesomeIcon

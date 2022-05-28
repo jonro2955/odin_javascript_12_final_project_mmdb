@@ -1,8 +1,20 @@
 ### Next:
 
-Complete the addToWatchList(e) function in App.js
+When user clicks on an add+ button, display a context menu showing the different lists the user has in their firestore document. Upon clicking one of them, the movie id will be inserted to the selected list.
+
+Also when user clicks on an add+ button, prevent duplicate entry for a movie that has already been added by greying out the name of the list that hold the movie.
+
+
+
 
 Allow user to choose if they want to display their personal lists on the homepage from the LoginPage after signing in. Also Make it so that in the settings you can change the location of personal lists on the homepage. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
+
+The instructions says you should add lots of interesting features. Ideas:
+
+- sharing lists on social media
+- emailing lists
+- look at imdb and other sites to find manageable features to replicate using reactjs
+- visual animative enhancements
 
 Attribute flaticons and API providers
 
@@ -11,6 +23,8 @@ Add director's name and info on the movie page
 Complete readme thoroughly
 
 Save notes in a separate file and gitignore it
+
+mobile view styling
 
 ### Firebase Hosted URL
 

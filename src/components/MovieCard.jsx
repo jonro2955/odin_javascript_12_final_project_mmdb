@@ -1,8 +1,11 @@
+import { useContext } from 'react';
+import { MyContext } from './MyContext';
 import { Link } from 'react-router-dom';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function MovieCard({ movie, addToWatchList }) {
+export default function MovieCard({ movie }) {
+  const addToWatchList = useContext(MyContext.addToWatchList);
   return (
     <div className='card'>
       <Link to={`/movie/${movie.id}`} className='cardLink'>
@@ -21,7 +24,7 @@ export default function MovieCard({ movie, addToWatchList }) {
           <FontAwesomeIcon icon={faStar} />
           {movie.vote_average}
           <button data-movieid={movie.id} onClick={addToWatchList}>
-            +
+            Add
           </button>
         </div>
       </div>
