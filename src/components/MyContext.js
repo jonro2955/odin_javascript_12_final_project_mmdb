@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
 /* The initial dummy values will be changed to useful data or functions 
-by assigning them to the context provider's 'value' prop */
+when its context provider's 'value' props are passed in */
 export const MyContext = {
-  addToWatchList: createContext('initialDummyValue'),
-  someOther: createContext('initialDummyValue'),
+  AddToList: createContext('initialDummyValue'),
+  SomeOther: createContext('initialDummyValue'),
 };
 

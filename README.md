@@ -1,16 +1,18 @@
 ### Next:
 
-When user clicks on an add+ button, display a context menu showing the different lists the user has in their firestore document. Upon clicking one of them, the movie id will be inserted to the selected list.
+When user clicks on an add+ button (in MovieCard and later in MoviePage), display a context menu showing the different lists the user has in their firestore document (extract to a new component). Each menu item must also have the data-movieId attribute equal to the selected parent movie. Upon clicking one of them, the movie id will be inserted to the selected list. Note that with this method, we can get rid of the second param in addToList(evtObj, listName) and replace listName with e.target.textContent, since the button will be labelled using the exact list name used in firestore.
 
 Also when user clicks on an add+ button, prevent duplicate entry for a movie that has already been added by greying out the name of the list that hold the movie.
 
-
-
+Make addToWatchList(e) so that it takes an extra argument which is the name of a list.
 
 Allow user to choose if they want to display their personal lists on the homepage from the LoginPage after signing in. Also Make it so that in the settings you can change the location of personal lists on the homepage. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
 
+For actor page, if the actor api packet provides the actor's "known for" movie ids, display them in a carousel.
+
 The instructions says you should add lots of interesting features. Ideas:
 
+- user can rate, see, and write reviews https://www.themoviedb.org/movie/558-spider-man-2
 - sharing lists on social media
 - emailing lists
 - look at imdb and other sites to find manageable features to replicate using reactjs

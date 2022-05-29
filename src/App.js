@@ -30,6 +30,7 @@ const db = getFirestore(app);
 
 export default function App() {
   const [user, setUser] = useState(null);
+
   //reset user anytime auth state chages
   getAuth().onAuthStateChanged((usr) => {
     if (usr) {
@@ -45,10 +46,10 @@ export default function App() {
   /**initDefaultUserList(uid): A function to be called each time user logs in.
    * It checks our firestore's "User Lists" collection for a document with an
    * id equal to the logged in user's id, and if not found, creates one.
-   * The newly created document will be a simple object with one property called
-   * watchList, with a starting value of [] (an empty array). This is the default
-   * movie list that every user starts out with. This array will later hold movie ids
-   * that the user will choose.
+   * The newly created document will be a simple object with one key called
+   * 'Watch List', with a starting value of an empty array. This is the default
+   * list that every user starts out with. This array will later hold movie ids
+   * that the user can add.
    * */
   async function initDefaultUserList(uid) {
     const docRef = doc(db, 'User Lists', uid);
@@ -62,20 +63,43 @@ export default function App() {
     }
   }
 
-  // Passed to other components using context API
-  async function addToWatchList(e) {
+  /* addToList(evtObj, listName) will be passed to other components
+  using the context API. 
+  The receiver will then attach it to some clickable element with a 
+  'data-movieid' attribute which is going to be a movieId. Then when
+  that element is clicked, this function will access the movie id
+  through the event object and add it to firestore. A list name must 
+  be given as a string input by the calling component*/
+  async function addToList(evtObj, listName) {
     if (user) {
-      const clickedMovieId = e.target.getAttribute('data-movieid');
+      const clickedMovieId = evtObj.target.getAttribute('data-movieid');
       const uid = user.uid;
       const docRef = doc(db, 'User Lists', uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        let tempArray = docSnap.data()['Watch List'];
+        let tempArray = docSnap.data()[listName];
         tempArray.push(clickedMovieId);
+        let tempObj = {};
+        tempObj[listName] = tempArray;
         const collectionRef = collection(db, 'User Lists');
-        await setDoc(doc(collectionRef, uid), {
-          'Watch List': tempArray,
-        });
+        await setDoc(doc(collectionRef, uid), tempObj);
+        console.log(docSnap.data());
+      }
+    } else {
+      alert('You must be logged in to save movies.');
+    }
+  }
+
+  async function createNewList(listName) {
+    if (user) {
+      const uid = user.uid;
+      const docRef = doc(db, 'User Lists', uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        let tempUserObj = docSnap.data();
+        tempUserObj[listName] = [];
+        const collectionRef = collection(db, 'User Lists');
+        await setDoc(doc(collectionRef, uid), tempUserObj);
       }
     } else {
       alert('You must be logged in to save movies.');
@@ -84,7 +108,11 @@ export default function App() {
 
   return (
     <>
-      <MyContext.addToWatchList.Provider value={addToWatchList}>
+      <MyContext.AddToList.Provider
+        value={(e) => {
+          addToList(e, 'Watch List');
+        }}
+      >
         <HashRouter basename='/'>
           <Navbar user={user} />
           <Routes>
@@ -93,10 +121,13 @@ export default function App() {
             <Route path='/poster/:movieId' element={<PosterPage />} />
             <Route path='/actor/:actorId' element={<ActorPage />} />
             <Route path='/login' element={<LoginPage user={user} />} />
-            <Route path='/lists' element={<ListsPage user={user} />} />
+            <Route
+              path='/lists'
+              element={<ListsPage user={user} createNewList={createNewList} />}
+            />
           </Routes>
         </HashRouter>
-      </MyContext.addToWatchList.Provider>
+      </MyContext.AddToList.Provider>
     </>
   );
 }
