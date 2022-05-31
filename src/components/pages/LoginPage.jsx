@@ -1,3 +1,6 @@
+import { useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MyContext } from '../MyContext';
 import {
   getAuth,
   signInWithPopup,
@@ -6,10 +9,10 @@ import {
 } from 'firebase/auth';
 import facebookLogo from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/facebook-logo.png';
 import googleLogo from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/google-logo.png';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
-export default function LoginPage({ user }) {
+export default function LoginPage() {
+  const contextProps = useContext(MyContext);
+
   async function signInWithFacebook() {
     var provider = new FacebookAuthProvider();
     await signInWithPopup(getAuth(), provider)
@@ -42,14 +45,14 @@ export default function LoginPage({ user }) {
 
   return (
     <div id='LoginPage' className='page'>
-      {user ? (
+      {contextProps.user ? (
         // signed in
         <>
           <div>
             {'Signed in using ' +
-              user.providerData[0].providerId +
+              contextProps.user.providerData[0].providerId +
               ' as ' +
-              user.displayName}
+              contextProps.user.displayName}
           </div>
           <button onClick={logOut}>Log Out</button>
         </>

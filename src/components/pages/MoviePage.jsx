@@ -1,12 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { MyContext } from '../MyContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
+  const contextProps = useContext(MyContext);
   const [details, setDetails] = useState();
   const [videoKeys, setVideoKeys] = useState();
   const [cast, setCast] = useState();

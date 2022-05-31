@@ -1,5 +1,7 @@
 ### Next:
 
+ListPage should render a carousel for each list the user has, each with a header with the name of the list. Newly created lists should manifest themselves as empty carousels. Each carousel should come with a delete button to delete that list. Each movie card in a "user" list carousel should have a remove button that removes the movie from that particular list.
+
 When user clicks on an add+ button (in MovieCard and later in MoviePage), display a context menu showing the different lists the user has in their firestore document (extract to a new component). Each menu item must also have the data-movieId attribute equal to the selected parent movie. Upon clicking one of them, the movie id will be inserted to the selected list. Note that with this method, we can get rid of the second param in addToList(evtObj, listName) and replace listName with e.target.textContent, since the button will be labelled using the exact list name used in firestore.
 
 Also when user clicks on an add+ button, prevent duplicate entry for a movie that has already been added by greying out the name of the list that hold the movie.
@@ -74,10 +76,10 @@ npm install react-router-dom
     };
     initializeApp(firebaseConfig);
 
-### To deploy your site to Firebase hosting:
+### Deploy your site to Firebase hosting:
 
-1. Run 'npm run build' to update the contents of the /build output folder with webpack-bundled code containing the recent changes.
-2. Run 'firebase deploy' to replace the currently hosted files in firebase with the new /build folder files. Hosted site url: https://mmdb-5e9fd.web.app/
+1. Run 'npm run build' to update the contents of the /build output folder.
+2. Run 'firebase deploy' to update firebase hosted files with the /build folder files. 
 
 ### TMDB API
 

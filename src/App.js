@@ -6,7 +6,7 @@ import PosterPage from './components/pages/PosterPage';
 import LoginPage from './components/pages/LoginPage';
 import ListsPage from './components/pages/ListsPage';
 import { MyContext } from './components/MyContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -17,6 +17,7 @@ import {
   getDoc,
   doc,
 } from 'firebase/firestore';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyDmnDmYKukf4pvEC6QecqF4cSlUmSNeijY',
   authDomain: 'mmdb-97518.firebaseapp.com',
@@ -30,6 +31,21 @@ const db = getFirestore(app);
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [contextProps, setContextProps] = useState({
+    addToList,
+    user,
+    // app,
+    db,
+  });
+
+  useEffect(() => {
+    setContextProps({
+      addToList,
+      user,
+      // app,
+      db,
+    });
+  }, [user]);
 
   //reset user anytime auth state chages
   getAuth().onAuthStateChanged((usr) => {
@@ -45,11 +61,11 @@ export default function App() {
 
   /**initDefaultUserList(uid): A function to be called each time user logs in.
    * It checks our firestore's "User Lists" collection for a document with an
-   * id equal to the logged in user's id, and if not found, creates one.
+   * id matching the logged in user's id, and if not found, creates one.
    * The newly created document will be a simple object with one key called
    * 'Watch List', with a starting value of an empty array. This is the default
-   * list that every user starts out with. This array will later hold movie ids
-   * that the user can add.
+   * list that every user starts out with. The array will later hold movie ids
+   * that the user can add using addToList(movieObj, listName).
    * */
   async function initDefaultUserList(uid) {
     const docRef = doc(db, 'User Lists', uid);
@@ -60,46 +76,31 @@ export default function App() {
         'Watch List': [],
       });
       console.log(`Initialized default firestore document for new user ${uid}`);
-    }
+    } 
   }
 
-  /* addToList(evtObj, listName) will be passed to other components
+  /* addToList(movieObj, listName) will be passed to other components
   using the context API. 
   The receiver will then attach it to some clickable element with a 
   'data-movieid' attribute which is going to be a movieId. Then when
   that element is clicked, this function will access the movie id
   through the event object and add it to firestore. A list name must 
   be given as a string input by the calling component*/
-  async function addToList(evtObj, listName) {
+  async function addToList(movieObj, listName) {
     if (user) {
-      const clickedMovieId = evtObj.target.getAttribute('data-movieid');
+      // const clickedMovieId = movieObj.target.getAttribute('data-movieid');
       const uid = user.uid;
       const docRef = doc(db, 'User Lists', uid);
       const docSnap = await getDoc(docRef);
+      /* Checking if(docSnap.exists()) isn't neccessary since a doc will 
+      always be set up for a new user at onAuthStateChanged(), but it is 
+      done here for practice and security.*/
       if (docSnap.exists()) {
-        let tempArray = docSnap.data()[listName];
-        tempArray.push(clickedMovieId);
-        let tempObj = {};
-        tempObj[listName] = tempArray;
+        let tempDoc = docSnap.data();
+        tempDoc[listName].push(movieObj);
         const collectionRef = collection(db, 'User Lists');
-        await setDoc(doc(collectionRef, uid), tempObj);
-        console.log(docSnap.data());
-      }
-    } else {
-      alert('You must be logged in to save movies.');
-    }
-  }
-
-  async function createNewList(listName) {
-    if (user) {
-      const uid = user.uid;
-      const docRef = doc(db, 'User Lists', uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        let tempUserObj = docSnap.data();
-        tempUserObj[listName] = [];
-        const collectionRef = collection(db, 'User Lists');
-        await setDoc(doc(collectionRef, uid), tempUserObj);
+        await setDoc(doc(collectionRef, uid), tempDoc);
+        alert('Movie successfully added to list.');
       }
     } else {
       alert('You must be logged in to save movies.');
@@ -108,26 +109,21 @@ export default function App() {
 
   return (
     <>
-      <MyContext.AddToList.Provider
-        value={(e) => {
-          addToList(e, 'Watch List');
-        }}
-      >
+      {/* All children of <MyContext.Provider ... /> get their 
+      props from the Context API. See MyContext.js */}
+      <MyContext.Provider value={contextProps}>
         <HashRouter basename='/'>
-          <Navbar user={user} />
+          <Navbar />
           <Routes>
-            <Route path='/' element={<HomePage user={user} />} />
-            <Route path='/movie/:movieId' element={<MoviePage user={user} />} />
+            <Route path='/' element={<HomePage />} />
+            <Route path='/movie/:movieId' element={<MoviePage />} />
             <Route path='/poster/:movieId' element={<PosterPage />} />
             <Route path='/actor/:actorId' element={<ActorPage />} />
-            <Route path='/login' element={<LoginPage user={user} />} />
-            <Route
-              path='/lists'
-              element={<ListsPage user={user} createNewList={createNewList} />}
-            />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/lists' element={<ListsPage />} />
           </Routes>
         </HashRouter>
-      </MyContext.AddToList.Provider>
+      </MyContext.Provider>
     </>
   );
 }

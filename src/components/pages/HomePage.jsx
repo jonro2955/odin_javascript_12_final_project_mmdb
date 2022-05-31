@@ -1,7 +1,9 @@
 import MovieCarousel from '../MovieCarousel';
-import { useState, useEffect } from 'react';
+import { MyContext } from '../MyContext';
+import { useState, useEffect, useContext } from 'react';
 
 export default function HomePage() {
+  const contextProps = useContext(MyContext);
   const [mostPopularList, setMostPopularList] = useState([]);
   const [comingSoonList, setComingSoonList] = useState([]);
   const [nowPlayingList, setNowPlayingList] = useState([]);
@@ -49,25 +51,13 @@ export default function HomePage() {
   return (
     <div id='HomePage' className='page'>
       <h1>Most Popular</h1>
-      <MovieCarousel
-        id='mostPopularList'
-        movieList={mostPopularList}
-      />
+      <MovieCarousel id='mostPopularList' movieList={mostPopularList} />
       <h1>Coming Soon</h1>
-      <MovieCarousel
-        id='comingSoonList'
-        movieList={comingSoonList}
-      />
+      <MovieCarousel id='comingSoonList' movieList={comingSoonList} />
       <h1>Now Playing</h1>
-      <MovieCarousel
-        id='nowPlayingList'
-        movieList={nowPlayingList}
-      />
+      <MovieCarousel id='nowPlayingList' movieList={nowPlayingList} />
       <h1>Top Rated</h1>
-      <MovieCarousel
-        id='topRatedList'
-        movieList={topRatedList}
-      />
+      <MovieCarousel id='topRatedList' movieList={topRatedList} />
     </div>
   );
 }

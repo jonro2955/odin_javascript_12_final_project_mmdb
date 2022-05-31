@@ -26,8 +26,8 @@ export default function MovieCard({ movie }) {
           {movie.vote_average}
           <button
             data-movieid={movie.id}
-            onClick={() => {
-              contextProps.addToList(movie, 'Watch List'); 
+            onClick={(e) => {
+              contextProps.addToList(e, 'Watch List');
             }}
           >
             Add
