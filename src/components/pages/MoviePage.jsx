@@ -95,12 +95,10 @@ export default function MoviePage() {
               />
             </div>
             <div className='overview'>{details.overview}</div>
-            <div>
-              <h3>Top 10 Cast</h3>
-              <ActorCarousel id='ActorCarousel' actorList={cast.slice(0, 10)} />
-            </div>
           </div>
         </div>
+        <h3>Top 10 Cast</h3>
+        <ActorCarousel id='ActorCarousel' actorList={cast.slice(0, 10)} />
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>

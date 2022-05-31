@@ -73,7 +73,7 @@ export default function App() {
     if (!docSnap.exists()) {
       const collectionRef = collection(db, 'User Lists');
       await setDoc(doc(collectionRef, uid), {
-        'Watch List': [],
+        'Watch List': [Date.now()],
       });
       console.log(`Initialized default firestore document for new user ${uid}`);
     } 

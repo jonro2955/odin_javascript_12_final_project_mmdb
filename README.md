@@ -1,8 +1,8 @@
 ### Next:
 
-ListPage should render a carousel for each list the user has, each with a header with the name of the list. Newly created lists should manifest themselves as empty carousels. Each carousel should come with a delete button to delete that list. Each movie card in a "user" list carousel should have a remove button that removes the movie from that particular list.
-
 When user clicks on an add+ button (in MovieCard and later in MoviePage), display a context menu showing the different lists the user has in their firestore document (extract to a new component). Each menu item must also have the data-movieId attribute equal to the selected parent movie. Upon clicking one of them, the movie id will be inserted to the selected list. Note that with this method, we can get rid of the second param in addToList(evtObj, listName) and replace listName with e.target.textContent, since the button will be labelled using the exact list name used in firestore.
+
+Each movie card in UserList page should have a remove button that removes the movie from that particular list.
 
 Also when user clicks on an add+ button, prevent duplicate entry for a movie that has already been added by greying out the name of the list that hold the movie.
 
@@ -14,11 +14,13 @@ For actor page, if the actor api packet provides the actor's "known for" movie i
 
 The instructions says you should add lots of interesting features. Ideas:
 
-- user can rate, see, and write reviews https://www.themoviedb.org/movie/558-spider-man-2
-- sharing lists on social media
-- emailing lists
-- look at imdb and other sites to find manageable features to replicate using reactjs
-- visual animative enhancements
+User can rate, see, and write reviews https://www.themoviedb.org/movie/558-spider-man-2
+
+Sharing lists or movies on social media/email
+
+Look at imdb and other sites to find manageable features to replicate using reactjs
+
+Visual animative enhancements
 
 Attribute flaticons and API providers
 
@@ -79,7 +81,7 @@ npm install react-router-dom
 ### Deploy your site to Firebase hosting:
 
 1. Run 'npm run build' to update the contents of the /build output folder.
-2. Run 'firebase deploy' to update firebase hosted files with the /build folder files. 
+2. Run 'firebase deploy' to update firebase hosted files with the /build folder files (this takes a long pause before it starts running)
 
 ### TMDB API
 
