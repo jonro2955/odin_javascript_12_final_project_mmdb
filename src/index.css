@@ -7,6 +7,15 @@ body {
   background-color: #232323;
   scroll-behavior: smooth;
 }
+.popupListMenu {
+  /* flex-direction: column;
+  align-items: center;
+  justify-content: center; */
+  position: absolute;
+  display: flex;
+  border: 1px solid black;
+  transform: translate(-25%, 0);
+}
 .listCreator {
   position: absolute;
   top: 50%; /* position the top  edge of the element at the middle of the parent */
@@ -46,6 +55,24 @@ body {
   border-radius: 5px; */
   padding: 10px 20px 10px 20px;
 }
+/* scrollbar width */
+.carousel::-webkit-scrollbar {
+  height: 20px;
+}
+/* scrollbar Track */
+.carousel::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+/*scrollbar Handle */
+.carousel::-webkit-scrollbar-thumb {
+  background: #b30000;
+  border-radius: 10px;
+}
+/*scrollbar Handle on hover */
+.carousel::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
 
 .card {
   min-width: 200px;
@@ -69,9 +96,12 @@ body {
   border-radius: 15px;
 }
 .cardDetail {
-  height: 70px;
-  overflow: hidden;
+  height: 72px;
+  overflow-y: scroll;
   color: aliceblue;
+}
+.cardDetail::-webkit-scrollbar {
+  display: none;
 }
 .flexCenteredColumn {
   display: flex;
@@ -222,6 +252,7 @@ nav {
     padding: 20px;
     gap: 20px;
     transition: all 500ms;
+    z-index: 99999;
   }
   .navlink {
     text-align: center;
@@ -233,23 +264,10 @@ nav {
   .carousel::-webkit-scrollbar {
     display: none;
   }
-}
-
-/* scrollbar width */
-.carousel::-webkit-scrollbar {
-  height: 20px;
-}
-/* scrollbar Track */
-.carousel::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
-  border-radius: 10px;
-}
-/*scrollbar Handle */
-.carousel::-webkit-scrollbar-thumb {
-  background: #b30000;
-  border-radius: 10px;
-}
-/*scrollbar Handle on hover */
-.carousel::-webkit-scrollbar-thumb:hover {
-  background: #b30000;
+  .carouselScrollArrow {
+    display: none;
+  }
+  .moviePagePoster {
+    display: none;
+  }
 }

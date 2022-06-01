@@ -1,11 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
-import { MyContext } from './MyContext';
+import { AppContext } from './AppContext';
 import { Link } from 'react-router-dom';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function MyNavbar() {
-  const contextProps = useContext(MyContext);
+export default function Navbar() {
+  const appContext = useContext(AppContext);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   useEffect(() => {
     document.addEventListener('click', (e) => {
@@ -41,7 +41,9 @@ export default function MyNavbar() {
             <Link to='/lists'>Lists</Link>
           </li>
           <li className='navlink'>
-            <Link to='/login'>{contextProps.user ? contextProps.user.email : 'Login'}</Link>
+            <Link to='/login'>
+              {appContext.user ? appContext.user.email : 'Login'}
+            </Link>
           </li>
         </ul>
         <div

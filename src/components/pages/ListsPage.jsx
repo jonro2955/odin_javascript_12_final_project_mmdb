@@ -1,27 +1,34 @@
 import { useState, useContext, useEffect } from 'react';
-import { MyContext } from '../MyContext';
+import { AppContext } from '../AppContext';
 import { collection, setDoc, getDoc, doc } from 'firebase/firestore';
 import MovieCarousel from '../MovieCarousel';
+import ListCreator from '../ListCreator';
+import { ListsContext } from '../ListsContext';
 
 export default function ListsPage() {
-  const contextProps = useContext(MyContext);
+  const appContext = useContext(AppContext);
   const [creatorOn, setCreatorOn] = useState(false);
   const [userLists, setUserLists] = useState();
+  const [listsContext, setListsContext] = useState();
 
-  /* I could have declared this function in App.js and passed it here using 
-  useContext, but since it will only be used in this page, it is declared here. */
-  async function createNewList(props, listName) {
-    /*firebase will throw error if you use setDoc with a doc 
-    with a field having an empty string*/
+  function toggleCreator() {
+    setCreatorOn(!creatorOn);
+  }
+
+  function turnCreatorOff() {
+    setCreatorOn(false);
+  }
+
+  async function createNewList(appContext, listName) {
+    /*firebase will throw an error if you use setDoc with an empty string field*/
     if (!listName) {
       return;
     }
-    const uid = props.user.uid;
-    const docRef = doc(props.db, 'User Lists', uid);
+    const uid = appContext.user.uid;
+    const docRef = doc(appContext.db, 'User Lists', uid);
     const docSnap = await getDoc(docRef);
-    // First, create a temporary copy of the user's document
+    // First, create a temporary copy of the user's document object
     let tempDoc = docSnap.data();
-    // console.log(tempDoc);
     /* Prevent duplicate entries by checking if tempDoc[listName] exists. 
       setDoc() will overwrite items with the same name*/
     if (tempDoc[listName]) {
@@ -31,127 +38,136 @@ export default function ListsPage() {
       );
     } else {
       tempDoc[listName] = [Date.now()];
-      const collectionRef = collection(props.db, 'User Lists');
+      const collectionRef = collection(appContext.db, 'User Lists');
       await setDoc(doc(collectionRef, uid), tempDoc);
-      updateUserLists(contextProps);
+      updateListsPage(appContext);
     }
   }
 
-  async function deleteList(props, listName) {
+  async function deleteList(appContext, listName) {
     if (!listName) {
       return;
     }
-    const uid = props.user.uid;
-    const docRef = doc(props.db, 'User Lists', uid);
+    const uid = appContext.user.uid;
+    const docRef = doc(appContext.db, 'User Lists', uid);
     const docSnap = await getDoc(docRef);
-    // First, create a temporary copy of the user's document
+    // First, create a temporary copy of the user's document object
     let tempDoc = docSnap.data();
+    //delete the property with the listName key
     delete tempDoc[listName];
-    console.log(tempDoc);
-    const collectionRef = collection(props.db, 'User Lists');
+    const collectionRef = collection(appContext.db, 'User Lists');
     await setDoc(doc(collectionRef, uid), tempDoc);
-    updateUserLists(contextProps);
+    updateListsPage(appContext);
   }
 
-  async function updateUserLists(contextProps) {
-    if (contextProps.user) {
-      const uid = contextProps.user.uid;
-      const docRef = doc(contextProps.db, 'User Lists', uid);
+  async function removeFromList(appContext, movieObj, listName) {
+    if (appContext.user) {
+      const uid = appContext.user.uid;
+      const docRef = doc(appContext.db, 'User Lists', uid);
       const docSnap = await getDoc(docRef);
-      /*docSnap.data() returns the user's firestore json document in random order. 
-        Object.entries(...) converts it into an array of sub arrays whose 
-        first item is the key string and the second item is the value. In this 
-        case, the value is also an array whose first item is the timestamp at 
-        the time that list was created. We sort it by the timestamp and set it 
-        as userLists*/
+      if (docSnap.exists()) {
+        let tempObj = docSnap.data();
+        let tempArr = tempObj[listName];
+        // remove given movieObj from tempArr
+        tempArr = tempArr.filter((item) => {
+          return item.id !== movieObj.id;
+        });
+        tempObj[listName] = tempArr;
+        const collectionRef = collection(appContext.db, 'User Lists');
+        await setDoc(doc(collectionRef, uid), tempObj);
+        updateListsPage(appContext);
+      }
+    } else {
+      alert('Error: you are not logged in.');
+    }
+  }
+
+  async function updateListsPage(appContext) {
+    if (appContext.user) {
+      const uid = appContext.user.uid;
+      const docRef = doc(appContext.db, 'User Lists', uid);
+      const docSnap = await getDoc(docRef);
+      /*docSnap.data() returns a firestore doc json whose content is
+      ordered randomly each time you access it*/
       if (docSnap.data()) {
-        const arrayConvert = Object.entries(docSnap.data());
-        arrayConvert.sort((a, b) => a[1][0] - b[1][0]);
-        setUserLists(arrayConvert);
+        /*Sort by converting to an array and using the timestamps inside*/
+        const arrayConversion = Object.entries(docSnap.data());
+        arrayConversion.sort((a, b) => a[1][0] - b[1][0]);
+        setUserLists(arrayConversion);
       }
     }
   }
 
-  // Get user lists from firestore and store it as a state
+  // Render the page and provide the context at mount or new login
   useEffect(() => {
-    updateUserLists(contextProps);
-  }, [contextProps]);
+    updateListsPage(appContext);
+    setListsContext({
+      toggleCreator,
+      turnCreatorOff,
+      createNewList,
+      deleteList,
+      removeFromList,
+    });
+  }, [appContext]);
 
   return (
-    <div className='page'>
-      {contextProps.user ? (
-        // signed in
-        <>
-          <button
-            id='addListBtn'
-            onClick={() => {
-              setCreatorOn(!creatorOn);
-              console.log(userLists);
-            }}
-          >
-            Create New List
-          </button>
+    <ListsContext.Provider value={listsContext}>
+      <div className='page'>
+        {appContext.user ? (
+          // signed in
+          <>
+            <button
+              id='addListBtn'
+              onClick={() => {
+                setCreatorOn(!creatorOn);
+              }}
+            >
+              Create a new list
+            </button>
 
-          {userLists &&
-            userLists.map((list, i) => (
-              <div key={i}>
-                {/* list[0] is each lists' key string because the lists object was
-                converted from json to an array using Object.entries() which makes 
-                the key string the first item and the value the second item in its sub arrays*/}
-                <h1>{list[0]}</h1>
-                {/* Place a delete button only for lists other than 'Watch List' */}
-                {list[0] != 'Watch List' && (
-                  <button
-                    onClick={() => {
-                      // delete the firestore list with name of list[0] in this scope
-                      // then updateUserLists(contextProps);
-                      deleteList(contextProps, list[0]);
-                      // updateUserLists(contextProps);
-                    }}
-                  >
-                    Delete
-                  </button>
-                )}
-                <MovieCarousel id={list[0]} movieList={list[1].slice(1)} />
-              </div>
-            ))}
+            {userLists &&
+              userLists.map((list, i) => (
+                <div key={i}>
+                  {/* list[0] is each lists' key string because the list object was
+                converted from json to an array using Object.entries()*/}
+                  <h1>{list[0]}</h1>
+                  {/* Place a delete button only with lists other than 'Watch List' */}
+                  {list[0] !== 'Watch List' && (
+                    <button
+                      onClick={() => {
+                        deleteList(appContext, list[0]);
+                      }}
+                    >
+                      Delete this list
+                    </button>
+                  )}
+                  {/* list[1] is an array whose first item is a timestamp, so
+                we have to slice the first item out. Then we reverse the array 
+                to show the latest additions first.*/}
+                  <MovieCarousel
+                    id={list[0]}
+                    movieList={list[1].slice(1).reverse()}
+                    listName={list[0]}
+                    deletable={true}
+                  />
+                </div>
+              ))}
 
-          {/* creator popup start*/}
-          {creatorOn && (
-            <div className='listCreator'>
-              <h3>Create New List</h3>
-              <form
-                id='listCreatorForm'
-                onSubmit={() => {
-                  createNewList(
-                    contextProps,
-                    document.getElementById('listCreatorInput').value
-                  );
-                  document.getElementById('listCreatorInput').value = '';
-                  setCreatorOn(!creatorOn);
-                }}
-              >
-                <label htmlFor='listCreatorInput'>List Name: </label>
-                <input id='listCreatorInput' type='text' autoFocus={true} />
-                <button type='submit'>Create</button>
-              </form>
-              <button
-                onClick={() => {
-                  setCreatorOn(!creatorOn);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-          {/* creator popup end */}
-        </>
-      ) : (
-        // signed out
-        <>
-          <div>Please log in</div>
-        </>
-      )}
-    </div>
+            {creatorOn && (
+              <ListCreator
+                createNewList={createNewList}
+                toggleCreator={toggleCreator}
+                turnCreatorOff={turnCreatorOff}
+              />
+            )}
+          </>
+        ) : (
+          // signed out
+          <>
+            <div>Please log in</div>
+          </>
+        )}
+      </div>
+    </ListsContext.Provider>
   );
 }

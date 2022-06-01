@@ -1,37 +1,44 @@
-import { useContext } from 'react';
-import { MyContext } from './MyContext';
 import { Link } from 'react-router-dom';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useContext } from 'react';
+import { AppContext } from './AppContext';
+import { ListsContext } from './ListsContext';
 
-export default function MovieCard({ movie }) {
-  const contextProps = useContext(MyContext);
+export default function MovieCard(props) {
+  const appContext = useContext(AppContext);
+  const listsContext = useContext(ListsContext);
 
   return (
     <div className='card'>
-      <Link to={`/movie/${movie.id}`} className='cardLink'>
+      <Link to={`/movie/${props.movie.id}`} className='cardLink'>
         <img
           className='posterImg'
-          alt={movie.title}
-          src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+          alt={props.movie.title}
+          src={`https://image.tmdb.org/t/p/original${props.movie.poster_path}`}
           width='200'
           height='300'
         ></img>
       </Link>
       <div className='cardDetail'>
-        <div>{movie.title}</div>
-        <div>Release Date: {movie.release_date}</div>
+        <div>{props.movie.title}</div>
+        <div>Release Date: {props.movie.release_date}</div>
         <div>
           <FontAwesomeIcon icon={faStar} />
-          {movie.vote_average}
-          <button
-            data-movieid={movie.id}
-            onClick={() => {
-              contextProps.addToList(movie, 'Watch List'); 
-            }}
-          >
-            Add
-          </button>
+          {props.movie.vote_average}
+          {props.deletable && (
+            <button
+              onClick={() => {
+                listsContext.removeFromList(
+                  appContext,
+                  props.movie,
+                  props.listName
+                );
+              }}
+            >
+              Remove
+            </button>
+          )}
         </div>
       </div>
     </div>

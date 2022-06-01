@@ -1,6 +1,5 @@
-import { useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MyContext } from '../MyContext';
+import { useContext } from 'react';
+import { AppContext } from '../AppContext';
 import {
   getAuth,
   signInWithPopup,
@@ -11,7 +10,7 @@ import facebookLogo from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_jav
 import googleLogo from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/google-logo.png';
 
 export default function LoginPage() {
-  const contextProps = useContext(MyContext);
+  const appContext = useContext(AppContext);
 
   async function signInWithFacebook() {
     var provider = new FacebookAuthProvider();
@@ -45,14 +44,14 @@ export default function LoginPage() {
 
   return (
     <div id='LoginPage' className='page'>
-      {contextProps.user ? (
+      {appContext.user ? (
         // signed in
         <>
           <div>
             {'Signed in using ' +
-              contextProps.user.providerData[0].providerId +
+              appContext.user.providerData[0].providerId +
               ' as ' +
-              contextProps.user.displayName}
+              appContext.user.displayName}
           </div>
           <button onClick={logOut}>Log Out</button>
         </>

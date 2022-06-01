@@ -2,14 +2,15 @@ import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MyContext } from '../MyContext';
+import { AppContext } from '../AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
+import Adder from '../Adder';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
-  const contextProps = useContext(MyContext);
-  const [details, setDetails] = useState();
+  const appContext = useContext(AppContext);
+  const [movie, setMovie] = useState();
   const [videoKeys, setVideoKeys] = useState();
   const [cast, setCast] = useState();
   const [recommendedList, setRecommendedList] = useState();
@@ -18,7 +19,7 @@ export default function MoviePage() {
 
   useEffect(() => {
     (async () => {
-      const detailsPacket = await fetch(
+      const moviePacket = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US`
       );
       const castPacket = await fetch(
@@ -33,17 +34,17 @@ export default function MoviePage() {
       const videoPacket = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US`
       );
-      const detailsJson = await detailsPacket.json();
+      const movieJson = await moviePacket.json();
       const castJson = await castPacket.json();
       const recommendedJson = await recommendedPacket.json();
       const similarJson = await similarPacket.json();
       const videoJson = await videoPacket.json();
-      setDetails(detailsJson);
+      setMovie(movieJson);
       setCast(castJson.cast);
       setRecommendedList(recommendedJson.results);
       setSimilarList(similarJson.results);
       setVideoKeys(videoJson.results);
-      //Scroll to top everytime this component mounts
+      //Scroll to top everytime this component mounts:
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     })();
@@ -60,26 +61,27 @@ export default function MoviePage() {
   }, [videoKeys]);
 
   return (
-    details &&
+    movie &&
     trailerKey &&
     cast && (
       <div id='MoviePage' className='page'>
         <div className='flexCenteredColumn container70W'>
-          <h1>{details.title}</h1>
-          <div>
-            <FontAwesomeIcon icon={faStar} />
-            {details.vote_average}
-          </div>
-          {details.tagline && <h3>"{details.tagline}"</h3>}
+          <h1>{movie.title}</h1>
+          <Adder movie={movie} />
+          {movie.tagline && <h3>"{movie.tagline}"</h3>}
           <div style={{ marginBottom: '10px' }}>
-            Release Date: {details.release_date}
+            Release Date: {movie.release_date}
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <FontAwesomeIcon icon={faStar} />
+            {movie.vote_average}
           </div>
           <div style={{ width: '100%' }}>
             <div className='visualsContainer'>
               <Link to={`/poster/${movieId}`}>
                 <img
-                  src={`https://image.tmdb.org/t/p/original${details.poster_path}`}
-                  alt={details.title}
+                  src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                  alt={movie.title}
                   height='400'
                   className='moviePagePoster'
                 ></img>
@@ -94,7 +96,7 @@ export default function MoviePage() {
                 title='Embedded youtube'
               />
             </div>
-            <div className='overview'>{details.overview}</div>
+            <div className='overview'>{movie.overview}</div>
           </div>
         </div>
         <h3>Top 10 Cast</h3>

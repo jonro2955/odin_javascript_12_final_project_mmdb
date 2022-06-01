@@ -5,7 +5,7 @@ import ActorPage from './components/pages/ActorPage';
 import PosterPage from './components/pages/PosterPage';
 import LoginPage from './components/pages/LoginPage';
 import ListsPage from './components/pages/ListsPage';
-import { MyContext } from './components/MyContext';
+import { AppContext } from './components/AppContext';
 import { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
@@ -17,7 +17,6 @@ import {
   getDoc,
   doc,
 } from 'firebase/firestore';
-
 const firebaseConfig = {
   apiKey: 'AIzaSyDmnDmYKukf4pvEC6QecqF4cSlUmSNeijY',
   authDomain: 'mmdb-97518.firebaseapp.com',
@@ -30,28 +29,24 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [contextProps, setContextProps] = useState({
+  const [user, setUser] = useState();
+  const [appContext, setAppContext] = useState({
     addToList,
     user,
-    // app,
     db,
   });
 
   useEffect(() => {
-    setContextProps({
+    setAppContext({
       addToList,
       user,
-      // app,
       db,
     });
   }, [user]);
 
-  //reset user anytime auth state chages
   getAuth().onAuthStateChanged((usr) => {
     if (usr) {
       setUser(usr);
-      //get logged in user data at any time by calling console.log(getAuth().currentUser);
       let uid = getAuth().currentUser.uid;
       initDefaultUserList(uid);
     } else {
@@ -76,31 +71,27 @@ export default function App() {
         'Watch List': [Date.now()],
       });
       console.log(`Initialized default firestore document for new user ${uid}`);
-    } 
+    }
   }
 
-  /* addToList(movieObj, listName) will be passed to other components
-  using the context API. 
-  The receiver will then attach it to some clickable element with a 
-  'data-movieid' attribute which is going to be a movieId. Then when
-  that element is clicked, this function will access the movie id
-  through the event object and add it to firestore. A list name must 
-  be given as a string input by the calling component*/
+  /* addToList(movieObj, listName): 
+  movieObj must be a TMDB API movie details object containing things like  
+  a movie's title, id, release_date, etc.
+  listName must be a string that matches one of the existing list names in 
+  the user's firestore document*/
   async function addToList(movieObj, listName) {
     if (user) {
-      // const clickedMovieId = movieObj.target.getAttribute('data-movieid');
       const uid = user.uid;
       const docRef = doc(db, 'User Lists', uid);
       const docSnap = await getDoc(docRef);
       /* Checking if(docSnap.exists()) isn't neccessary since a doc will 
       always be set up for a new user at onAuthStateChanged(), but it is 
-      done here for practice and security.*/
+      done here just to note the method for future reference.*/
       if (docSnap.exists()) {
-        let tempDoc = docSnap.data();
-        tempDoc[listName].push(movieObj);
+        let tempObj = docSnap.data();
+        tempObj[listName].push(movieObj);
         const collectionRef = collection(db, 'User Lists');
-        await setDoc(doc(collectionRef, uid), tempDoc);
-        alert('Movie successfully added to list.');
+        await setDoc(doc(collectionRef, uid), tempObj);
       }
     } else {
       alert('You must be logged in to save movies.');
@@ -109,9 +100,9 @@ export default function App() {
 
   return (
     <>
-      {/* All children of <MyContext.Provider ... /> get their 
-      props from the Context API. See MyContext.js */}
-      <MyContext.Provider value={contextProps}>
+      {/* All children of <AppContext.Provider ... /> get their props 
+      from the Context API. See how appContext is set in this file*/}
+      <AppContext.Provider value={appContext}>
         <HashRouter basename='/'>
           <Navbar />
           <Routes>
@@ -123,7 +114,7 @@ export default function App() {
             <Route path='/lists' element={<ListsPage />} />
           </Routes>
         </HashRouter>
-      </MyContext.Provider>
+      </AppContext.Provider>
     </>
   );
 }

@@ -1,12 +1,6 @@
 ### Next:
-
-When user clicks on an add+ button (in MovieCard and later in MoviePage), display a context menu showing the different lists the user has in their firestore document (extract to a new component). Each menu item must also have the data-movieId attribute equal to the selected parent movie. Upon clicking one of them, the movie id will be inserted to the selected list. Note that with this method, we can get rid of the second param in addToList(evtObj, listName) and replace listName with e.target.textContent, since the button will be labelled using the exact list name used in firestore.
-
-Each movie card in UserList page should have a remove button that removes the movie from that particular list.
-
-Also when user clicks on an add+ button, prevent duplicate entry for a movie that has already been added by greying out the name of the list that hold the movie.
-
-Make addToWatchList(e) so that it takes an extra argument which is the name of a list.
+"Adder.jsx"
+Update the inactivity status of added lists buttons immediately.
 
 Allow user to choose if they want to display their personal lists on the homepage from the LoginPage after signing in. Also Make it so that in the settings you can change the location of personal lists on the homepage. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
 
@@ -32,7 +26,9 @@ Save notes in a separate file and gitignore it
 
 mobile view styling
 
-### Firebase Hosted URL
+### Deploy your site to Firebase hosting:
+
+npm run build && firebase deploy
 
 https://mmdb-97518.web.app
 
@@ -77,11 +73,6 @@ npm install react-router-dom
     appId: '1:638858031859:web:bccf0ab7669ed7946a7d86',
     };
     initializeApp(firebaseConfig);
-
-### Deploy your site to Firebase hosting:
-
-1. Run 'npm run build' to update the contents of the /build output folder.
-2. Run 'firebase deploy' to update firebase hosted files with the /build folder files (this takes a long pause before it starts running)
 
 ### TMDB API
 
