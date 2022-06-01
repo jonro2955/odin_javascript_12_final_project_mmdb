@@ -10,9 +10,9 @@ import Adder from '../Adder';
 export default function MoviePage() {
   let movieId = useParams().movieId;
   const appContext = useContext(AppContext);
-  const [movie, setMovie] = useState();
+  const [movieObject, setMovieObject] = useState();
   const [videoKeys, setVideoKeys] = useState();
-  const [cast, setCast] = useState();
+  const [castList, setCastList] = useState();
   const [recommendedList, setRecommendedList] = useState();
   const [similarList, setSimilarList] = useState();
   const [trailerKey, setTrailerKey] = useState();
@@ -39,8 +39,8 @@ export default function MoviePage() {
       const recommendedJson = await recommendedPacket.json();
       const similarJson = await similarPacket.json();
       const videoJson = await videoPacket.json();
-      setMovie(movieJson);
-      setCast(castJson.cast);
+      setMovieObject(movieJson);
+      setCastList(castJson.cast);
       setRecommendedList(recommendedJson.results);
       setSimilarList(similarJson.results);
       setVideoKeys(videoJson.results);
@@ -61,27 +61,27 @@ export default function MoviePage() {
   }, [videoKeys]);
 
   return (
-    movie &&
+    movieObject &&
     trailerKey &&
-    cast && (
+    castList && (
       <div id='MoviePage' className='page'>
         <div className='flexCenteredColumn container70W'>
-          <h1>{movie.title}</h1>
-          <Adder movie={movie} />
-          {movie.tagline && <h3>"{movie.tagline}"</h3>}
+          <h1>{movieObject.title}</h1>
+          <Adder movieObject={movieObject} />
+          {movieObject.tagline && <h3>"{movieObject.tagline}"</h3>}
           <div style={{ marginBottom: '10px' }}>
-            Release Date: {movie.release_date}
+            Release Date: {movieObject.release_date}
           </div>
           <div style={{ marginBottom: '10px' }}>
             <FontAwesomeIcon icon={faStar} />
-            {movie.vote_average}
+            {movieObject.vote_average}
           </div>
           <div style={{ width: '100%' }}>
             <div className='visualsContainer'>
               <Link to={`/poster/${movieId}`}>
                 <img
-                  src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                  alt={movie.title}
+                  src={`https://image.tmdb.org/t/p/original${movieObject.poster_path}`}
+                  alt={movieObject.title}
                   height='400'
                   className='moviePagePoster'
                 ></img>
@@ -96,11 +96,11 @@ export default function MoviePage() {
                 title='Embedded youtube'
               />
             </div>
-            <div className='overview'>{movie.overview}</div>
+            <div className='overview'>{movieObject.overview}</div>
           </div>
         </div>
         <h3>Top 10 Cast</h3>
-        <ActorCarousel id='ActorCarousel' actorList={cast.slice(0, 10)} />
+        <ActorCarousel id='ActorCarousel' actorList={castList.slice(0, 10)} />
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>

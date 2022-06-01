@@ -1,8 +1,8 @@
 ### Next:
-"Adder.jsx"
-Update the inactivity status of added lists buttons immediately.
 
-Allow user to choose if they want to display their personal lists on the homepage from the LoginPage after signing in. Also Make it so that in the settings you can change the location of personal lists on the homepage. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
+Make the buttons stylish
+
+Allow user to choose if they want to display their personal lists at the top of the homepage from the LoginPage. Allow users to choose which list to include there and in which order. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
 
 For actor page, if the actor api packet provides the actor's "known for" movie ids, display them in a carousel.
 
@@ -26,8 +26,12 @@ Save notes in a separate file and gitignore it
 
 mobile view styling
 
-### Deploy your site to Firebase hosting:
+### CLI commands
 
+npm run git <msg> ===
+git add -A && git commit -m <msg> && git push origin main
+
+npm run deploy ===
 npm run build && firebase deploy
 
 https://mmdb-97518.web.app

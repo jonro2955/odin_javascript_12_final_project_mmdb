@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from './AppContext';
 import { getDoc, doc } from 'firebase/firestore';
 
-/* This renders the add button and the popup selection of the available 
-list names to add to. 
-The movie prop must be a TMDB API movie details object containing things 
+/* The Adder component renders the add button and the popup menu of the 
+available list names. 
+The movieObject prop must be a TMDB API movie details object containing things 
 like a movie's title, id, release_date, etc.*/
-export default function Adder({ movie }) {
+export default function Adder({ movieObject }) {
   const appContext = useContext(AppContext);
   const [menuOn, setMenuOn] = useState(false);
   const [listNamesArray, setListNamesArray] = useState();
@@ -16,27 +16,25 @@ export default function Adder({ movie }) {
     setMenuOn(!menuOn);
   }
 
-  /*The listNamesArray state will hold an array of the user's list names
+  /*The listNamesArray state will hold an array of the user's list name
   strings. Whenever this component mounts or someone logs in and changes 
-  appContext, fetch the user doc and set the listNamesArray*/
+  appContext, fetch the user doc and update the listNamesArray*/
   useEffect(() => {
     if (appContext.user) {
       (async () => {
         const uid = appContext.user.uid;
         const docRef = doc(appContext.db, 'User Lists', uid);
         const docSnap = await getDoc(docRef);
-        /*Sort by converting to array and using the timestamps inside*/
+        /*Sort by timestamps. It is the second array's first item*/
         const arrayConversion = Object.entries(docSnap.data());
         arrayConversion.sort((a, b) => a[1][0] - b[1][0]);
         let returnArray = [];
-        /* If movieArray contains a movie object with a property id
-          that matches movie.id, push item[0] into a special array for
-          all such cases*/
         let inactives = [];
         arrayConversion.forEach((item) => {
           returnArray.push(item[0]);
+          /* 'inactives' is an array of listNames that have this movieObject already*/
           let alreadyContains = item[1].slice(1).find((obj) => {
-            return obj.id === movie.id;
+            return obj.id === movieObject.id;
           });
           if (alreadyContains) {
             inactives.push(item[0]);
@@ -46,7 +44,7 @@ export default function Adder({ movie }) {
         setListNamesArray(returnArray);
       })();
     }
-  }, [appContext]);
+  }, [appContext, movieObject]);
 
   return (
     <div>
@@ -55,26 +53,28 @@ export default function Adder({ movie }) {
           toggleMenu();
         }}
       >
-        Add To List
+        Add to list
       </button>
       {listNamesArray && menuOn && (
         <div className='popupListMenu'>
-          {listNamesArray.map((name) => {
-            let inactiveStatus = false;
-            console.log(name);
-            if (inactiveNamesArray.includes(name)) {
-              inactiveStatus = true;
-            }
+          {listNamesArray.map((listName) => {
+            let disabledStatus = inactiveNamesArray.includes(listName)
+              ? true
+              : false;
             return (
               <button
-                key={name}
-                disabled={inactiveStatus}
+                disabled={disabledStatus}
+                key={listName}
                 onClick={() => {
-                  appContext.addToList(movie, name);
+                  //add movie to list and make list inactive for this movie
+                  appContext.addToList(movieObject, listName);
+                  let inactivesCopy = inactiveNamesArray;
+                  inactivesCopy.push(listName);
+                  setInactiveNamesArray(inactivesCopy);
                   setMenuOn(false);
                 }}
               >
-                {name}
+                {listName}
               </button>
             );
           })}

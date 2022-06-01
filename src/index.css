@@ -13,8 +13,9 @@ body {
   justify-content: center; */
   position: absolute;
   display: flex;
+  flex-direction: column;
   border: 1px solid black;
-  transform: translate(-25%, 0);
+  /* transform: translate(-25%, 0); */
 }
 .listCreator {
   position: absolute;

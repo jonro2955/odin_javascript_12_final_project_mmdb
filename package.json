@@ -20,7 +20,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "git": "git add -A && git commit -m",
+    "postgit": "git push origin main",
+    "predeploy": "npm run build",
+    "deploy": "firebase deploy"
   },
   "eslintConfig": {
     "extends": [

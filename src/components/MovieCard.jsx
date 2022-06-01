@@ -26,7 +26,7 @@ export default function MovieCard(props) {
         <div>
           <FontAwesomeIcon icon={faStar} />
           {props.movie.vote_average}
-          {props.deletable && (
+          {props.deletable ? (
             <button
               onClick={() => {
                 listsContext.removeFromList(
@@ -37,6 +37,14 @@ export default function MovieCard(props) {
               }}
             >
               Remove
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                appContext.addToList(props.movie, 'Watch List');
+              }}
+            >
+              Watchlist+
             </button>
           )}
         </div>
