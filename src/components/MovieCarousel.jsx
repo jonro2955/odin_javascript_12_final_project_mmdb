@@ -1,7 +1,6 @@
 import MovieCard from './MovieCard';
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 /*The first 2 parameters (id, movieList) are mandatory. 
 The id parameter is used to match the scrollLeft() and scrollRight()
@@ -29,7 +28,7 @@ export default function MovieCarousel(props) {
         className='carouselScrollArrow'
       />
       <div id={props.id} className='carousel'>
-        {props.movieList &&
+        {props.movieList ? (
           props.movieList.map((movie, i) => (
             <MovieCard
               key={i}
@@ -37,7 +36,10 @@ export default function MovieCarousel(props) {
               listName={props.listName}
               deletable={props.deletable}
             />
-          ))}
+          ))
+        ) : (
+          <div>This list is empty</div>
+        )}
       </div>
       <FontAwesomeIcon
         icon={faAngleRight}

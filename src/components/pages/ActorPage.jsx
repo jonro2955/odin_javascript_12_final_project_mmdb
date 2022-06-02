@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/avatar.png';
 
@@ -21,15 +21,17 @@ export default function ActorPage() {
       <div id='ActorPage' className='page'>
         <div className='container70W'>
           <h1>{actor.name}</h1>
-          <img
-            width='300'
-            alt={actor.name}
-            src={
-              actor.profile_path
-                ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
-                : avatar
-            }
-          ></img>
+          <Link to={`/poster${actor.profile_path}`}>
+            <img
+              width='300'
+              alt={actor.name}
+              src={
+                actor.profile_path
+                  ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
+                  : avatar
+              }
+            ></img>
+          </Link>
           <h3>Birthday: {actor.birthday}</h3>
           <h3>Place of birth: {actor.place_of_birth}</h3>
           <div>{actor.biography}</div>

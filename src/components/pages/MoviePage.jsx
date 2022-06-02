@@ -78,7 +78,7 @@ export default function MoviePage() {
           </div>
           <div style={{ width: '100%' }}>
             <div className='visualsContainer'>
-              <Link to={`/poster/${movieId}`}>
+              <Link to={`/poster${movieObject.poster_path}`}>
                 <img
                   src={`https://image.tmdb.org/t/p/original${movieObject.poster_path}`}
                   alt={movieObject.title}

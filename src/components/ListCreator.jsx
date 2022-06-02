@@ -10,7 +10,7 @@ export default function ListCreator(props) {
     <div className='listCreator'>
       <h3>Create New List</h3>
       <form
-        id='listCreatorForm'
+        className='listCreatorForm'
         onSubmit={() => {
           const inputField = document.getElementById('listCreatorInput');
           listsContext.createNewList(appContext, inputField.value);
@@ -23,6 +23,7 @@ export default function ListCreator(props) {
         <button type='submit'>Create</button>
       </form>
       <button
+        style={{ position: 'absolute', top: '5px', right: '5px' }}
         onClick={() => {
           listsContext.turnCreatorOff();
         }}

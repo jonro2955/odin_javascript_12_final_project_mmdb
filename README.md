@@ -1,10 +1,8 @@
 ### Next:
 
-Make the buttons stylish
+Make the buttons stylish.
 
 Allow user to choose if they want to display their personal lists at the top of the homepage from the LoginPage. Allow users to choose which list to include there and in which order. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
-
-For actor page, if the actor api packet provides the actor's "known for" movie ids, display them in a carousel.
 
 The instructions says you should add lots of interesting features. Ideas:
 
@@ -28,11 +26,12 @@ mobile view styling
 
 ### CLI commands
 
-npm run git <msg> ===
-git add -A && git commit -m <msg> && git push origin main
+npm run deploy && npm run git <msg> 
+===
+npm run build && firebase deploy && git add -A && git commit -m <msg> && git push origin main
 
 npm run deploy ===
-npm run build && firebase deploy
+
 
 https://mmdb-97518.web.app
 

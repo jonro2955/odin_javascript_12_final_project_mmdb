@@ -4,12 +4,22 @@ import { collection, setDoc, getDoc, doc } from 'firebase/firestore';
 import MovieCarousel from '../MovieCarousel';
 import ListCreator from '../ListCreator';
 import { ListsContext } from '../ListsContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default function ListsPage() {
   const appContext = useContext(AppContext);
   const [creatorOn, setCreatorOn] = useState(false);
-  const [userLists, setUserLists] = useState();
   const [listsContext, setListsContext] = useState();
+  const [userLists, setUserLists] = useState();
+
+  /** The userLists state will have a special data structure. It is an array which has
+   * been converted from a firestore "User Lists" object using
+   * Object.entries(firestoreDocObject). Each userLists array item, let's call it
+   * ArrayL1, is an array corresponding to a movie list belonging to the user.
+   * ArrayL1[0] is the name string of the list. ArrayL1[1] is another array whose
+   * first item, ArrayL1[1][0], is the timestamp from when the list was created.
+   * The rest of that array, ArrayL1[1].slice(1), are movie id numbers.*/
 
   function toggleCreator() {
     setCreatorOn(!creatorOn);
@@ -32,10 +42,6 @@ export default function ListsPage() {
     /* Prevent duplicate entries by checking if tempDoc[listName] exists. 
       setDoc() will overwrite items with the same name*/
     if (tempDoc[listName]) {
-      alert(
-        `Save unsuccessful. List '${listName}' already
-          exists. Cannot create duplicate lists.`
-      );
     } else {
       tempDoc[listName] = [Date.now()];
       const collectionRef = collection(appContext.db, 'User Lists');
@@ -117,12 +123,13 @@ export default function ListsPage() {
           // signed in
           <>
             <button
-              id='addListBtn'
+              className='mainAddBtn'
               onClick={() => {
                 setCreatorOn(!creatorOn);
               }}
             >
-              Create a new list
+              <div>Create new list</div>
+              <FontAwesomeIcon className='addIcon' icon={faPlus} />
             </button>
 
             {userLists &&
@@ -134,6 +141,7 @@ export default function ListsPage() {
                   {/* Place a delete button only with lists other than 'Watch List' */}
                   {list[0] !== 'Watch List' && (
                     <button
+                      style={{ fontSize: '1.5em' }}
                       onClick={() => {
                         deleteList(appContext, list[0]);
                       }}

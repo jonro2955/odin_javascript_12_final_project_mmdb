@@ -32,6 +32,7 @@ export default function App() {
   const [user, setUser] = useState();
   const [appContext, setAppContext] = useState({
     addToList,
+    movieIsInList,
     user,
     db,
   });
@@ -39,6 +40,7 @@ export default function App() {
   useEffect(() => {
     setAppContext({
       addToList,
+      movieIsInList,
       user,
       db,
     });
@@ -88,13 +90,40 @@ export default function App() {
       always be set up for a new user at onAuthStateChanged(), but it is 
       done here just to note the method for future reference.*/
       if (docSnap.exists()) {
-        let tempObj = docSnap.data();
-        tempObj[listName].push(movieObj);
-        const collectionRef = collection(db, 'User Lists');
-        await setDoc(doc(collectionRef, uid), tempObj);
+        let tempListsObj = docSnap.data();
+        // Prevent duplicates
+        let alreadyThere = await movieIsInList(
+          movieObj,
+          tempListsObj,
+          listName
+        );
+        if (!alreadyThere) {
+          tempListsObj[listName].push(movieObj);
+          const collectionRef = collection(db, 'User Lists');
+          await setDoc(doc(collectionRef, uid), tempListsObj);
+        } else {
+          // alert('This movie was previously added.');
+        }
       }
     } else {
       alert('You must be logged in to save movies.');
+    }
+  }
+
+  async function movieIsInList(movieObj, tempListsObj, listName) {
+    const movieId = movieObj.id;
+    const listsArray = Object.entries(tempListsObj);
+    const targetEntry = listsArray.find((item) => {
+      return item[0] === listName;
+    });
+    const targetList = targetEntry[1].slice(1);
+    let found = targetList.find((movie) => {
+      return movie.id === movieId;
+    });
+    if (found) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -108,7 +137,7 @@ export default function App() {
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/movie/:movieId' element={<MoviePage />} />
-            <Route path='/poster/:movieId' element={<PosterPage />} />
+            <Route path='/poster/:path' element={<PosterPage />} />
             <Route path='/actor/:actorId' element={<ActorPage />} />
             <Route path='/login' element={<LoginPage />} />
             <Route path='/lists' element={<ListsPage />} />

@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from './AppContext';
 import { getDoc, doc } from 'firebase/firestore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 /* The Adder component renders the add button and the popup menu of the 
 available list names. 
@@ -49,20 +51,24 @@ export default function Adder({ movieObject }) {
   return (
     <div>
       <button
+        className='mainAddBtn'
         onClick={() => {
           toggleMenu();
         }}
       >
-        Add to list
+        <div>Add to list</div>
+        <FontAwesomeIcon className='addIcon' icon={faPlus} />
       </button>
       {listNamesArray && menuOn && (
         <div className='popupListMenu'>
+          <h3>Choose a list</h3>
           {listNamesArray.map((listName) => {
             let disabledStatus = inactiveNamesArray.includes(listName)
               ? true
               : false;
             return (
               <button
+                className='popupListBtn'
                 disabled={disabledStatus}
                 key={listName}
                 onClick={() => {
@@ -78,6 +84,14 @@ export default function Adder({ movieObject }) {
               </button>
             );
           })}
+          <button
+            style={{ position: 'absolute', top: '5px', right: '5px' }}
+            onClick={() => {
+              toggleMenu();
+            }}
+          >
+            Cancel
+          </button>
         </div>
       )}
     </div>
