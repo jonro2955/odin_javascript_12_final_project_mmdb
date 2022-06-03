@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { AppContext } from './AppContext';
+import { AppContext } from './contexts/AppContext';
 import { getDoc, doc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -13,10 +13,6 @@ export default function Adder({ movieObject }) {
   const [menuOn, setMenuOn] = useState(false);
   const [listNamesArray, setListNamesArray] = useState();
   const [inactiveNamesArray, setInactiveNamesArray] = useState([]);
-
-  function toggleMenu() {
-    setMenuOn(!menuOn);
-  }
 
   /*The listNamesArray state will hold an array of the user's list name
   strings. Whenever this component mounts or someone logs in and changes 
@@ -48,12 +44,20 @@ export default function Adder({ movieObject }) {
     }
   }, [appContext, movieObject]);
 
+  function toggleMenu() {
+    setMenuOn(!menuOn);
+  }
+
   return (
     <div>
       <button
         className='mainAddBtn'
         onClick={() => {
-          toggleMenu();
+          if (appContext.user) {
+            toggleMenu();
+          } else {
+            alert('You must be logged in to add movies.');
+          }
         }}
       >
         <div>Add to list</div>

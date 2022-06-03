@@ -5,7 +5,7 @@ import ActorPage from './components/pages/ActorPage';
 import PosterPage from './components/pages/PosterPage';
 import LoginPage from './components/pages/LoginPage';
 import ListsPage from './components/pages/ListsPage';
-import { AppContext } from './components/AppContext';
+import { AppContext } from './components/contexts/AppContext';
 import { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
@@ -28,6 +28,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+/* App() is the root component which contains the firebase user object
+and the database object. It passes these along with functions 
+addToList and movieIsInList to all comonents below its component 
+hierarchy through the useContext api (wrapped inside the appContext state)*/
+
 export default function App() {
   const [user, setUser] = useState();
   const [appContext, setAppContext] = useState({
@@ -36,15 +41,6 @@ export default function App() {
     user,
     db,
   });
-
-  useEffect(() => {
-    setAppContext({
-      addToList,
-      movieIsInList,
-      user,
-      db,
-    });
-  }, [user]);
 
   getAuth().onAuthStateChanged((usr) => {
     if (usr) {
@@ -76,11 +72,10 @@ export default function App() {
     }
   }
 
-  /* addToList(movieObj, listName): 
-  movieObj must be a TMDB API movie details object containing things like  
-  a movie's title, id, release_date, etc.
-  listName must be a string that matches one of the existing list names in 
-  the user's firestore document*/
+  /* addToList(movieObj, listName): The movieObj input must be a TMDB API 
+  movie details object containing things like a movie's title, id, 
+  release_date, etc. The listName input must be a string that matches 
+  one of the existing list names in the user's firestore document*/
   async function addToList(movieObj, listName) {
     if (user) {
       const uid = user.uid;
@@ -126,6 +121,15 @@ export default function App() {
       return false;
     }
   }
+
+  useEffect(() => {
+    setAppContext({
+      addToList,
+      movieIsInList,
+      user,
+      db,
+    });
+  }, [user]);
 
   return (
     <>

@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AppContext } from '../AppContext';
+import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
 import Adder from '../Adder';
@@ -52,17 +52,19 @@ export default function MoviePage() {
 
   useEffect(() => {
     if (videoKeys) {
+      // console.log(videoKeys);
       let trailerKey = videoKeys.find((key) => {
         return key.type === 'Trailer';
       });
-      setTrailerKey(trailerKey.key);
+      if (trailerKey) {
+        setTrailerKey(trailerKey.key);
+      }
       // console.log(trailerKey);
     }
   }, [videoKeys]);
 
   return (
     movieObject &&
-    trailerKey &&
     castList && (
       <div id='MoviePage' className='page'>
         <div className='flexCenteredColumn container70W'>
@@ -70,11 +72,11 @@ export default function MoviePage() {
           <Adder movieObject={movieObject} />
           {movieObject.tagline && <h3>"{movieObject.tagline}"</h3>}
           <div style={{ marginBottom: '10px' }}>
-            Release Date: {movieObject.release_date}
+            Released: {movieObject.release_date}
           </div>
           <div style={{ marginBottom: '10px' }}>
-            <FontAwesomeIcon icon={faStar} />
-            {movieObject.vote_average}
+            <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
+            {` ${movieObject.vote_average} (${movieObject.vote_count})`}
           </div>
           <div style={{ width: '100%' }}>
             <div className='visualsContainer'>
@@ -86,21 +88,36 @@ export default function MoviePage() {
                   className='moviePagePoster'
                 ></img>
               </Link>
-              <iframe
-                width='773'
-                height='400'
-                src={`https://www.youtube.com/embed/${trailerKey}`}
-                frameBorder='0'
-                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                allowFullScreen
-                title='Embedded youtube'
-              />
+              {trailerKey ? (
+                <iframe
+                  width='773'
+                  height='400'
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+                  frameBorder='0'
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                  allowFullScreen
+                  title='Embedded youtube'
+                />
+              ) : (
+                <div
+                  className='trailerSubstitute'
+                  style={{
+                    backgroundImage: `url(https://image.tmdb.org/t/p/original${movieObject.backdrop_path})`,
+                  }}
+                >
+                  <h3 style={{ backgroundColor: '#343434' }}>
+                    Trailer not available
+                  </h3>
+                </div>
+              )}
             </div>
             <div className='overview'>{movieObject.overview}</div>
           </div>
         </div>
         <h3>Top 10 Cast</h3>
-        <ActorCarousel id='ActorCarousel' actorList={castList.slice(0, 10)} />
+        {castList && (
+          <ActorCarousel id='MovieCarousel' actorList={castList.slice(0, 10)} />
+        )}
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>

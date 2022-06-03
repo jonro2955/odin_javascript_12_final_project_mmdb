@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { AppContext } from '../AppContext';
+import { AppContext } from '../contexts/AppContext';
 import {
   getAuth,
   signInWithPopup,
@@ -46,15 +46,15 @@ export default function LoginPage() {
     <div id='LoginPage' className='page'>
       {appContext.user ? (
         // signed in
-        <>
-          <div>
-            {'Signed in using ' +
+        <div>
+          <h3>
+            {'You are signed in using ' +
               appContext.user.providerData[0].providerId +
               ' as ' +
               appContext.user.displayName}
-          </div>
+          </h3>
           <button onClick={logOut}>Log Out</button>
-        </>
+        </div>
       ) : (
         // signed out
         <>

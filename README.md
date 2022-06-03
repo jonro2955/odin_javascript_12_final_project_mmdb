@@ -1,22 +1,27 @@
 ### Next:
 
-Make the buttons stylish.
+Make list creator and movie adder dsappear when clicking outside
 
-Allow user to choose if they want to display their personal lists at the top of the homepage from the LoginPage. Allow users to choose which list to include there and in which order. This can probably be done through using js to change css grid props, and then save and load these props into and from firestore.
+When you click outside of the search input box or the search results window, toggle the search result window off.
 
-The instructions says you should add lots of interesting features. Ideas:
+show notification when a movie or list is successfully added/created. If a duplicate entry is not added, notify.
 
-User can rate, see, and write reviews https://www.themoviedb.org/movie/558-spider-man-2
 
-Sharing lists or movies on social media/email
+Get search up. Search api request: `https://api.themoviedb.org/3/search/movie?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&query=${search}` Replace ${search} with the search input string. Render the resulting data onto
 
-Look at imdb and other sites to find manageable features to replicate using reactjs
-
-Visual animative enhancements
+User can add a rating to TMDB
 
 Attribute flaticons and API providers
 
 Add director's name and info on the movie page
+
+Incorporate typescript or declare types with proptypes
+
+styled components
+
+Higher-order Components
+
+https://www.theodinproject.com/lessons/node-path-javascript-advanced-concepts
 
 Complete readme thoroughly
 
@@ -26,14 +31,37 @@ mobile view styling
 
 ### CLI commands
 
-npm run deploy && npm run git <msg> 
+npm run deploy && npm run git <msg>
 ===
 npm run build && firebase deploy && git add -A && git commit -m <msg> && git push origin main
 
-npm run deploy ===
-
-
 https://mmdb-97518.web.app
+
+### TMDB API
+
+TMDB API Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
+
+My TMDB API Key = ee3bf23ca6ee40ece5d8b91daed50a29
+
+Sonic movie id: 675353
+
+Movie list request format: https://api.themoviedb.org/3/movie/{list_name}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+
+Movie details: https://api.themoviedb.org/3/movie/{movie_id}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
+
+Movie poster image: https://image.tmdb.org/t/p/original/{the_poster_path}
+
+Cast: https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
+
+Recommended movies: https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
+
+Using the movie ID, You can also request: reviews for a movie,
+similar movies, lists the movie belings to, and even post your own review of it into TMDB.
+
+To embed the official trailer onto a page, use the movie ID to get the "official Trailer" "key" from
+https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
+Then, access the "official Trailer" key from the resulting json object (there can be many keys) and put the key into: https://www.youtube.com/watch?v={key}.
+Then, use the youtube url as the src attribute inside of an <iframe> tag.
 
 ### react-router-dom
 
@@ -76,27 +104,3 @@ npm install react-router-dom
     appId: '1:638858031859:web:bccf0ab7669ed7946a7d86',
     };
     initializeApp(firebaseConfig);
-
-### TMDB API
-
-TMDB API Documentation home: https://developers.themoviedb.org/3/getting-started/introduction
-
-My TMDB API Key = ee3bf23ca6ee40ece5d8b91daed50a29
-
-Movie list request format: https://api.themoviedb.org/3/movie/{list_name}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
-
-Movie details: https://api.themoviedb.org/3/movie/{movie_id}?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
-
-Movie poster image: https://image.tmdb.org/t/p/original/{the_poster_path}
-
-Cast: https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
-
-Recommended movies: https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1
-
-Using the movie ID, You can also request: reviews for a movie,
-similar movies, lists the movie belings to, and even post your own review of it into TMDB.
-
-To embed the official trailer onto a page, use the movie ID to get the "official Trailer" "key" from
-https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US
-Then, access the "official Trailer" key from the resulting json object (there can be many keys) and put the key into: https://www.youtube.com/watch?v={key}.
-Then, use the youtube url as the src attribute inside of an <iframe> tag.

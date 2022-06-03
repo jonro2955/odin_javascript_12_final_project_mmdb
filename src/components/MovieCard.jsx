@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext, useEffect, useState } from 'react';
-import { AppContext } from './AppContext';
-import { ListsContext } from './ListsContext';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { useContext} from 'react';
+import { AppContext } from './contexts/AppContext';
+import { ListsContext } from './contexts/ListsContext';
 
 export default function MovieCard(props) {
   const appContext = useContext(AppContext);
@@ -24,7 +24,7 @@ export default function MovieCard(props) {
         <div>{props.movie.title}</div>
         <div>Release Date: {props.movie.release_date}</div>
         <div>
-          <FontAwesomeIcon icon={faStar} />
+          <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
           {props.movie.vote_average}
           {props.deletable ? (
             <button
@@ -41,7 +41,11 @@ export default function MovieCard(props) {
           ) : (
             <button
               onClick={() => {
-                appContext.addToList(props.movie, 'Watch List');
+                if (appContext.user) {
+                  appContext.addToList(props.movie, 'Watch List');
+                } else {
+                  alert('You must be logged in to add movies.');
+                }
               }}
             >
               Watchlist+

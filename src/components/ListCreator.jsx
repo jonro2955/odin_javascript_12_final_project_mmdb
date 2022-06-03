@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { AppContext } from './AppContext';
-import { ListsContext } from './ListsContext';
+import { AppContext } from './contexts/AppContext';
+import { ListsContext } from './contexts/ListsContext';
 
-export default function ListCreator(props) {
+export default function ListCreator() {
   const appContext = useContext(AppContext);
   const listsContext = useContext(ListsContext);
 

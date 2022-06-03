@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from 'react';
-import { AppContext } from '../AppContext';
+import { AppContext } from '../contexts/AppContext';
 import { collection, setDoc, getDoc, doc } from 'firebase/firestore';
 import MovieCarousel from '../MovieCarousel';
 import ListCreator from '../ListCreator';
-import { ListsContext } from '../ListsContext';
+import { ListsContext } from '../contexts/ListsContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,13 +13,19 @@ export default function ListsPage() {
   const [listsContext, setListsContext] = useState();
   const [userLists, setUserLists] = useState();
 
-  /** The userLists state will have a special data structure. It is an array which has
-   * been converted from a firestore "User Lists" object using
-   * Object.entries(firestoreDocObject). Each userLists array item, let's call it
-   * ArrayL1, is an array corresponding to a movie list belonging to the user.
-   * ArrayL1[0] is the name string of the list. ArrayL1[1] is another array whose
-   * first item, ArrayL1[1][0], is the timestamp from when the list was created.
-   * The rest of that array, ArrayL1[1].slice(1), are movie id numbers.*/
+  /** ListsPage() has many jobs to do.
+   * The userLists state is a value fetched from firestore, and it will be
+   * a special data structure. It is an array which has been converted from
+   * a firestore "User Lists" object using Object.entries(Object).
+   * Each userLists array item, let's call it itemL1, is an array corresponding
+   * to a movie list belonging to the user. itemL1[0] is the name string of
+   * the list. itemL1[1] is another array whose first item, itemL1[1][0],
+   * is the timestamp from when the list was created.
+   * The rest of that array, itemL1[1].slice(1), are movie id numbers.
+   *
+   * The functions declared here are only used by children of this component.
+   * They are first saved into the 'listsContext' state and passed using
+   * the useContext api.*/
 
   function toggleCreator() {
     setCreatorOn(!creatorOn);
@@ -138,7 +144,7 @@ export default function ListsPage() {
                   {/* list[0] is each lists' key string because the list object was
                 converted from json to an array using Object.entries()*/}
                   <h1>{list[0]}</h1>
-                  {/* Place a delete button only with lists other than 'Watch List' */}
+                  {/* Place a delete button for lists other than 'Watch List' */}
                   {list[0] !== 'Watch List' && (
                     <button
                       style={{ fontSize: '1.5em' }}
@@ -151,7 +157,7 @@ export default function ListsPage() {
                   )}
                   {/* list[1] is an array whose first item is a timestamp, so
                 we have to slice the first item out. Then we reverse the array 
-                to show the latest additions first.*/}
+                to show the latest adds first.*/}
                   <MovieCarousel
                     id={list[0]}
                     movieList={list[1].slice(1).reverse()}
@@ -172,7 +178,16 @@ export default function ListsPage() {
         ) : (
           // signed out
           <>
-            <div>Please log in</div>
+            <h1
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              You must be logged in to create and edit custom lists.
+            </h1>
           </>
         )}
       </div>

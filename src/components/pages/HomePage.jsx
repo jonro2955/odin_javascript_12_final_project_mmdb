@@ -1,5 +1,5 @@
 import MovieCarousel from '../MovieCarousel';
-import { AppContext } from '../AppContext';
+import { AppContext } from '../contexts/AppContext';
 import { useState, useEffect, useContext } from 'react';
 
 export default function HomePage() {
