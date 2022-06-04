@@ -5,7 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
-import Adder from '../Adder';
+import MovieAdder from '../MovieAdder';
+import MovieRater from '../MovieRater';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
@@ -67,16 +68,26 @@ export default function MoviePage() {
     movieObject &&
     castList && (
       <div id='MoviePage' className='page'>
-        <div className='flexCenteredColumn container70W'>
+        <div className='flexCenteredColumn sideBarContainer'>
           <h1>{movieObject.title}</h1>
-          <Adder movieObject={movieObject} />
-          {movieObject.tagline && <h3>"{movieObject.tagline}"</h3>}
-          <div style={{ marginBottom: '10px' }}>
-            Released: {movieObject.release_date}
-          </div>
-          <div style={{ marginBottom: '10px' }}>
-            <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
-            {` ${movieObject.vote_average} (${movieObject.vote_count})`}
+          <div className='movieInfoGrid'>
+            <div>
+              {movieObject.genres.map((genre) => (
+                <div key={genre.name} style={{ fontSize: 'small' }}>
+                  {genre.name}
+                </div>
+              ))}
+            </div>
+            <div>Released: {movieObject.release_date}</div>
+            <div>
+              Rating
+              <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
+              {` ${movieObject.vote_average.toFixed(1)} (${
+                movieObject.vote_count
+              })`}
+            </div>
+            <MovieRater movieObject={movieObject} />
+            <MovieAdder movieObject={movieObject} />
           </div>
           <div style={{ width: '100%' }}>
             <div className='visualsContainer'>

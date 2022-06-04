@@ -8,7 +8,7 @@ export default function ListCreator() {
 
   return (
     <div className='listCreator'>
-      <h3>Create New List</h3>
+      <h3>List Name</h3>
       <form
         className='listCreatorForm'
         onSubmit={() => {
@@ -18,7 +18,6 @@ export default function ListCreator() {
           listsContext.turnCreatorOff();
         }}
       >
-        <label htmlFor='listCreatorInput'>List Name: </label>
         <input id='listCreatorInput' type='text' autoFocus={true} />
         <button type='submit'>Create</button>
       </form>

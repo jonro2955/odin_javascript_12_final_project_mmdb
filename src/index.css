@@ -7,13 +7,16 @@ body {
   background-color: #232323;
   scroll-behavior: smooth;
 }
+button {
+  border-color: #b30000;
+  border-radius: 5px;
+}
 .searchResultWindow {
   position: absolute;
   top: 70px;
   left: 50%;
   transform: translate(-50%, 0);
   background-color: #000000;
-  opacity: 92%;
   width: 50%;
   height: 90vh;
   overflow-y: scroll;
@@ -37,16 +40,26 @@ body {
 .searchResultWindow::-webkit-scrollbar-thumb:hover {
   background: #b30000;
 }
-
 .searchResultEntry {
-  border-bottom: #343434 1px solid;
+  display: grid;
+  grid-template-areas: 'routeLink addButton';
+}
+.searchResultEntryLinkGrid {
+  text-decoration: none;
+  border-bottom: #343434 solid 1px;
+  color: 'aliceblue';
   display: grid;
   color: aliceblue;
   grid-template-areas:
-    'poster     title      title'
-    'poster release_date release_date'
-    'poster vote_average vote_average'
-    'poster  genre_ids     genre_ids';
+    'poster     title      title  '
+    'poster release_date release_date '
+    'poster vote_average vote_average '
+    'poster  genre_ids     genre_ids ';
+}
+.searchResultEntryAddBtn {
+  width: 50%;
+  height: 30%;
+  margin: auto;
 }
 .searchResultEntry:hover {
   background-color: #131313;
@@ -84,19 +97,29 @@ body {
 }
 .popupListBtn {
   font-size: 1.5em;
-  width: fit-content;
+  min-width: 300px;
 }
-.mainAddBtn {
-  margin: 0 20px;
-  padding: 10px;
-  border-radius: 10px;
+.moviePageAddBtn {
+  color: #b30000;
+  border: #b30000 3px solid;
+  box-shadow: inset 0 0 5px grey;
+  padding: 0 10px;
+  border-radius: 20px;
+  font-size: 1em;
+}
+.deleteListBtn {
   font-size: 1.5em;
-  /* width:100%; */
+  color: #b30000;
+  border: #b30000 1px solid;
+  border-radius: 5px;
+}
+.moviePageAddBtn:hover {
+  box-shadow: inset 0 0 20px grey;
 }
 .listCreator {
   position: absolute;
-  top: 50%; /* position the top  edge of the element at the middle of the parent */
-  left: 50%; /* position the left edge of the element at the middle of the parent */
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -100%);
   background-color: #343434;
   border: #b30000 2px solid;
@@ -115,7 +138,6 @@ body {
   gap: 1%;
   overflow-x: scroll;
   overflow-y: hidden;
-  /* cursor: grab; */
   scroll-behavior: smooth;
   padding: 10px;
   border-radius: 15px;
@@ -128,7 +150,7 @@ body {
   color: #b30000;
   font-size: 5em;
   cursor: pointer;
-  border: #b30000 1px solid;
+  border: #b30000 2px solid;
   box-shadow: inset 0 0 5px grey;
   border-radius: 25px;
   padding: 10px 20px 10px 20px;
@@ -178,7 +200,7 @@ body {
   border-radius: 15px;
 }
 .cardDetail {
-  height: 100px;
+  height: 55px;
   overflow-y: scroll;
   color: aliceblue;
 }
@@ -196,7 +218,27 @@ body {
   align-items: center;
   justify-content: center;
 }
+.loginBtn {
+  width: 300px;
+}
 
+.loginPageContent {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.loginPgBtnsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+.loginPgBtn {
+  height: 50%;
+  width: 50%;
+  font-size: large;
+}
 .page {
   margin: auto;
   width: 100%;
@@ -206,7 +248,7 @@ body {
   color: aliceblue;
   /* border:aliceblue 1px solid; */
 }
-.container70W {
+.sideBarContainer {
   width: 70%;
   margin: auto;
   /* border: aliceblue 1px solid; */
@@ -256,10 +298,7 @@ nav {
   /* border: 1px solid white; */
 }
 .searchForm {
-  /* display: grid;
-  grid-template-columns: auto 20%; */
-  /* border: 1px solid white; */
-  width: 100%;
+  width: 97%;
 }
 .searchInput {
   height: 40px;
@@ -314,6 +353,22 @@ nav {
 .actorLink {
   color: #b30000;
 }
+.movieInfoGrid {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  grid-gap: 3%;
+}
+.movieInfoGrid > div {
+  /* border: 1px solid white; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/***************************************************************************/
+/******************************MOBILE*VIEW**********************************/
+/***************************************************************************/
 @media screen and (max-width: 1024px) {
   .searchResultWindow {
     width: 100%;
@@ -353,6 +408,11 @@ nav {
     background-color: rgb(182, 34, 34);
     right: -100%;
   }
+  .carousel {
+    width: 100%;
+    height: 260px;
+    align-items: center;
+  }
   .carousel::-webkit-scrollbar {
     display: none;
   }
@@ -361,5 +421,22 @@ nav {
   }
   .moviePagePoster {
     display: none;
+  }
+  .sideBarContainer {
+    width: 100%;
+  }
+  .card {
+    min-width: 100px;
+    width: 200px;
+    min-height: 380px;
+    height: 380px;
+  }
+  .cardDetail {
+    height: 80px;
+  }
+  .posterImg {
+    min-width: 100px;
+    width: 100px;
+    height: 150px;
   }
 }

@@ -28,16 +28,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* App() is the root component which contains the firebase user object
-and the database object. It passes these along with functions 
-addToList and movieIsInList to all comonents below its component 
-hierarchy through the useContext api (wrapped inside the appContext state)*/
-
+/* <App/> is the root component which contains the firebase user object
+and the database object. It passes these along with the function 
+addToList() to all comonents below its component hierarchy through 
+the useContext api*/
 export default function App() {
   const [user, setUser] = useState();
   const [appContext, setAppContext] = useState({
     addToList,
-    movieIsInList,
+    getGenre,
     user,
     db,
   });
@@ -52,14 +51,12 @@ export default function App() {
     }
   });
 
-  /**initDefaultUserList(uid): A function to be called each time user logs in.
-   * It checks our firestore's "User Lists" collection for a document with an
-   * id matching the logged in user's id, and if not found, creates one.
-   * The newly created document will be a simple object with one key called
-   * 'Watch List', with a starting value of an empty array. This is the default
-   * list that every user starts out with. The array will later hold movie ids
-   * that the user can add using addToList(movieObj, listName).
-   * */
+  /**initDefaultUserList(uid): This is called on each auth state change.
+   * If firestore's "User Lists" collection doesn't have a document with
+   * an id matching the logged in user's id, one is created.
+   * We'll make the new document contain an object with a key called
+   * 'Watch List', and a value of an empty array. This is the default
+   * movie list that every user starts out with. */
   async function initDefaultUserList(uid) {
     const docRef = doc(db, 'User Lists', uid);
     const docSnap = await getDoc(docRef);
@@ -72,7 +69,8 @@ export default function App() {
     }
   }
 
-  /* addToList(movieObj, listName): The movieObj input must be a TMDB API 
+  /* addToList(movieObj, listName): Adds a movie object to the list
+  with the given list name. The movieObj input must be a TMDB API 
   movie details object containing things like a movie's title, id, 
   release_date, etc. The listName input must be a string that matches 
   one of the existing list names in the user's firestore document*/
@@ -105,6 +103,7 @@ export default function App() {
     }
   }
 
+  // This is just a utility function for the addToList() function
   async function movieIsInList(movieObj, tempListsObj, listName) {
     const movieId = movieObj.id;
     const listsArray = Object.entries(tempListsObj);
@@ -122,10 +121,38 @@ export default function App() {
     }
   }
 
+  function getGenre(idNum) {
+    const genreList = [
+      { id: 28, name: 'Action' },
+      { id: 12, name: 'Adventure' },
+      { id: 16, name: 'Animation' },
+      { id: 35, name: 'Comedy' },
+      { id: 80, name: 'Crime' },
+      { id: 99, name: 'Documentary' },
+      { id: 18, name: 'Drama' },
+      { id: 10751, name: 'Family' },
+      { id: 14, name: 'Fantasy' },
+      { id: 36, name: 'History' },
+      { id: 27, name: 'Horror' },
+      { id: 10402, name: 'Music' },
+      { id: 9648, name: 'Mystery' },
+      { id: 10749, name: 'Romance' },
+      { id: 878, name: 'Science Fiction' },
+      { id: 10770, name: 'TV Movie' },
+      { id: 53, name: 'Thriller' },
+      { id: 10752, name: 'War' },
+      { id: 37, name: 'Western' },
+    ];
+    const target = genreList.find((obj) => {
+      return obj.id === idNum;
+    });
+    return target.name;
+  }
+
   useEffect(() => {
     setAppContext({
       addToList,
-      movieIsInList,
+      getGenre,
       user,
       db,
     });
@@ -134,7 +161,7 @@ export default function App() {
   return (
     <>
       {/* All children of <AppContext.Provider ... /> get their props 
-      from the Context API. See how appContext is set in this file*/}
+      from the Context API. See setAppContext() calls in here*/}
       <AppContext.Provider value={appContext}>
         <HashRouter basename='/'>
           <Navbar />

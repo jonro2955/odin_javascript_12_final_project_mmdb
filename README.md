@@ -1,19 +1,14 @@
 ### Next:
 
-Make list creator and movie adder dsappear when clicking outside
-
-When you click outside of the search input box or the search results window, toggle the search result window off.
-
-show notification when a movie or list is successfully added/created. If a duplicate entry is not added, notify.
 
 
-Get search up. Search api request: `https://api.themoviedb.org/3/search/movie?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&query=${search}` Replace ${search} with the search input string. Render the resulting data onto
+
 
 User can add a rating to TMDB
 
 Attribute flaticons and API providers
 
-Add director's name and info on the movie page
+Add director's name and info on movie page
 
 Incorporate typescript or declare types with proptypes
 
@@ -31,8 +26,8 @@ mobile view styling
 
 ### CLI commands
 
-npm run deploy && npm run git <msg>
-===
+# npm run deploy && npm run git <msg>
+
 npm run build && firebase deploy && git add -A && git commit -m <msg> && git push origin main
 
 https://mmdb-97518.web.app

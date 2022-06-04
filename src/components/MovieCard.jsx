@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { useContext} from 'react';
+import { useContext } from 'react';
 import { AppContext } from './contexts/AppContext';
 import { ListsContext } from './contexts/ListsContext';
 
@@ -19,40 +19,42 @@ export default function MovieCard(props) {
           width='200'
           height='300'
         ></img>
-      </Link>
-      <div className='cardDetail'>
-        <div>{props.movie.title}</div>
-        <div>Release Date: {props.movie.release_date}</div>
-        <div>
-          <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
-          {props.movie.vote_average}
-          {props.deletable ? (
-            <button
-              onClick={() => {
-                listsContext.removeFromList(
-                  appContext,
-                  props.movie,
-                  props.listName
-                );
-              }}
-            >
-              Remove
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                if (appContext.user) {
-                  appContext.addToList(props.movie, 'Watch List');
-                } else {
-                  alert('You must be logged in to add movies.');
-                }
-              }}
-            >
-              Watchlist+
-            </button>
-          )}
+        <div className='cardDetail'>
+          <div>{props.movie.title}</div>
+          <div style={{fontSize:'smaller'}}>Release Date: {props.movie.release_date}</div>
+          <div>
+            <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
+            {` ${props.movie.vote_average.toFixed(1)} (${
+              props.movie.vote_count
+            }) `}
+          </div>
         </div>
-      </div>
+      </Link>
+      {props.deletable ? (
+        <button
+          onClick={() => {
+            listsContext.removeFromList(
+              appContext,
+              props.movie,
+              props.listName
+            );
+          }}
+        >
+          Remove
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            if (appContext.user) {
+              appContext.addToList(props.movie, 'Watch List');
+            } else {
+              alert('You must be logged in to add movies.');
+            }
+          }}
+        >
+          Watchlist+
+        </button>
+      )}
     </div>
   );
 }

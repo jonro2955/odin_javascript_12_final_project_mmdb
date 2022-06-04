@@ -1,8 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { AppContext } from './contexts/AppContext';
 import { Link } from 'react-router-dom';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SearchResults from './SearchResults';
 
 export default function Navbar() {
@@ -10,13 +8,11 @@ export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [searchInputValue, setSearchString] = useState();
 
-  /*Toggle mobile menu off when clicking anything that isn't fa-bars (burger)*/
+  /*Toggle the mobile menu off when clicking anything that isn't the 
+  burger button (.fa-bars)*/
   useEffect(() => {
     document.addEventListener('click', (e) => {
-      if (
-        e.target === document.querySelector('.fa-bars') ||
-        e.target === document.getElementById('searchInput')
-      ) {
+      if (e.target === document.querySelector('.fa-bars')) {
         setShowMobileMenu(true);
       } else {
         setShowMobileMenu(false);
@@ -40,10 +36,10 @@ export default function Navbar() {
               setSearchString(e.target.value);
             }}
           ></input>
-          {/* <FontAwesomeIcon className='searchIcon' icon={faSearch} /> */}
         </form>
         {/* Whenever searchInputValue state changes, <SearchResults/> will 
-        get the new value and update itself*/}
+        get the new value and update itself. If the searchInputValue is an
+        empty string, <SearchResults/> will make itself disappear*/}
         <SearchResults searchInputValue={searchInputValue} />
         <ul
           className='navLinksContainer'

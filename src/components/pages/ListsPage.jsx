@@ -2,30 +2,28 @@ import { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../contexts/AppContext';
 import { collection, setDoc, getDoc, doc } from 'firebase/firestore';
 import MovieCarousel from '../MovieCarousel';
-import ListCreator from '../ListCreator';
+import ListAdder from '../ListAdder';
 import { ListsContext } from '../contexts/ListsContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
+/** <ListsPage/> has many jobs to do.
+ * The userLists state will be a user's lists doc object fetched from
+ * firestore and converted to an array using Object.entries(Object).
+ * Each array item is also an array corresponding
+ * to a movie list. item[0] is the name of
+ * the list, a string. item[1] is another array whose first item,
+ * item[1][0], is the timestamp from when the list was created.
+ * The rest of that array, itemL1[1].slice(1), are movie id numbers.
+ *
+ * Functions declared here are passed to children of this component
+ * using the context api after being first saved into the listsContext
+ * state.*/
 export default function ListsPage() {
   const appContext = useContext(AppContext);
   const [creatorOn, setCreatorOn] = useState(false);
   const [listsContext, setListsContext] = useState();
   const [userLists, setUserLists] = useState();
-
-  /** ListsPage() has many jobs to do.
-   * The userLists state is a value fetched from firestore, and it will be
-   * a special data structure. It is an array which has been converted from
-   * a firestore "User Lists" object using Object.entries(Object).
-   * Each userLists array item, let's call it itemL1, is an array corresponding
-   * to a movie list belonging to the user. itemL1[0] is the name string of
-   * the list. itemL1[1] is another array whose first item, itemL1[1][0],
-   * is the timestamp from when the list was created.
-   * The rest of that array, itemL1[1].slice(1), are movie id numbers.
-   *
-   * The functions declared here are only used by children of this component.
-   * They are first saved into the 'listsContext' state and passed using
-   * the useContext api.*/
 
   function toggleCreator() {
     setCreatorOn(!creatorOn);
@@ -47,8 +45,7 @@ export default function ListsPage() {
     let tempDoc = docSnap.data();
     /* Prevent duplicate entries by checking if tempDoc[listName] exists. 
       setDoc() will overwrite items with the same name*/
-    if (tempDoc[listName]) {
-    } else {
+    if (!tempDoc[listName]) {
       tempDoc[listName] = [Date.now()];
       const collectionRef = collection(appContext.db, 'User Lists');
       await setDoc(doc(collectionRef, uid), tempDoc);
@@ -129,12 +126,13 @@ export default function ListsPage() {
           // signed in
           <>
             <button
-              className='mainAddBtn'
+              className='moviePageAddBtn'
+              style={{ padding: '10px', fontSize: '1.5em' }}
               onClick={() => {
                 setCreatorOn(!creatorOn);
               }}
             >
-              <div>Create new list</div>
+              <div>New List</div>
               <FontAwesomeIcon className='addIcon' icon={faPlus} />
             </button>
 
@@ -147,12 +145,12 @@ export default function ListsPage() {
                   {/* Place a delete button for lists other than 'Watch List' */}
                   {list[0] !== 'Watch List' && (
                     <button
-                      style={{ fontSize: '1.5em' }}
+                      className='deleteListBtn'
                       onClick={() => {
                         deleteList(appContext, list[0]);
                       }}
                     >
-                      Delete this list
+                      {`Delete list: ${list[0]}`}
                     </button>
                   )}
                   {/* list[1] is an array whose first item is a timestamp, so
@@ -168,7 +166,7 @@ export default function ListsPage() {
               ))}
 
             {creatorOn && (
-              <ListCreator
+              <ListAdder
                 createNewList={createNewList}
                 toggleCreator={toggleCreator}
                 turnCreatorOff={turnCreatorOff}

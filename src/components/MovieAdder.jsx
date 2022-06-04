@@ -4,19 +4,17 @@ import { getDoc, doc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-/* The Adder component renders the add button and the popup menu of the 
-available list names. 
+/* The MovieAdder component renders the add button and a popup menu of the 
+available list names when that add button is clicked. 
 The movieObject prop must be a TMDB API movie details object containing things 
 like a movie's title, id, release_date, etc.*/
-export default function Adder({ movieObject }) {
+export default function MovieAdder({ movieObject }) {
   const appContext = useContext(AppContext);
-  const [menuOn, setMenuOn] = useState(false);
+  const [adderOn, setAdderOn] = useState(false);
   const [listNamesArray, setListNamesArray] = useState();
   const [inactiveNamesArray, setInactiveNamesArray] = useState([]);
 
-  /*The listNamesArray state will hold an array of the user's list name
-  strings. Whenever this component mounts or someone logs in and changes 
-  appContext, fetch the user doc and update the listNamesArray*/
+  /*Get user's list names from firestore*/
   useEffect(() => {
     if (appContext.user) {
       (async () => {
@@ -45,13 +43,13 @@ export default function Adder({ movieObject }) {
   }, [appContext, movieObject]);
 
   function toggleMenu() {
-    setMenuOn(!menuOn);
+    setAdderOn(!adderOn);
   }
 
   return (
     <div>
       <button
-        className='mainAddBtn'
+        className='moviePageAddBtn'
         onClick={() => {
           if (appContext.user) {
             toggleMenu();
@@ -60,10 +58,10 @@ export default function Adder({ movieObject }) {
           }
         }}
       >
-        <div>Add to list</div>
+        <div >Add</div>
         <FontAwesomeIcon className='addIcon' icon={faPlus} />
       </button>
-      {listNamesArray && menuOn && (
+      {listNamesArray && adderOn && (
         <div className='popupListMenu'>
           <h3>Choose a list</h3>
           {listNamesArray.map((listName) => {
@@ -81,7 +79,7 @@ export default function Adder({ movieObject }) {
                   let inactivesCopy = inactiveNamesArray;
                   inactivesCopy.push(listName);
                   setInactiveNamesArray(inactivesCopy);
-                  setMenuOn(false);
+                  setAdderOn(false);
                 }}
               >
                 {listName}

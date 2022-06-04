@@ -19,7 +19,7 @@ export default function ActorPage() {
   return (
     actor && (
       <div id='ActorPage' className='page'>
-        <div className='container70W'>
+        <div className='sideBarContainer'>
           <h1>{actor.name}</h1>
           <Link to={`/poster${actor.profile_path}`}>
             <img

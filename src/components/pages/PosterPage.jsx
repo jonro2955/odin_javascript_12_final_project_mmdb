@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 
+/**This can display either a movie poster or an actor photo */
 export default function PosterPage() {
   let path = useParams().path;
 

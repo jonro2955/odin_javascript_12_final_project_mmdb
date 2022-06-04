@@ -2,9 +2,9 @@ import MovieCard from './MovieCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-/*The first 2 parameters (id, movieList) are mandatory. 
+/*The first 2 parameters (props.id, props.movieList) are mandatory. 
 The id parameter is used to match the scrollLeft() and scrollRight()
-button callbacks to this particular Carousel. The movieList prop must 
+callbacks to this particular Carousel. The movieList prop must 
 be in the form of an array of TMDB movie or cast objects.
 listName and deletable props are optional. They are passed down to 
 <MovieCard/> to enable the optional 'delete from list' option.*/
