@@ -20,8 +20,8 @@ export default function MovieCard(props) {
           height='300'
         ></img>
         <div className='cardDetail'>
-          <div>{props.movie.title}</div>
-          <div style={{fontSize:'smaller'}}>Release Date: {props.movie.release_date}</div>
+          <div className='movieCardTitle'>{props.movie.title}</div>
+          <div style={{ fontSize: 'smaller' }}>{props.movie.release_date}</div>
           <div>
             <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
             {` ${props.movie.vote_average.toFixed(1)} (${

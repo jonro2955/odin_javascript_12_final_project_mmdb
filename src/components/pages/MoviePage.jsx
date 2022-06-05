@@ -6,17 +6,17 @@ import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
 import MovieAdder from '../MovieAdder';
-import MovieRater from '../MovieRater';
+// import MovieRater from '../MovieRater';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
   const appContext = useContext(AppContext);
   const [movieObject, setMovieObject] = useState();
-  const [videoKeys, setVideoKeys] = useState();
-  const [castList, setCastList] = useState();
-  const [recommendedList, setRecommendedList] = useState();
-  const [similarList, setSimilarList] = useState();
-  const [trailerKey, setTrailerKey] = useState();
+  const [videoKeys, setVideoKeys] = useState(); //array
+  const [castList, setCastList] = useState(); //array
+  const [recommendedList, setRecommendedList] = useState(); //array
+  const [similarList, setSimilarList] = useState(); //array
+  const [trailerKey, setTrailerKey] = useState(); //string
 
   useEffect(() => {
     (async () => {
@@ -52,6 +52,7 @@ export default function MoviePage() {
   }, [movieId]);
 
   useEffect(() => {
+    //Find trailer key. If not found, find any video key
     if (videoKeys) {
       // console.log(videoKeys);
       let trailerKey = videoKeys.find((key) => {
@@ -59,8 +60,11 @@ export default function MoviePage() {
       });
       if (trailerKey) {
         setTrailerKey(trailerKey.key);
+      } else {
+        if (videoKeys[0]) {
+          setTrailerKey(videoKeys[0]);
+        }
       }
-      // console.log(trailerKey);
     }
   }, [videoKeys]);
 
@@ -78,7 +82,11 @@ export default function MoviePage() {
                 </div>
               ))}
             </div>
-            <div>Released: {movieObject.release_date}</div>
+            <div>
+              <div>Released: </div>
+              {movieObject.release_date}
+            </div>
+            {/* MovieRater */}
             <div>
               Rating
               <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
@@ -86,7 +94,7 @@ export default function MoviePage() {
                 movieObject.vote_count
               })`}
             </div>
-            <MovieRater movieObject={movieObject} />
+            {/* MovieRater */}
             <MovieAdder movieObject={movieObject} />
           </div>
           <div style={{ width: '100%' }}>
@@ -125,10 +133,14 @@ export default function MoviePage() {
             <div className='overview'>{movieObject.overview}</div>
           </div>
         </div>
-        <h3>Top 10 Cast</h3>
+        <h1>Top 10 Cast</h1>
         {castList && (
           <ActorCarousel id='MovieCarousel' actorList={castList.slice(0, 10)} />
         )}
+        {/* Reviews */}
+        <h1>Reviews</h1>
+        <div>Display reviews</div>
+        {/* Reviews */}
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>

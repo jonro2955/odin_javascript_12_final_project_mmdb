@@ -20,9 +20,9 @@ export default function ActorCarousel({ id, actorList }) {
         onClick={() => {
           scrollLeft(id);
         }}
-        className='carouselScrollArrow'
+        className='actorCarouselScrollArrow'
       />
-      <div id={id} className='carousel'>
+      <div id={id} className='actorCarousel'>
         {actorList.map((actor) => (
           <ActorCard key={actor.id} actor={actor} />
         ))}
@@ -32,7 +32,7 @@ export default function ActorCarousel({ id, actorList }) {
         onClick={() => {
           scrollRight(id);
         }}
-        className='carouselScrollArrow'
+        className='actorCarouselScrollArrow'
       />
     </div>
   );

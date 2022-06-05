@@ -3,24 +3,24 @@ import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascrip
 
 export default function ActorCard({ actor }) {
   return (
-    <div className='card'>
+    <div className='actorCard'>
       <Link to={`/actor/${actor.id}`} className='cardLink'>
         <img
-          className='posterImg'
+          className='actorImg'
           alt={actor.name}
           src={
             actor.profile_path
               ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
               : avatar
           }
-          width='200'
-          height='300'
+          width='100'
+          height='150'
         ></img>
+        <div className='actorCardDetail'>
+          <div>{actor.name}</div>
+          {/* <div className='actorCharacter'>{actor.character}</div> */}
+        </div>
       </Link>
-      <div className='cardDetail'>
-        <div>{actor.name}</div>
-        <div>{actor.character}</div>
-      </div>
     </div>
   );
 }

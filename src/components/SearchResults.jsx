@@ -66,6 +66,7 @@ export default function Navbar(props) {
               className='searchResultEntryLinkGrid'
             >
               <img
+                className='searchResultsImg'
                 style={{ gridArea: 'poster' }}
                 width='120'
                 alt={movie.title}
@@ -73,13 +74,16 @@ export default function Navbar(props) {
               ></img>
               <h4 style={{ gridArea: 'title' }}>{movie.title}</h4>
               <div style={{ gridArea: 'release_date' }}>
-                Released: {movie.release_date}
+                {movie.release_date}
               </div>
               <div style={{ gridArea: 'vote_average' }}>
                 <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
                 {` ${movie.vote_average} (${movie.vote_count})`}
               </div>
-              <div style={{ gridArea: 'genre_ids', fontSize: 'small' }}>
+              <div
+                className='searchResultsGenre'
+                style={{ gridArea: 'genre_ids', fontSize: 'small' }}
+              >
                 {movie.genre_ids.map((id) => (
                   <div>{appContext.getGenre(id)}</div>
                 ))}

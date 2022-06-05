@@ -12,9 +12,7 @@ export default function Navbar() {
   burger button (.fa-bars)*/
   useEffect(() => {
     document.addEventListener('click', (e) => {
-      if (e.target === document.querySelector('.fa-bars')) {
-        setShowMobileMenu(true);
-      } else {
+      if (e.target.getAttribute('class') !== 'fas fa-bars') {
         setShowMobileMenu(false);
       }
     });
@@ -49,15 +47,21 @@ export default function Navbar() {
               : { right: '-100px' }
           }
         >
-          <li className='navlink' key='Home'>
-            <Link to='/'>Home</Link>
+          <li className='noBullet' key='Home'>
+            <Link style={{ textDecoration: 'none' }} to='/'>
+              <h2 className='navlink'>Home</h2>
+            </Link>
           </li>
-          <li className='navlink' key='Lists'>
-            <Link to='/lists'>Lists</Link>
+          <li className='noBullet' key='Lists'>
+            <Link style={{ textDecoration: 'none' }} to='/lists'>
+              <h2 className='navlink'>Lists</h2>
+            </Link>
           </li>
-          <li className='navlink' key='Login'>
-            <Link to='/login'>
-              {appContext.user ? appContext.user.email : 'Login'}
+          <li className='noBullet' key='Login'>
+            <Link style={{ textDecoration: 'none' }} to='/login'>
+              <h2 className='navlink'>
+                {appContext.user ? appContext.user.email : 'Login'}
+              </h2>
             </Link>
           </li>
         </ul>

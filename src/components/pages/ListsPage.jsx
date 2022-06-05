@@ -141,7 +141,9 @@ export default function ListsPage() {
                 <div key={i}>
                   {/* list[0] is each lists' key string because the list object was
                 converted from json to an array using Object.entries()*/}
-                  <h1>{list[0]}</h1>
+                  <h1>
+                    {list[0] === 'Watch List' ? `Your ${list[0]}` : list[0]}
+                  </h1>
                   {/* Place a delete button for lists other than 'Watch List' */}
                   {list[0] !== 'Watch List' && (
                     <button
@@ -150,7 +152,7 @@ export default function ListsPage() {
                         deleteList(appContext, list[0]);
                       }}
                     >
-                      {`Delete list: ${list[0]}`}
+                      Delete list
                     </button>
                   )}
                   {/* list[1] is an array whose first item is a timestamp, so
