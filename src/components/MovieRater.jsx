@@ -1,43 +1,92 @@
 import { AppContext } from './contexts/AppContext';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 export default function MovieRater({ movieObject }) {
   const appContext = useContext(AppContext);
   const [adderOn, setAdderOn] = useState(false);
-  const [RequestToken, setRequestToken] = useState();
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
 
-  function toggleMenu() {
-    setAdderOn(!adderOn);
+  /*Detect if clicked on outside of element*/
+  function useOutsideAlerter(ref) {
+    useEffect(() => {
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setAdderOn(false);
+        }
+      }
+      // Bind the event listener
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [ref]);
   }
 
   return (
-    <div>
+    <div ref={wrapperRef}>
       <button
         className='moviePageAddBtn'
         onClick={() => {
-          if (appContext.user) {
-            toggleMenu();
-          } else {
-            alert('You must be logged in to add movies.');
-          }
+          setAdderOn(!adderOn);
         }}
       >
-        <div>Rate</div>
-        <FontAwesomeIcon className='addIcon' icon={faStar} />
+        <div>
+          Rate
+          <div>
+            <FontAwesomeIcon icon={faStar} />
+          </div>
+        </div>
       </button>
       {adderOn && (
-        <div className='popupListMenu'>
-          <h3>This feature is coming soon</h3>
-          <div>
-            It will allow you to enter a rating from 1 to 10 for this
-            movie into the global database at https://www.themoviedb.org/.
-          </div>
+        <div className='popupAdder'>
+          <form className='reviewForm'>
+            <ul class='list-inline rating-list'>
+              <li>
+                <i class='fa fa-star' title='Rate 10'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 9'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 8'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 7'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 6'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 5'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 4'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 3'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 2'></i>
+              </li>
+              <li>
+                <i class='fa fa-star' title='Rate 1'></i>
+              </li>
+            </ul>
+            <input
+              className='reviewInput'
+              type='text'
+              placeholder='Write a review'
+            ></input>
+          </form>
           <button
+            className='closeBtn'
             style={{ position: 'absolute', top: '5px', right: '5px' }}
             onClick={() => {
-              toggleMenu();
+              setAdderOn(false);
             }}
           >
             Cancel

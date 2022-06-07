@@ -12,7 +12,7 @@ export default function ActorPage() {
       );
       const actorJson = await actorPacket.json();
       setActor(actorJson);
-      // console.log(actorJson);
+      console.log(actorJson);
     })();
   }, [actorId]);
 
@@ -49,9 +49,9 @@ export default function ActorPage() {
             className='actorLink'
             target='_blank'
             rel='noreferrer'
-            href={`https://www.imdb.com/name/${actor.imdb_id}`}
+            href={`https://www.themoviedb.org/person/${actor.id}`}
           >
-            <h3>IMDB Profile</h3>
+            <h3>TMDB Profile</h3>
           </a>
         </div>
       </div>

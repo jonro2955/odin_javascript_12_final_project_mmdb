@@ -18,7 +18,6 @@ export default function ActorCard({ actor }) {
         ></img>
         <div className='actorCardDetail'>
           <div>{actor.name}</div>
-          {/* <div className='actorCharacter'>{actor.character}</div> */}
         </div>
       </Link>
     </div>

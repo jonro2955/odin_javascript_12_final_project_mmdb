@@ -1,8 +1,10 @@
 ### ToDo:
 
-Logged in users can add reviews to a movie: on movie page, make the ratings into a button. On click, if logged in, it opens a form with a star selector (1-10) and text input, else, alert to log in. 
+Logged in users can add reviews to a movie: on movie page, make the ratings into a button. On click, if logged in, it opens a form with a star selector (1-10) and text input, else, alert to log in.
 We'll start a new firestore collection called "Reviews".
 On submitting the review, a review object {stars: '7.5', review: 'I liked it'} goes into the "Reviews" collection > doc id: movie id > reviews: array[review objects...]. The movie page, on mount will read all review objects for that movie and display it. The review section will also update itself after someone submits a review.
+
+Replace imdb actor link with tmdb one
 
 ### Firebase url:
 
@@ -29,7 +31,7 @@ The following cli commands:
 npm run build && firebase deploy && git add -A && git commit -m <msg> && git push origin main
 
 can be reduced to:
-npm run deploy && npm run git <msg>
+npm run deploy && npm run git '<m>'
 
 ### TMDB API Documentation
 

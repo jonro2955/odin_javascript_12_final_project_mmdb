@@ -1,9 +1,7 @@
 import MovieCarousel from '../MovieCarousel';
-import { AppContext } from '../contexts/AppContext';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function HomePage() {
-  const appContext = useContext(AppContext);
   const [mostPopularList, setMostPopularList] = useState([]);
   const [comingSoonList, setComingSoonList] = useState([]);
   const [nowPlayingList, setNowPlayingList] = useState([]);

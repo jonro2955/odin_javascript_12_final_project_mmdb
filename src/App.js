@@ -29,96 +29,188 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 /* <App/> is the root component which contains the firebase user object
-and the database object. It passes these along with the function 
-addToList() to all comonents below its component hierarchy through 
-the useContext api*/
+and the database objects. It passes these along with other functions 
+to all comonents below its component hierarchy using the useContext api*/
 export default function App() {
-  const [user, setUser] = useState();
+  const [userLists, setUserLists] = useState();
+  /*`WLIDArray` is short for 'Watch List movie IDs Array' and it is 
+  for setting the `disabled` value of `Watchlist+` buttons in <MovieCard/>*/
+  const [WLIDArray] = useState([]);
+  const [user, setUser] = useState(() => {
+    return getAuth().currentUser || undefined;
+  });
   const [appContext, setAppContext] = useState({
-    addToList,
-    getGenre,
-    user,
     db,
+    user,
+    userLists,
+    WLIDArray,
+    fetchUserLists,
+    createNewList,
+    deleteList,
+    addToList,
+    removeFromList,
+    listExists,
+    movieIsInLocalList,
+    getGenre,
   });
 
-  getAuth().onAuthStateChanged((usr) => {
-    if (usr) {
-      setUser(usr);
-      let uid = getAuth().currentUser.uid;
-      initDefaultUserList(uid);
-    } else {
-      setUser(null);
+  // Update `user` at every mount
+  useEffect(() => getAuth().onAuthStateChanged(setUser), []);
+
+  // keep `userLists` up to date
+  useEffect(() => {
+    if (user === null) {
+      setUserLists(null); // clear data when not logged in
+      return;
     }
-  });
+    if (!user) {
+      return; // user still loading, do nothing yet
+    }
+    fetchUserLists(user); // calls setUserLists() with right refs
+  }, [user]); // <-- rerun when user changes
 
-  /**initDefaultUserList(uid): This is called on each auth state change.
-   * If firestore's "User Lists" collection doesn't have a document with
-   * an id matching the logged in user's id, one is created.
-   * We'll make the new document contain an object with a key called
-   * 'Watch List', and a value of an empty array. This is the default
-   * movie list that every user starts out with. */
-  async function initDefaultUserList(uid) {
-    const docRef = doc(db, 'User Lists', uid);
+  // update `appContext` each time `setUserLists()` runs
+  useEffect(() => {
+    if (userLists) {
+      setAppContext({
+        db,
+        user,
+        userLists,
+        WLIDArray: () => {
+          return userLists['Watch List'].map((item) => {
+            return item.id;
+          });
+        },
+        fetchUserLists,
+        createNewList,
+        deleteList,
+        addToList,
+        removeFromList,
+        listExists,
+        movieIsInLocalList,
+        getGenre,
+      });
+      // console.log('setAppContext', userLists['Watch List']);
+    }
+  }, [userLists]);
+
+  async function updateLists(newListObj) {
+    setUserLists(newListObj);
+    const collectionRef = collection(db, 'lists');
+    await setDoc(doc(collectionRef, user.uid), newListObj);
+  }
+
+  // set local `userLists` to fetched firestore doc
+  async function fetchUserLists() {
+    const docRef = doc(db, 'lists', user.uid);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
-      const collectionRef = collection(db, 'User Lists');
-      await setDoc(doc(collectionRef, uid), {
+      // if no user doc, initialize one with default watch list
+      const defaultDoc = {
         'Watch List': [Date.now()],
-      });
-      console.log(`Initialized default firestore document for new user ${uid}`);
+      };
+      updateLists(defaultDoc);
+      // console.log(
+      //   `Initialized default firestore document for new user ${user.uid}`
+      // );
+    } else {
+      // if user has a doc, set the `userLists` to it
+      setUserLists(docSnap.data());
+      // console.log(`Fetched existing user lists: `, docSnap.data());
     }
   }
 
-  /* addToList(movieObj, listName): Adds a movie object to the list
-  with the given list name. The movieObj input must be a TMDB API 
-  movie details object containing things like a movie's title, id, 
-  release_date, etc. The listName input must be a string that matches 
-  one of the existing list names in the user's firestore document*/
-  async function addToList(movieObj, listName) {
+  async function createNewList(listName) {
     if (user) {
-      const uid = user.uid;
-      const docRef = doc(db, 'User Lists', uid);
-      const docSnap = await getDoc(docRef);
-      /* Checking if(docSnap.exists()) isn't neccessary since a doc will 
-      always be set up for a new user at onAuthStateChanged(), but it is 
-      done here just to note the method for future reference.*/
-      if (docSnap.exists()) {
-        let tempListsObj = docSnap.data();
-        // Prevent duplicates
-        let alreadyThere = await movieIsInList(
-          movieObj,
-          tempListsObj,
-          listName
-        );
-        if (!alreadyThere) {
-          tempListsObj[listName].push(movieObj);
-          const collectionRef = collection(db, 'User Lists');
-          await setDoc(doc(collectionRef, uid), tempListsObj);
-        } else {
-          // alert('This movie was previously added.');
-        }
+      if (!listName) {
+        // empty string key in setDoc() generates firebase errors
+        return;
+      }
+      if (!listExists(listName)) {
+        const docRef = doc(appContext.db, 'lists', user.uid);
+        const docSnap = await getDoc(docRef);
+        // get copy of user doc
+        let tempLists = docSnap.data();
+        // alter it
+        tempLists[listName] = [Date.now()];
+        //set everything to the altered version
+        updateLists(tempLists);
+      } else {
+        alert('Cannot create duplicate lists.');
       }
     } else {
       alert('You must be logged in to save movies.');
     }
   }
 
-  // This is just a utility function for the addToList() function
-  async function movieIsInList(movieObj, tempListsObj, listName) {
+  function deleteList(listName) {
+    if (!listName) {
+      return;
+    }
+    //First convert to array and splice it
+    let tempLists = Object.entries(userLists);
+    let targetIndex = tempLists.findIndex((element) => element[0] === listName);
+    tempLists.splice(targetIndex, 1);
+    // Convert back to object
+    tempLists = Object.fromEntries(tempLists);
+    //update everything
+    updateLists(tempLists);
+  }
+
+  async function addToList(movieObj, listName) {
+    if (user) {
+      //check if userLists state has the movie
+      let alreadyAdded = movieIsInLocalList(movieObj, listName);
+      if (!alreadyAdded) {
+        const docRef = doc(db, 'lists', user.uid);
+        const docSnap = await getDoc(docRef);
+        let tempLists = docSnap.data();
+        tempLists[listName].push(movieObj);
+        updateLists(tempLists);
+      } else {
+        alert(`This movie was previously added to ${listName}`);
+      }
+    } else {
+      alert('You must be logged in to save movies.');
+    }
+  }
+
+  function removeFromList(movieObj, listName) {
+    if (user) {
+      // alter the local copy
+      let tempLists = Object.entries(userLists);
+      let listIndex = tempLists.findIndex((item) => item[0] === listName);
+      let list = tempLists[listIndex][1];
+      list = list.filter((item) => {
+        return item.id !== movieObj.id;
+      });
+      tempLists[listIndex][1] = list;
+      tempLists = Object.fromEntries(tempLists);
+      updateLists(tempLists);
+    } else {
+      alert('Error: you are not logged in.');
+    }
+  }
+
+  // Check if `userLists` has a list with the given name
+  function listExists(listName) {
+    const listsArray = Object.entries(userLists);
+    return listsArray.find((item) => {
+      return item[0] === listName;
+    });
+  }
+
+  // Check if a movie is in local userLists
+  function movieIsInLocalList(movieObj, listName) {
     const movieId = movieObj.id;
-    const listsArray = Object.entries(tempListsObj);
+    const listsArray = Object.entries(userLists);
     const targetEntry = listsArray.find((item) => {
       return item[0] === listName;
     });
     const targetList = targetEntry[1].slice(1);
-    let found = targetList.find((movie) => {
+    return targetList.find((movie) => {
       return movie.id === movieId;
     });
-    if (found) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   function getGenre(idNum) {
@@ -149,19 +241,20 @@ export default function App() {
     return target.name;
   }
 
-  useEffect(() => {
-    setAppContext({
-      addToList,
-      getGenre,
-      user,
-      db,
-    });
-  }, [user]);
+  // 550 is a generic movie id (Fight Club) for initialization
+  // const docRefReviews = doc(db, 'Reviews', '550');
+  // const docSnapReviews = await getDoc(docRefReviews);
+  // if (!docSnapReviews.exists()) {
+  //   let newObj={};
+  //   newObj[uid] = { stars: 8, review: 'great' };
+  //   const collectionRefReviews = collection(db, 'Reviews');
+  //   await setDoc(doc(collectionRefReviews, '550'), {});
+  // }
 
   return (
     <>
-      {/* All children of <AppContext.Provider ... /> get their props 
-      from the Context API. See setAppContext() calls in here*/}
+      {/* All children of <AppContext.Provider ... /> get the appContext 
+      state as a prop through the context api*/}
       <AppContext.Provider value={appContext}>
         <HashRouter basename='/'>
           <Navbar />

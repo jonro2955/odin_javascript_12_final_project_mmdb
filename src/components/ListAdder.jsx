@@ -13,7 +13,7 @@ export default function ListCreator() {
         className='listCreatorForm'
         onSubmit={() => {
           const inputField = document.getElementById('listCreatorInput');
-          listsContext.createNewList(appContext, inputField.value);
+          appContext.createNewList(inputField.value);
           inputField.value = '';
           listsContext.turnCreatorOff();
         }}

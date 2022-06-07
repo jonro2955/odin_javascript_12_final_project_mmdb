@@ -3,11 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
 import { AppContext } from './contexts/AppContext';
-import { ListsContext } from './contexts/ListsContext';
 
 export default function MovieCard(props) {
   const appContext = useContext(AppContext);
-  const listsContext = useContext(ListsContext);
 
   return (
     <div className='card'>
@@ -31,19 +29,19 @@ export default function MovieCard(props) {
         </div>
       </Link>
       {props.deletable ? (
+        // `Remove` Button
         <button
           onClick={() => {
-            listsContext.removeFromList(
-              appContext,
-              props.movie,
-              props.listName
-            );
+            appContext.removeFromList(props.movie, props.listName);
           }}
         >
           Remove
         </button>
       ) : (
+        // `Watchlist+` Button
         <button
+          // `disabled` attribute
+          disabled={props.watchListAdded}
           onClick={() => {
             if (appContext.user) {
               appContext.addToList(props.movie, 'Watch List');

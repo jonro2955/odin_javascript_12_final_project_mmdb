@@ -12,11 +12,11 @@ MMDB accesses data on millions of movies and tv shows through [themoviedb.org AP
 
 ### Focus Areas
 
+- React Context API.
+- Firebase SDK for user authentication and database operations.
+- Requesting and upacking JSON data from themoviedb.org API.
 - Responsive CSS for great look and feel across all devices.
 - User interface design and wireframing.
-- React Context API.
-- Firebase SDKs for user authentication and database operations.
-- Requesting and upacking JSON data from themoviedb.org servers.
 
 ### Tools
 

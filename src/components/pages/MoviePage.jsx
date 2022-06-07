@@ -1,16 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
 import MovieAdder from '../MovieAdder';
-// import MovieRater from '../MovieRater';
+import MovieRater from '../MovieRater';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
-  const appContext = useContext(AppContext);
   const [movieObject, setMovieObject] = useState();
   const [videoKeys, setVideoKeys] = useState(); //array
   const [castList, setCastList] = useState(); //array
@@ -45,7 +43,7 @@ export default function MoviePage() {
       setRecommendedList(recommendedJson.results);
       setSimilarList(similarJson.results);
       setVideoKeys(videoJson.results);
-      //Scroll to top everytime this component mounts:
+      //Scroll to top everytime component mounts:
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     })();
@@ -74,6 +72,12 @@ export default function MoviePage() {
       <div id='MoviePage' className='page'>
         <div className='flexCenteredColumn sideBarContainer'>
           <h1>{movieObject.title}</h1>
+          <div>
+            <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
+            {` ${movieObject.vote_average.toFixed(1)} (${
+              movieObject.vote_count
+            })`}
+          </div>
           <div className='movieInfoGrid'>
             <div>
               {movieObject.genres.map((genre) => (
@@ -87,14 +91,8 @@ export default function MoviePage() {
               {movieObject.release_date}
             </div>
             {/* MovieRater */}
-            <div>
-              Rating
-              <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
-              {` ${movieObject.vote_average.toFixed(1)} (${
-                movieObject.vote_count
-              })`}
-            </div>
-            {/* MovieRater */}
+            <MovieRater movieObject={movieObject} />
+            {/* MovieAdder */}
             <MovieAdder movieObject={movieObject} />
           </div>
           <div style={{ width: '100%' }}>
@@ -137,10 +135,6 @@ export default function MoviePage() {
         {castList && (
           <ActorCarousel id='MovieCarousel' actorList={castList.slice(0, 10)} />
         )}
-        {/* Reviews */}
-        <h1>Reviews</h1>
-        <div>Display reviews</div>
-        {/* Reviews */}
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>
@@ -153,6 +147,10 @@ export default function MoviePage() {
             <MovieCarousel movieList={similarList} id='similarList' />
           </>
         )}
+        {/* Reviews */}
+        <h1>Reviews</h1>
+        <div>Display reviews</div>
+        {/* Reviews */}
       </div>
     )
   );

@@ -1,14 +1,25 @@
+import { useContext, useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
+import { AppContext } from './contexts/AppContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-/*The first 2 parameters (props.id, props.movieList) are mandatory. 
+/*The first 2 parameters (props.id, props.movieList) are mandatory
+and must be provided by the calling parent. 
 The id parameter is used to match the scrollLeft() and scrollRight()
 callbacks to this particular Carousel. The movieList prop must 
 be in the form of an array of TMDB movie or cast objects.
 listName and deletable props are optional. They are passed down to 
 <MovieCard/> to enable the optional 'delete from list' option.*/
 export default function MovieCarousel(props) {
+  const appContext = useContext(AppContext);
+  const [WLIDArray, setWLIDArray] = useState();
+  useEffect(() => {
+    if (appContext.userLists) {
+      setWLIDArray(appContext.WLIDArray());
+    }
+  }, [appContext]);
+
   function scrollLeft(id) {
     document.getElementById(id).scrollLeft -= 1300;
   }
@@ -30,6 +41,7 @@ export default function MovieCarousel(props) {
         {props.movieList.length > 0 ? (
           props.movieList.map((movie, i) => (
             <MovieCard
+              watchListAdded={WLIDArray ? WLIDArray.includes(movie.id) : false}
               key={i}
               movie={movie}
               listName={props.listName}
