@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { AppContext } from '../contexts/AppContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   getAuth,
   signInWithPopup,
@@ -40,8 +40,17 @@ export default function LoginPage() {
       });
   }
 
-  async function logOut() {
-    getAuth().signOut();
+  async function logMeOut() {
+    await getAuth()
+      .signOut()
+      .then(
+        function () {
+          console.log('Signed Out');
+        },
+        function (error) {
+          console.error('Sign Out Error', error);
+        }
+      );
   }
 
   return (
@@ -63,9 +72,22 @@ export default function LoginPage() {
                 }}
                 className='loginPgBtn'
               >
-                Go to Lists
+                My Lists
               </button>
-              <button onClick={logOut} className='loginPgBtn'>
+              <button
+                onClick={() => {
+                  // navigateTo('/lists');
+                }}
+                className='loginPgBtn'
+              >
+                My Reviews
+              </button>
+              <button
+                onClick={() => {
+                  logMeOut();
+                }}
+                className='loginPgBtn'
+              >
                 Log Out
               </button>
             </div>

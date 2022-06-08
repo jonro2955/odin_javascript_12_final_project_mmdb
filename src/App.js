@@ -15,6 +15,7 @@ import {
   collection,
   setDoc,
   getDoc,
+  getDocs,
   doc,
 } from 'firebase/firestore';
 const firebaseConfig = {
@@ -33,6 +34,7 @@ and the database objects. It passes these along with other functions
 to all comonents below its component hierarchy using the useContext api*/
 export default function App() {
   const [userLists, setUserLists] = useState();
+  const [userReviews, setUserReviews] = useState();
   /*`WLIDArray` is short for 'Watch List movie IDs Array' and it is 
   for setting the `disabled` value of `Watchlist+` buttons in <MovieCard/>*/
   const [WLIDArray] = useState([]);
@@ -43,8 +45,10 @@ export default function App() {
     db,
     user,
     userLists,
+    userReviews,
     WLIDArray,
-    fetchUserLists,
+    fetchUserData,
+    submitMovieReview,
     createNewList,
     deleteList,
     addToList,
@@ -53,6 +57,10 @@ export default function App() {
     movieIsInLocalList,
     getGenre,
   });
+
+  // getAuth().onAuthStateChanged((usr) => {
+  //   setUser(usr);
+  // });
 
   // Update `user` at every mount
   useEffect(() => getAuth().onAuthStateChanged(setUser), []);
@@ -66,7 +74,8 @@ export default function App() {
     if (!user) {
       return; // user still loading, do nothing yet
     }
-    fetchUserLists(user); // calls setUserLists() with right refs
+    // if user is defined, fetch user's lists
+    fetchUserData(user);
   }, [user]); // <-- rerun when user changes
 
   // update `appContext` each time `setUserLists()` runs
@@ -76,12 +85,14 @@ export default function App() {
         db,
         user,
         userLists,
+        userReviews,
         WLIDArray: () => {
           return userLists['Watch List'].map((item) => {
             return item.id;
           });
         },
-        fetchUserLists,
+        fetchUserData,
+        submitMovieReview,
         createNewList,
         deleteList,
         addToList,
@@ -90,51 +101,103 @@ export default function App() {
         movieIsInLocalList,
         getGenre,
       });
-      // console.log('setAppContext', userLists['Watch List']);
     }
-  }, [userLists]);
+    //user must be in dedendency list for proper log-out behaviour
+  }, [user, userLists, userReviews]);
 
-  async function updateLists(newListObj) {
-    setUserLists(newListObj);
-    const collectionRef = collection(db, 'lists');
-    await setDoc(doc(collectionRef, user.uid), newListObj);
-  }
-
-  // set local `userLists` to fetched firestore doc
-  async function fetchUserLists() {
-    const docRef = doc(db, 'lists', user.uid);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-      // if no user doc, initialize one with default watch list
+  // fetch user's firestore 'lists' doc
+  async function fetchUserData() {
+    // user lists
+    const docRef1 = doc(db, user.uid, 'lists');
+    const docSnap1 = await getDoc(docRef1);
+    if (!docSnap1.exists()) {
+      // if no doc, initialize one with default watch list
       const defaultDoc = {
         'Watch List': [Date.now()],
       };
-      updateLists(defaultDoc);
-      // console.log(
-      //   `Initialized default firestore document for new user ${user.uid}`
-      // );
+      updateUserLists(defaultDoc);
+      console.log(`Initialized "'Watch List' for new user ${user.uid}`);
     } else {
-      // if user has a doc, set the `userLists` to it
-      setUserLists(docSnap.data());
-      // console.log(`Fetched existing user lists: `, docSnap.data());
+      setUserLists(docSnap1.data());
+      console.log(`fetch User List: `, docSnap1.data());
     }
+    //user reviews
+    const docRef2 = doc(db, user.uid, 'reviews');
+    const docSnap2 = await getDoc(docRef2);
+    if (docSnap2.exists()) {
+      setUserReviews(docSnap2.data());
+      console.log(`fetch User Reviews: `, docSnap2.data());
+    }
+  }
+
+  // reviewObj example: {stars: 10, text: 'Good', movieId: 752623}
+  async function submitMovieReview(reviewObj) {
+    // add review to user doc
+    const docRef = doc(db, user.uid, 'reviews');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      let all = docSnap.data()['all'];
+      if (all[reviewObj.movieId]) {
+        alert('You have already reviewed this movie.');
+      } else {
+        all[reviewObj.movieId] = {
+          stars: reviewObj.stars,
+          text: reviewObj.text,
+        };
+        const collectionRef = collection(db, user.uid);
+        await setDoc(doc(collectionRef, 'reviews'), { all });
+      }
+    } else {
+      let all = {};
+      all[reviewObj.movieId] = { stars: reviewObj.stars, text: reviewObj.text };
+      const collectionRef = collection(db, user.uid);
+      await setDoc(doc(collectionRef, 'reviews'), { all });
+    }
+    // add review to reviewed movies collection
+    const docRef2 = doc(db, 'movies', 'reviews');
+    const docSnap2 = await getDoc(docRef2);
+    if (docSnap2.exists()) {
+      let all = docSnap.data()['all'];
+      if (!all[reviewObj.movieId]) {
+        all[reviewObj.movieId] = {
+          stars: reviewObj.stars,
+          text: reviewObj.text,
+        };
+        const collectionRef = collection(db, 'movies');
+        await setDoc(doc(collectionRef, 'reviews'), { all });
+      }
+    } else {
+      let all = {};
+      all[reviewObj.movieId] = { stars: reviewObj.stars, text: reviewObj.text };
+      const collectionRef2 = collection(db, 'movies');
+      await setDoc(doc(collectionRef2, 'reviews'), { all });
+    }
+  }
+
+  async function updateReviewCollections(newListObj) {
+  }
+
+  async function updateUserLists(newListObj) {
+    setUserLists(newListObj);
+    const collectionRef = collection(db, user.uid);
+    await setDoc(doc(collectionRef, 'lists'), newListObj);
   }
 
   async function createNewList(listName) {
     if (user) {
       if (!listName) {
-        // empty string key in setDoc() generates firebase errors
+        // an empty string key in setDoc() generates errors
         return;
       }
       if (!listExists(listName)) {
-        const docRef = doc(appContext.db, 'lists', user.uid);
+        const docRef = doc(db, user.uid, 'lists');
         const docSnap = await getDoc(docRef);
         // get copy of user doc
         let tempLists = docSnap.data();
         // alter it
         tempLists[listName] = [Date.now()];
         //set everything to the altered version
-        updateLists(tempLists);
+        updateUserLists(tempLists);
       } else {
         alert('Cannot create duplicate lists.');
       }
@@ -143,56 +206,53 @@ export default function App() {
     }
   }
 
-  function deleteList(listName) {
-    if (!listName) {
-      return;
-    }
-    //First convert to array and splice it
-    let tempLists = Object.entries(userLists);
+  async function deleteList(listName) {
+    const docRef = doc(appContext.db, user.uid, 'lists');
+    const docSnap = await getDoc(docRef);
+    // get copy of user doc
+    let tempLists = docSnap.data();
+    // alter it
+    tempLists = Object.entries(tempLists);
     let targetIndex = tempLists.findIndex((element) => element[0] === listName);
     tempLists.splice(targetIndex, 1);
     // Convert back to object
     tempLists = Object.fromEntries(tempLists);
     //update everything
-    updateLists(tempLists);
+    updateUserLists(tempLists);
   }
 
   async function addToList(movieObj, listName) {
-    if (user) {
-      //check if userLists state has the movie
-      let alreadyAdded = movieIsInLocalList(movieObj, listName);
-      if (!alreadyAdded) {
-        const docRef = doc(db, 'lists', user.uid);
-        const docSnap = await getDoc(docRef);
-        let tempLists = docSnap.data();
-        tempLists[listName].push(movieObj);
-        updateLists(tempLists);
-      } else {
-        alert(`This movie was previously added to ${listName}`);
-      }
+    let alreadyAdded = movieIsInLocalList(movieObj, listName);
+    if (!alreadyAdded) {
+      const docRef = doc(db, user.uid, 'lists');
+      const docSnap = await getDoc(docRef);
+      let tempLists = docSnap.data();
+      tempLists[listName].push(movieObj);
+      updateUserLists(tempLists);
     } else {
-      alert('You must be logged in to save movies.');
+      alert(`This movie was previously added to ${listName}`);
     }
   }
 
-  function removeFromList(movieObj, listName) {
-    if (user) {
-      // alter the local copy
-      let tempLists = Object.entries(userLists);
-      let listIndex = tempLists.findIndex((item) => item[0] === listName);
-      let list = tempLists[listIndex][1];
-      list = list.filter((item) => {
-        return item.id !== movieObj.id;
-      });
-      tempLists[listIndex][1] = list;
-      tempLists = Object.fromEntries(tempLists);
-      updateLists(tempLists);
-    } else {
-      alert('Error: you are not logged in.');
-    }
+  async function removeFromList(movieObj, listName) {
+    const docRef = doc(db, user.uid, 'lists');
+    const docSnap = await getDoc(docRef);
+    // get copy of user doc
+    let tempLists = docSnap.data();
+    // alter it
+    tempLists = Object.entries(tempLists);
+    let listIndex = tempLists.findIndex((item) => item[0] === listName);
+    let list = tempLists[listIndex][1];
+    console.log(list);
+    list = list.filter((item) => {
+      return item.id !== movieObj.id;
+    });
+    tempLists[listIndex][1] = list;
+    tempLists = Object.fromEntries(tempLists);
+    updateUserLists(tempLists);
   }
 
-  // Check if `userLists` has a list with the given name
+  // Check if local `userLists` has a list with the given name
   function listExists(listName) {
     const listsArray = Object.entries(userLists);
     return listsArray.find((item) => {
@@ -240,16 +300,6 @@ export default function App() {
     });
     return target.name;
   }
-
-  // 550 is a generic movie id (Fight Club) for initialization
-  // const docRefReviews = doc(db, 'Reviews', '550');
-  // const docSnapReviews = await getDoc(docRefReviews);
-  // if (!docSnapReviews.exists()) {
-  //   let newObj={};
-  //   newObj[uid] = { stars: 8, review: 'great' };
-  //   const collectionRefReviews = collection(db, 'Reviews');
-  //   await setDoc(doc(collectionRefReviews, '550'), {});
-  // }
 
   return (
     <>

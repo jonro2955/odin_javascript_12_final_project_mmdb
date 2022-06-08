@@ -5,16 +5,18 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 export default function MovieRater({ movieObject }) {
   const appContext = useContext(AppContext);
-  const [adderOn, setAdderOn] = useState(false);
+  const [raterOn, setRaterOn] = useState(false);
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
+  const [starRating, setStarRating] = useState(0);
+  const [hover, setHover] = useState(0);
 
   /*Detect if clicked on outside of element*/
   function useOutsideAlerter(ref) {
     useEffect(() => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
-          setAdderOn(false);
+          setRaterOn(false);
         }
       }
       // Bind the event listener
@@ -26,12 +28,32 @@ export default function MovieRater({ movieObject }) {
     }, [ref]);
   }
 
+  function closeRater() {
+    document.querySelector('.reviewTextArea').value = '';
+    setStarRating(0);
+    setHover(0);
+    setRaterOn(false);
+  }
+
+  function submitReview(e) {
+    e.preventDefault();
+    let reviewText = document.querySelector('.reviewTextArea').value;
+    let reviewObj = {
+      movieId: movieObject.id,
+      stars: starRating,
+      text: reviewText,
+    };
+    appContext.submitMovieReview(reviewObj);
+    closeRater();
+  }
+
   return (
     <div ref={wrapperRef}>
       <button
+        disabled={appContext.user ? false : true}
         className='moviePageAddBtn'
         onClick={() => {
-          setAdderOn(!adderOn);
+          setRaterOn(!raterOn);
         }}
       >
         <div>
@@ -41,52 +63,49 @@ export default function MovieRater({ movieObject }) {
           </div>
         </div>
       </button>
-      {adderOn && (
+
+      {raterOn && (
         <div className='popupAdder'>
-          <form className='reviewForm'>
-            <ul class='list-inline rating-list'>
-              <li>
-                <i class='fa fa-star' title='Rate 10'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 9'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 8'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 7'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 6'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 5'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 4'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 3'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 2'></i>
-              </li>
-              <li>
-                <i class='fa fa-star' title='Rate 1'></i>
-              </li>
-            </ul>
-            <input
-              className='reviewInput'
+          <form className='reviewForm' onSubmit={submitReview}>
+            <div>{`Choose a star rating: ${starRating}`}</div>
+            {/*  https://w3collective.com/react-star-rating-component/ */}
+            <div className='starRating'>
+              {[...Array(10)].map((star, index) => {
+                index += 1;
+                return (
+                  <button
+                    type='button'
+                    key={index}
+                    className={`starButton ${
+                      index <= (hover || starRating) ? 'starOn' : 'starOff'
+                    }`}
+                    onMouseEnter={() => {
+                      setHover(index);
+                      setStarRating(index);
+                    }}
+                    onMouseLeave={() => setHover(starRating)}
+                  >
+                    <span className='star'>&#9733;</span>
+                  </button>
+                );
+              })}
+            </div>
+            <textarea
+              className='reviewTextArea'
               type='text'
               placeholder='Write a review'
-            ></input>
+            ></textarea>
+            <div>
+              <button className='submitReviewBtn' type='submit'>
+                Submit
+              </button>
+            </div>
           </form>
           <button
             className='closeBtn'
             style={{ position: 'absolute', top: '5px', right: '5px' }}
             onClick={() => {
-              setAdderOn(false);
+              closeRater();
             }}
           >
             Cancel

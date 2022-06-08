@@ -1,7 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
 import MovieAdder from '../MovieAdder';
@@ -9,6 +10,8 @@ import MovieRater from '../MovieRater';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
+  const appContext = useContext(AppContext);
+  const [reviewsArray, setReviewsArray] = useState();
   const [movieObject, setMovieObject] = useState();
   const [videoKeys, setVideoKeys] = useState(); //array
   const [castList, setCastList] = useState(); //array
@@ -54,7 +57,7 @@ export default function MoviePage() {
     if (videoKeys) {
       // console.log(videoKeys);
       let trailerKey = videoKeys.find((key) => {
-        return key.type === 'Trailer';
+        return key.type === 'TrailsetUserDataer';
       });
       if (trailerKey) {
         setTrailerKey(trailerKey.key);
@@ -65,6 +68,13 @@ export default function MoviePage() {
       }
     }
   }, [videoKeys]);
+
+  useEffect(() => {
+    if (appContext.userReviews) {
+      console.log(appContext.userReviews.reviews);
+      setReviewsArray(appContext.userReviews.reviews);
+    }
+  }, [appContext]);
 
   return (
     movieObject &&
@@ -135,6 +145,12 @@ export default function MoviePage() {
         {castList && (
           <ActorCarousel id='MovieCarousel' actorList={castList.slice(0, 10)} />
         )}
+
+        {/* Reviews: extract this to a component */}
+        <h1>Reviews</h1>
+        {reviewsArray &&
+          reviewsArray.map((review, i) => <div key={i}>{review.movieId}</div>)}
+
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>
@@ -147,10 +163,6 @@ export default function MoviePage() {
             <MovieCarousel movieList={similarList} id='similarList' />
           </>
         )}
-        {/* Reviews */}
-        <h1>Reviews</h1>
-        <div>Display reviews</div>
-        {/* Reviews */}
       </div>
     )
   );

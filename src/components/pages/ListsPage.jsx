@@ -7,10 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 /** <ListsPage/> has many jobs to do.
- * `userListsArr` will be a user lists object from AppContext
- * converted to an array using Object.entries(Object).
+ * `userListsArr` will be set to Object.entries(appContext.userLists)
  * Each array `item` is an array corresponding
- * to a movie list. item[0] is the name of
+ * to a list. item[0] is the name of
  * the list, string. item[1] is another array whose first item,
  * item[1][0], is the timestamp from when the list was created.
  * The rest of the array, itemL1[1].slice(1), are movie id numbers.

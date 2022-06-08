@@ -37,11 +37,11 @@ export default function MovieCard(props) {
         >
           Remove
         </button>
-      ) : (
-        // `Watchlist+` Button
+      ) : // `Watchlist+` Button
+      appContext.user ? (
         <button
           // `disabled` attribute
-          disabled={props.watchListAdded}
+          disabled={appContext.user ? props.watchListAdded : false}
           onClick={() => {
             if (appContext.user) {
               appContext.addToList(props.movie, 'Watch List');
@@ -52,6 +52,8 @@ export default function MovieCard(props) {
         >
           Watchlist+
         </button>
+      ) : (
+        <></>
       )}
     </div>
   );

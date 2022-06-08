@@ -62,20 +62,18 @@ export default function MovieAdder({ movieObject }) {
   return (
     <div ref={wrapperRef}>
       <button
+        disabled={appContext.user ? false : true}
         className='moviePageAddBtn'
         onClick={() => {
-          if (appContext.user) {
-            toggleMenu();
-          } else {
-            alert('You must be logged in to add movies.');
-          }
+          toggleMenu();
         }}
       >
         <div>Add</div>
         <FontAwesomeIcon className='addIcon' icon={faPlus} />
       </button>
+
       {listNamesArray && adderOn && (
-        <div className='popupListMenu'>
+        <div className='popupAdder'>
           <h3>Choose a list</h3>
           {listNamesArray.map((listName) => {
             let disabledStatus = inactiveNamesArray.includes(listName)
