@@ -14,6 +14,8 @@ export default function Navbar() {
     document.addEventListener('click', (e) => {
       if (e.target.getAttribute('class') !== 'fas fa-bars') {
         setShowMobileMenu(false);
+        setSearchString(null);
+        document.querySelector('.searchInput').value = '';
       }
     });
   }, []);

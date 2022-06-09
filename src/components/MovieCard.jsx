@@ -7,6 +7,15 @@ import { AppContext } from './contexts/AppContext';
 export default function MovieCard(props) {
   const appContext = useContext(AppContext);
 
+  // Secrets of Dumbledore
+  function shortenedTitle(title) {
+    let arr = title.split('');
+    if (arr.length > 22) {
+      arr = arr.slice(0,20).concat(['.', '.', '.']);
+    }
+    return arr.join('');
+  }
+
   return (
     <div className='card'>
       <Link to={`/movie/${props.movie.id}`} className='cardLink'>
@@ -18,7 +27,9 @@ export default function MovieCard(props) {
           height='300'
         ></img>
         <div className='cardDetail'>
-          <div className='movieCardTitle'>{props.movie.title}</div>
+          <div className='movieCardTitle'>
+            {shortenedTitle(props.movie.title)}
+          </div>
           <div style={{ fontSize: 'smaller' }}>{props.movie.release_date}</div>
           <div>
             <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
