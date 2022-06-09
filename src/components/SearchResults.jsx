@@ -87,15 +87,17 @@ export default function Navbar(props) {
                   ))}
                 </div>
               </div>
-              <button
-                className='searchResultEntryAddBtn'
-                onClick={(e) => {
-                  e.preventDefault();
-                  appContext.addToList(movie, 'Watch List');
-                }}
-              >
-                Watchlist+
-              </button>
+              {appContext.user && (
+                <button
+                  className='searchResultEntryAddBtn'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    appContext.addToList(movie, 'Watch List');
+                  }}
+                >
+                  Watchlist+
+                </button>
+              )}
             </Link>
           </div>
         ))}

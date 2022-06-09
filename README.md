@@ -1,26 +1,29 @@
 # odin_javascript_12_mmdb
 
+[Live Demo](https://mmdb-97518.web.app)
+
 This app showcases my skills in developing responsive, aesthetic and functional web application using HTML, CSS and ReactJS.
 
-MMDB is a movie entertainment web app. Users can look up a movie, look up its actors, watch the trailer, and browse related movies. They can also log in to save movies and review them. Such features are typical of paid video streaming sites.
+MMDB is a movie entertainment database using the [TMDB api](https://www.developers.themoviedb.org). Users can look up, review, and save movies. These features are typical of video streaming sites.
 
-MMDB accesses data on millions of movies and tv shows through [themoviedb.org API](https://www.developers.themoviedb.org).
+Emphasis was placed on developing features for logged in users, such as the ability to submit movie reviews. Each review submission affects the total combined score calculated with data obtained from the TMDB api.   
 
 <hr/>
-
-[Live Demo](https://mmdb-97518.web.app)
 
 ### Focus Areas
 
 - React Context API.
 - Firebase SDK for user authentication and database operations.
 - Requesting and upacking JSON data from themoviedb.org API.
-- Responsive CSS for great look and feel across all devices.
+- Responsive CSS for proper look and feel across all devices.
 - User interface design and wireframing.
 
 ### Tools
 
-- tools
+- React: router, context API
+- Firebase: authentication, database, hosting
+- vanilla CSS
+
 
 ### Acknowledgements
 

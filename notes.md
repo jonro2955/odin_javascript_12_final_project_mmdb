@@ -1,11 +1,3 @@
-### ToDo:
-
-Logged in users can add reviews to a movie: on movie page, make the ratings into a button. On click, if logged in, it opens a form with a star selector (1-10) and text input, else, alert to log in.
-We'll start a new firestore collection called "Reviews".
-On submitting the review, a review object like {stars: '7.5', review: 'I liked it'} goes into the "Reviews" collection > doc id: movie id > reviews: array[review objects...]. The movie page, on mount will read all review objects for that movie and display it. The review section will also update itself after someone submits a review.
-
-Replace imdb actor link with tmdb one
-
 ### Firebase url:
 
 https://mmdb-97518.web.app
