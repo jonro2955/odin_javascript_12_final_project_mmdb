@@ -20,9 +20,11 @@ Emphasis was placed on developing features for logged in users, such as the abil
 
 ### Tools
 
-- React: router, context API
-- Firebase: authentication, database, hosting
-- vanilla CSS
+- React: router, context API.
+- Firebase: authentication, database, hosting.
+- Google and Facebook developer tools, authentication tokens.
+- Vanilla CSS.
+
 
 
 ### Acknowledgements
