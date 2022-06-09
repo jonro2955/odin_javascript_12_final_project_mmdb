@@ -2,16 +2,18 @@ import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getDoc, doc } from 'firebase/firestore';
 import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ActorCarousel from '../ActorCarousel';
 import MovieAdder from '../MovieAdder';
 import MovieRater from '../MovieRater';
+import MovieReviews from '../MovieReviews';
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
   const appContext = useContext(AppContext);
-  const [reviewsArray, setReviewsArray] = useState();
+  const [reviews, setReviews] = useState([]);
   const [movieObject, setMovieObject] = useState();
   const [videoKeys, setVideoKeys] = useState(); //array
   const [castList, setCastList] = useState(); //array
@@ -55,9 +57,9 @@ export default function MoviePage() {
   useEffect(() => {
     //Find trailer key. If not found, find any video key
     if (videoKeys) {
-      // console.log(videoKeys);
+      // console.log('videoKeys', videoKeys);
       let trailerKey = videoKeys.find((key) => {
-        return key.type === 'TrailsetUserDataer';
+        return key.type === 'Trailer';
       });
       if (trailerKey) {
         setTrailerKey(trailerKey.key);
@@ -70,22 +72,44 @@ export default function MoviePage() {
   }, [videoKeys]);
 
   useEffect(() => {
-    if (appContext.userReviews) {
-      console.log(appContext.userReviews.reviews);
-      setReviewsArray(appContext.userReviews.reviews);
+    if (movieObject && appContext.userReviews) {
+      let reviews;
+      (async () => {
+        const docRef = doc(appContext.db, movieId, 'reviews');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          reviews = docSnap.data().coll;
+          setReviews(reviews);
+        } else {
+          setReviews([]);
+        }
+      })();
     }
-  }, [appContext]);
+  }, [movieObject, appContext.userReviews]);
+
+  function getAverageScore(reviews, movieObject) {
+    let mmdbPoints = 0;
+    for (let i = 0; i < reviews.length; i++) {
+      mmdbPoints += reviews[i].stars;
+    }
+    let tmdbPoints = movieObject.vote_average * movieObject.vote_count;
+    return (
+      (mmdbPoints + tmdbPoints) /
+      (reviews.length + movieObject.vote_count)
+    ).toFixed(1);
+  }
 
   return (
     movieObject &&
-    castList && (
+    castList &&
+    reviews && (
       <div id='MoviePage' className='page'>
         <div className='flexCenteredColumn sideBarContainer'>
           <h1>{movieObject.title}</h1>
           <div>
             <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
-            {` ${movieObject.vote_average.toFixed(1)} (${
-              movieObject.vote_count
+            {` ${getAverageScore(reviews, movieObject)} (${
+              movieObject.vote_count + reviews.length
             })`}
           </div>
           <div className='movieInfoGrid'>
@@ -119,7 +143,7 @@ export default function MoviePage() {
                 <iframe
                   width='773'
                   height='400'
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=0&mute=1`}
                   frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                   allowFullScreen
@@ -147,9 +171,8 @@ export default function MoviePage() {
         )}
 
         {/* Reviews: extract this to a component */}
-        <h1>Reviews</h1>
-        {reviewsArray &&
-          reviewsArray.map((review, i) => <div key={i}>{review.movieId}</div>)}
+        <h1>MMDB User Reviews</h1>
+        <MovieReviews reviews={reviews} />
 
         {recommendedList.length > 0 && (
           <>

@@ -8,7 +8,7 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 and must be provided by the calling parent. 
 The id parameter is used to match the scrollLeft() and scrollRight()
 callbacks to this particular Carousel. The movieList prop must 
-be in the form of an array of TMDB movie or cast objects.
+be in the form of an array of TMDB movie objects.
 listName and deletable props are optional. They are passed down to 
 <MovieCard/> to enable the optional 'delete from list' option.*/
 export default function MovieCarousel(props) {

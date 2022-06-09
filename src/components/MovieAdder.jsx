@@ -16,11 +16,12 @@ export default function MovieAdder({ movieObject }) {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
 
-  /*Detect if clicked on outside of element*/
+  /*Detect if clicked outside of element to close it*/
   function useOutsideAlerter(ref) {
     useEffect(() => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
+          //close it
           setAdderOn(false);
         }
       }

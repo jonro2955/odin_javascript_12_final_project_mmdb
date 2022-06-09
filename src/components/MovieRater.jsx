@@ -11,12 +11,13 @@ export default function MovieRater({ movieObject }) {
   const [starRating, setStarRating] = useState(0);
   const [hover, setHover] = useState(0);
 
-  /*Detect if clicked on outside of element*/
+  /*Detect if clicked outside of element to close it*/
   function useOutsideAlerter(ref) {
     useEffect(() => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
-          setRaterOn(false);
+          // close it
+          close();
         }
       }
       // Bind the event listener
@@ -28,8 +29,8 @@ export default function MovieRater({ movieObject }) {
     }, [ref]);
   }
 
-  function closeRater() {
-    document.querySelector('.reviewTextArea').value = '';
+  function close() {
+    if (raterOn) document.querySelector('.reviewTextArea').value = '';
     setStarRating(0);
     setHover(0);
     setRaterOn(false);
@@ -40,11 +41,12 @@ export default function MovieRater({ movieObject }) {
     let reviewText = document.querySelector('.reviewTextArea').value;
     let reviewObj = {
       movieId: movieObject.id,
+      title: movieObject.title,
       stars: starRating,
       text: reviewText,
     };
     appContext.submitMovieReview(reviewObj);
-    closeRater();
+    close();
   }
 
   return (
@@ -81,9 +83,13 @@ export default function MovieRater({ movieObject }) {
                     }`}
                     onMouseEnter={() => {
                       setHover(index);
+                    }}
+                    onMouseLeave={() => {
+                      setHover(0);
+                    }}
+                    onMouseDown={() => {
                       setStarRating(index);
                     }}
-                    onMouseLeave={() => setHover(starRating)}
                   >
                     <span className='star'>&#9733;</span>
                   </button>
@@ -96,7 +102,11 @@ export default function MovieRater({ movieObject }) {
               placeholder='Write a review'
             ></textarea>
             <div>
-              <button className='submitReviewBtn' type='submit'>
+              <button
+                className='submitReviewBtn'
+                type='submit'
+                disabled={starRating === 0 ? true : false}
+              >
                 Submit
               </button>
             </div>
@@ -105,7 +115,7 @@ export default function MovieRater({ movieObject }) {
             className='closeBtn'
             style={{ position: 'absolute', top: '5px', right: '5px' }}
             onClick={() => {
-              closeRater();
+              close();
             }}
           >
             Cancel

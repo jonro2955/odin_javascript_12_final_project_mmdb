@@ -5,6 +5,7 @@ import ActorPage from './components/pages/ActorPage';
 import PosterPage from './components/pages/PosterPage';
 import LoginPage from './components/pages/LoginPage';
 import ListsPage from './components/pages/ListsPage';
+
 import { AppContext } from './components/contexts/AppContext';
 import { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
@@ -15,7 +16,6 @@ import {
   collection,
   setDoc,
   getDoc,
-  getDocs,
   doc,
 } from 'firebase/firestore';
 const firebaseConfig = {
@@ -116,71 +116,105 @@ export default function App() {
         'Watch List': [Date.now()],
       };
       updateUserLists(defaultDoc);
-      console.log(`Initialized "'Watch List' for new user ${user.uid}`);
+      // console.log(`Initialized default watch list for new user ${user.uid}`);
     } else {
       setUserLists(docSnap1.data());
-      console.log(`fetch User List: `, docSnap1.data());
+      // console.log(`Fetch user lists doc: `, docSnap1.data());
     }
     //user reviews
     const docRef2 = doc(db, user.uid, 'reviews');
     const docSnap2 = await getDoc(docRef2);
     if (docSnap2.exists()) {
       setUserReviews(docSnap2.data());
-      console.log(`fetch User Reviews: `, docSnap2.data());
+      // console.log(`Fetch user reviews doc: `, docSnap2.data());
     }
   }
 
   // reviewObj example: {stars: 10, text: 'Good', movieId: 752623}
   async function submitMovieReview(reviewObj) {
-    // add review to user doc
+    addToUserReviewsCollection(reviewObj);
+    addToMovieReviewsCollection(reviewObj);
+  }
+
+  // Add review to separate movie collection
+  async function addToMovieReviewsCollection(reviewObj) {
+    let collName = reviewObj.movieId.toString();
+    const docRef = doc(db, collName, 'reviews');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // add review to existing doc array
+      let coll = docSnap.data()['coll'];
+      coll.push({
+        stars: reviewObj.stars,
+        text: reviewObj.text,
+        title: reviewObj.title,
+        userName: user.displayName,
+        userId: user.uid,
+        email: user.email,
+      });
+      const collectionRef = collection(db, collName);
+      await setDoc(doc(collectionRef, 'reviews'), { coll });
+    } else {
+      // create new doc as an array
+      let coll = [
+        {
+          stars: reviewObj.stars,
+          text: reviewObj.text,
+          title: reviewObj.title,
+          userName: user.displayName,
+          userId: user.uid,
+          email: user.email,
+        },
+      ];
+      const collectionRef = collection(db, collName);
+      await setDoc(doc(collectionRef, 'reviews'), { coll });
+    }
+  }
+
+  // add review to user collection's `reviews` doc
+  async function addToUserReviewsCollection(reviewObj) {
     const docRef = doc(db, user.uid, 'reviews');
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      let all = docSnap.data()['all'];
-      if (all[reviewObj.movieId]) {
-        alert('You have already reviewed this movie.');
-      } else {
-        all[reviewObj.movieId] = {
+      // add to doc
+      let coll = docSnap.data()['coll'];
+      // if (coll[reviewObj.movieId]) {
+      //   alert('You have already reviewed this movie.');
+      // } else {
+        coll[reviewObj.movieId] = {
+          movieId: reviewObj.movieId,
           stars: reviewObj.stars,
           text: reviewObj.text,
+          title: reviewObj.title,
+          userName: user.displayName,
+          email: user.email,
         };
         const collectionRef = collection(db, user.uid);
-        await setDoc(doc(collectionRef, 'reviews'), { all });
-      }
+        await setDoc(doc(collectionRef, 'reviews'), { coll });
+        setUserReviews(coll);
+      // }
     } else {
-      let all = {};
-      all[reviewObj.movieId] = { stars: reviewObj.stars, text: reviewObj.text };
+      // create doc
+      let coll = {};
+      coll[reviewObj.movieId] = {
+        movieId: reviewObj.movieId,
+        stars: reviewObj.stars,
+        text: reviewObj.text,
+        title: reviewObj.title,
+        userName: user.displayName,
+        email: user.email,
+      };
       const collectionRef = collection(db, user.uid);
-      await setDoc(doc(collectionRef, 'reviews'), { all });
-    }
-    // add review to reviewed movies collection
-    const docRef2 = doc(db, 'movies', 'reviews');
-    const docSnap2 = await getDoc(docRef2);
-    if (docSnap2.exists()) {
-      let all = docSnap.data()['all'];
-      if (!all[reviewObj.movieId]) {
-        all[reviewObj.movieId] = {
-          stars: reviewObj.stars,
-          text: reviewObj.text,
-        };
-        const collectionRef = collection(db, 'movies');
-        await setDoc(doc(collectionRef, 'reviews'), { all });
-      }
-    } else {
-      let all = {};
-      all[reviewObj.movieId] = { stars: reviewObj.stars, text: reviewObj.text };
-      const collectionRef2 = collection(db, 'movies');
-      await setDoc(doc(collectionRef2, 'reviews'), { all });
+      await setDoc(doc(collectionRef, 'reviews'), { coll });
+      setUserReviews(coll);
     }
   }
 
-  async function updateReviewCollections(newListObj) {
-  }
-
+  //update both firestore doc and local state
   async function updateUserLists(newListObj) {
-    setUserLists(newListObj);
     const collectionRef = collection(db, user.uid);
     await setDoc(doc(collectionRef, 'lists'), newListObj);
+    setUserLists(newListObj);
   }
 
   async function createNewList(listName) {

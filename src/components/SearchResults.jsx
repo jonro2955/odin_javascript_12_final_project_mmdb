@@ -7,7 +7,6 @@ import { AppContext } from './contexts/AppContext';
 export default function Navbar(props) {
   const appContext = useContext(AppContext);
   const [fetchedResults, setFetchedResults] = useState([]);
-  const [displayOn, setDisplayOn] = useState(false);
   const sampleFetchedResultEntry = {
     adult: false,
     backdrop_path: '/hcNM0HjfPonIzOVy6LVTDBXSfMq.jpg',
@@ -44,10 +43,10 @@ export default function Navbar(props) {
     }
   }, [props]);
 
-  /** Make search result window disappear when clicking anything else*/
+  /** Make search result window disappear only when clicking not button*/
   useEffect(() => {
     document.addEventListener('click', (e) => {
-      if (e.target !== document.querySelector('.searchResultWindow')) {
+      if (e.target.getAttribute('class') !== 'searchResultEntryAddBtn') {
         document.querySelector('.searchResultWindow').style.display = 'none';
       }
     });
@@ -72,22 +71,31 @@ export default function Navbar(props) {
                 alt={movie.title}
                 src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
               ></img>
-              <h4 style={{ gridArea: 'title' }}>{movie.title}</h4>
-              <div style={{ gridArea: 'release_date' }}>
-                {movie.release_date}
+              <div className='searchResultDetail'>
+                <h4>{movie.title}</h4>
+                <div>{movie.release_date}</div>
+                <div>
+                  <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
+                  {` ${movie.vote_average} (${movie.vote_count})`}
+                </div>
+                <div
+                  className='searchResultsGenre'
+                  style={{ fontSize: 'small' }}
+                >
+                  {movie.genre_ids.map((id) => (
+                    <div key={id}>{appContext.getGenre(id)}</div>
+                  ))}
+                </div>
               </div>
-              <div style={{ gridArea: 'vote_average' }}>
-                <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
-                {` ${movie.vote_average} (${movie.vote_count})`}
-              </div>
-              <div
-                className='searchResultsGenre'
-                style={{ gridArea: 'genre_ids', fontSize: 'small' }}
+              <button
+                className='searchResultEntryAddBtn'
+                onClick={(e) => {
+                  e.preventDefault();
+                  appContext.addToList(movie, 'Watch List');
+                }}
               >
-                {movie.genre_ids.map((id) => (
-                  <div>{appContext.getGenre(id)}</div>
-                ))}
-              </div>
+                Watchlist+
+              </button>
             </Link>
           </div>
         ))}

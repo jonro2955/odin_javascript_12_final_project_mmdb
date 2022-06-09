@@ -76,14 +76,6 @@ export default function LoginPage() {
               </button>
               <button
                 onClick={() => {
-                  // navigateTo('/lists');
-                }}
-                className='loginPgBtn'
-              >
-                My Reviews
-              </button>
-              <button
-                onClick={() => {
                   logMeOut();
                 }}
                 className='loginPgBtn'
