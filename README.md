@@ -18,7 +18,7 @@ Emphasis was placed on developing features for logged in users, such as the abil
 - Responsive CSS for proper look and feel across all devices.
 - User interface design and wireframing.
 
-### Tools
+### Tools 
 
 - React: router, context API.
 - Firebase: authentication, database, hosting.
