@@ -72,7 +72,8 @@ export default function MoviePage() {
   }, [videoKeys]);
 
   useEffect(() => {
-    if (movieObject && appContext.userReviews) {
+    if (movieObject ) {
+      //&& appContext.userReviews
       let reviews;
       (async () => {
         const docRef = doc(appContext.db, movieId, 'reviews');

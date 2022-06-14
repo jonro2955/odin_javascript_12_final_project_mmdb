@@ -7,8 +7,8 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from 'firebase/auth';
-import facebookLogo from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/facebook-logo.png';
-import googleLogo from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/google-logo.png';
+import facebookLogo from '../images/facebook-logo.png';
+import googleLogo from '../images/google-logo.png';
 
 export default function LoginPage() {
   const appContext = useContext(AppContext);

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import avatar from '/home/pc/TOP/Projects/2_Full_Stack_JavaScript/odin_javascript_12_final/odin_javascript_12_mmdb/src/images/avatar.png';
+import avatar from './images/avatar.png';
 
 export default function ActorCard({ actor }) {
   return (
