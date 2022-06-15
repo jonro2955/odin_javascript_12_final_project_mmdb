@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ActorCard from './ActorCard';
 
 function scrollLeft(id) {
-  document.getElementById(id).scrollLeft -= 1300;
+  document.getElementById(id).scrollLeft -= 1000;
 }
 
 function scrollRight(id) {
-  document.getElementById(id).scrollLeft += 1300;
+  document.getElementById(id).scrollLeft += 1000;
 }
 
 /*The id parameter is used to match the scrollLeft() and scrollRight()

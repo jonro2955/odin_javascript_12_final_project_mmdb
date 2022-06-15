@@ -21,11 +21,11 @@ export default function MovieCarousel(props) {
   }, [appContext]);
 
   function scrollLeft(id) {
-    document.getElementById(id).scrollLeft -= 1300;
+    document.getElementById(id).scrollLeft -= 1000;
   }
 
   function scrollRight(id) {
-    document.getElementById(id).scrollLeft += 1300;
+    document.getElementById(id).scrollLeft += 1000;
   }
 
   return (

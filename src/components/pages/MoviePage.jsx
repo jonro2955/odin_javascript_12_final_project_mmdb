@@ -144,7 +144,7 @@ export default function MoviePage() {
                 <iframe
                   width='773'
                   height='400'
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=0&mute=1`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
                   frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                   allowFullScreen
