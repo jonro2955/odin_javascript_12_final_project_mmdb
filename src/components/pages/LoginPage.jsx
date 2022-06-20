@@ -101,7 +101,7 @@ export default function LoginPage() {
                 />
                 <div>Log in with Google</div>
               </button>
-              <button
+              {/* <button
                 id='facebookSignInBtn'
                 className='loginBtn'
                 onClick={signInWithFacebook}
@@ -113,7 +113,7 @@ export default function LoginPage() {
                   height='50'
                 />
                 <div>Log in with Facebook</div>
-              </button>
+              </button> */}
             </div>
           </>
         )}

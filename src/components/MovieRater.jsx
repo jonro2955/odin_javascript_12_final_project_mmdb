@@ -3,13 +3,22 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
-export default function MovieRater({ movieObject }) {
+export default function MovieRater({ movieObject, usersPriorReview }) {
   const appContext = useContext(AppContext);
   const [raterOn, setRaterOn] = useState(false);
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
   const [starRating, setStarRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [reviewText, setReviewText] = useState();
+
+  useEffect(() => {
+    /**If usersPriorReview exists, pre-set the rating*/
+    if (usersPriorReview) {
+      setStarRating(usersPriorReview.stars);
+      setReviewText(usersPriorReview.text);
+    }
+  }, [usersPriorReview]);
 
   /*Detect if clicked outside of element to close it*/
   function useOutsideAlerter(ref) {
@@ -69,7 +78,12 @@ export default function MovieRater({ movieObject }) {
       {raterOn && (
         <div className='popupAdder'>
           <form className='reviewForm' onSubmit={submitReview}>
-            <div>{`Choose a star rating: ${starRating}`}</div>
+            <div>
+              {usersPriorReview
+                ? `You have previously rated this movie as shown below. Would you
+                like to change it?`
+                : `Choose a star rating: ${starRating}`}
+            </div>
             {/*  https://w3collective.com/react-star-rating-component/ */}
             <div className='starRating'>
               {[...Array(10)].map((star, index) => {
@@ -100,7 +114,9 @@ export default function MovieRater({ movieObject }) {
               className='reviewTextArea'
               type='text'
               placeholder='Write a review'
-            ></textarea>
+            >
+              {reviewText}
+            </textarea>
             <div>
               <button
                 className='submitReviewBtn'

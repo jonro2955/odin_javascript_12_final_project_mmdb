@@ -14,6 +14,7 @@ export default function MoviePage() {
   let movieId = useParams().movieId;
   const appContext = useContext(AppContext);
   const [reviews, setReviews] = useState([]);
+  const [usersPriorReview, setUsersPriorReview] = useState();
   const [movieObject, setMovieObject] = useState();
   const [videoKeys, setVideoKeys] = useState(); //array
   const [castList, setCastList] = useState(); //array
@@ -72,17 +73,36 @@ export default function MoviePage() {
   }, [videoKeys]);
 
   useEffect(() => {
-    if (movieObject ) {
-      //&& appContext.userReviews
-      let reviews;
+    if (movieObject) {
+      let dbReviewsForThisMovie;
       (async () => {
         const docRef = doc(appContext.db, movieId, 'reviews');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          reviews = docSnap.data().coll;
-          setReviews(reviews);
+          dbReviewsForThisMovie = docSnap.data().coll;
+          console.log(dbReviewsForThisMovie);
+          /*
+          If docSnap exists, dbReviewsForThisMovie will be an array of
+          review objects like this: 
+          {
+            email: "freemovement@live.ca"
+            stars: 10
+            text: "I loved it!"
+            title: "Sonic the Hedgehog 2"
+            userId: "B8BesNXeFoM6Q317pWUFRTZ4YKx2"
+            userName: "Jon Ro"
+          }
+          Find the one belonging to the user, and if it exists, set it
+          to setUsersPriorReview
+          */
+          let priorReview = dbReviewsForThisMovie.find((obj) => {
+            return obj.userId === appContext.user.uid;
+          });
+          setUsersPriorReview(priorReview);
+          setReviews(dbReviewsForThisMovie);
         } else {
           setReviews([]);
+          setUsersPriorReview();
         }
       })();
     }
@@ -126,7 +146,10 @@ export default function MoviePage() {
               {movieObject.release_date}
             </div>
             {/* MovieRater */}
-            <MovieRater movieObject={movieObject} />
+            <MovieRater
+              movieObject={movieObject}
+              usersPriorReview={usersPriorReview}
+            />
             {/* MovieAdder */}
             <MovieAdder movieObject={movieObject} />
           </div>
