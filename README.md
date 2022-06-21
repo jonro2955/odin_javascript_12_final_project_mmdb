@@ -1,6 +1,6 @@
 # odin_javascript_12_mmdb
 
-[Live site](https://mmdb-97518.web.app)
+[Live Site](https://mmdb-97518.web.app)
 
 This app showcases my skills in developing responsive, aesthetic and functional web application using HTML, CSS and ReactJS.
 
