@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import React from 'react';
 import avatar from './images/avatar.png';
 
 export default function ActorCard({ actor }) {

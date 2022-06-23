@@ -1,14 +1,14 @@
-import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getDoc, doc } from 'firebase/firestore';
-import { AppContext } from '../contexts/AppContext';
-import MovieCarousel from '../MovieCarousel';
-import ActorCarousel from '../ActorCarousel';
-import MovieAdder from '../MovieAdder';
-import MovieRater from '../MovieRater';
-import MovieReviews from '../MovieReviews';
+import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getDoc, doc } from "firebase/firestore";
+import { AppContext } from "../contexts/AppContext";
+import MovieCarousel from "../MovieCarousel";
+import ActorCarousel from "../ActorCarousel";
+import MovieAdder from "../MovieAdder";
+import MovieRater from "../MovieRater";
+import MovieReviews from "../MovieReviews";
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
@@ -60,7 +60,7 @@ export default function MoviePage() {
     if (videoKeys) {
       // console.log('videoKeys', videoKeys);
       let trailerKey = videoKeys.find((key) => {
-        return key.type === 'Trailer';
+        return key.type === "Trailer";
       });
       if (trailerKey) {
         setTrailerKey(trailerKey.key);
@@ -72,37 +72,17 @@ export default function MoviePage() {
     }
   }, [videoKeys]);
 
+  /* get movie reviews from db to pass to <MovieRater>. Putting this in App.js 
+  may improve maintainability.*/
   useEffect(() => {
     if (movieObject) {
-      let dbReviewsForThisMovie;
-      (async () => {
-        const docRef = doc(appContext.db, movieId, 'reviews');
+      (async function getReviews() {
+        const docRef = doc(appContext.db, movieId, "reviews");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          dbReviewsForThisMovie = docSnap.data().coll;
-          console.log(dbReviewsForThisMovie);
-          /*
-          If docSnap exists, dbReviewsForThisMovie will be an array of
-          review objects like this: 
-          {
-            email: "freemovement@live.ca"
-            stars: 10
-            text: "I loved it!"
-            title: "Sonic the Hedgehog 2"
-            userId: "B8BesNXeFoM6Q317pWUFRTZ4YKx2"
-            userName: "Jon Ro"
-          }
-          Find the one belonging to the user, and if it exists, set it
-          to setUsersPriorReview
-          */
-          let priorReview = dbReviewsForThisMovie.find((obj) => {
-            return obj.userId === appContext.user.uid;
-          });
-          setUsersPriorReview(priorReview);
-          setReviews(dbReviewsForThisMovie);
+          setReviews(docSnap.data().coll);
         } else {
           setReviews([]);
-          setUsersPriorReview();
         }
       })();
     }
@@ -114,29 +94,26 @@ export default function MoviePage() {
       mmdbPoints += reviews[i].stars;
     }
     let tmdbPoints = movieObject.vote_average * movieObject.vote_count;
-    return (
-      (mmdbPoints + tmdbPoints) /
-      (reviews.length + movieObject.vote_count)
-    ).toFixed(1);
+    return ((mmdbPoints + tmdbPoints) / (reviews.length + movieObject.vote_count)).toFixed(1);
   }
 
   return (
     movieObject &&
     castList &&
     reviews && (
-      <div id='MoviePage' className='page'>
-        <div className='flexCenteredColumn sideBarContainer'>
+      <div id="MoviePage" className="page">
+        <div className="flexCenteredColumn sideBarContainer">
           <h1>{movieObject.title}</h1>
           <div>
-            <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />
+            <FontAwesomeIcon icon={faStar} style={{ color: "gold" }} />
             {` ${getAverageScore(reviews, movieObject)} (${
               movieObject.vote_count + reviews.length
             })`}
           </div>
-          <div className='movieInfoGrid'>
+          <div className="movieInfoGrid">
             <div>
               {movieObject.genres.map((genre) => (
-                <div key={genre.name} style={{ fontSize: 'small' }}>
+                <div key={genre.name} style={{ fontSize: "small" }}>
                   {genre.name}
                 </div>
               ))}
@@ -146,53 +123,46 @@ export default function MoviePage() {
               {movieObject.release_date}
             </div>
             {/* MovieRater */}
-            <MovieRater
-              movieObject={movieObject}
-              usersPriorReview={usersPriorReview}
-            />
+            <MovieRater movieObject={movieObject} reviews={reviews} />
             {/* MovieAdder */}
             <MovieAdder movieObject={movieObject} />
           </div>
-          <div style={{ width: '100%' }}>
-            <div className='visualsContainer'>
+          <div style={{ width: "100%" }}>
+            <div className="visualsContainer">
               <Link to={`/poster${movieObject.poster_path}`}>
                 <img
                   src={`https://image.tmdb.org/t/p/original${movieObject.poster_path}`}
                   alt={movieObject.title}
-                  height='400'
-                  className='moviePagePoster'
+                  height="400"
+                  className="moviePagePoster"
                 ></img>
               </Link>
               {trailerKey ? (
                 <iframe
-                  width='773'
-                  height='400'
+                  width="773"
+                  height="400"
                   src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
-                  frameBorder='0'
-                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  title='Embedded youtube'
+                  title="Embedded youtube"
                 />
               ) : (
                 <div
-                  className='trailerSubstitute'
+                  className="trailerSubstitute"
                   style={{
                     backgroundImage: `url(https://image.tmdb.org/t/p/original${movieObject.backdrop_path})`,
                   }}
                 >
-                  <h3 style={{ backgroundColor: '#343434' }}>
-                    Trailer not available
-                  </h3>
+                  <h3 style={{ backgroundColor: "#343434" }}>Trailer not available</h3>
                 </div>
               )}
             </div>
-            <div className='overview'>{movieObject.overview}</div>
+            <div className="overview">{movieObject.overview}</div>
           </div>
         </div>
         <h1>Top 10 Cast</h1>
-        {castList && (
-          <ActorCarousel id='MovieCarousel' actorList={castList.slice(0, 10)} />
-        )}
+        {castList && <ActorCarousel id="MovieCarousel" actorList={castList.slice(0, 10)} />}
 
         {/* Reviews: extract this to a component */}
         <h1>MMDB User Reviews</h1>
@@ -201,13 +171,13 @@ export default function MoviePage() {
         {recommendedList.length > 0 && (
           <>
             <h1>Recommended</h1>
-            <MovieCarousel movieList={recommendedList} id='recommendedList' />
+            <MovieCarousel movieList={recommendedList} id="recommendedList" />
           </>
         )}
         {similarList.length > 0 && (
           <>
             <h1>Similar</h1>
-            <MovieCarousel movieList={similarList} id='similarList' />
+            <MovieCarousel movieList={similarList} id="similarList" />
           </>
         )}
       </div>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { AppContext } from './contexts/AppContext';
 
 export default function MovieCard(props) {

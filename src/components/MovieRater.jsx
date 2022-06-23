@@ -1,11 +1,13 @@
-import { AppContext } from './contexts/AppContext';
-import { useContext, useEffect, useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { AppContext } from "./contexts/AppContext";
+import { useContext, useEffect, useState, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
-export default function MovieRater({ movieObject, usersPriorReview }) {
+export default function MovieRater({ movieObject, reviews }) {
   const appContext = useContext(AppContext);
   const [raterOn, setRaterOn] = useState(false);
+  const [prevRevObj, setPrevRevObj] = useState();
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
   const [starRating, setStarRating] = useState(0);
@@ -13,12 +15,20 @@ export default function MovieRater({ movieObject, usersPriorReview }) {
   const [reviewText, setReviewText] = useState();
 
   useEffect(() => {
-    /**If usersPriorReview exists, pre-set the rating*/
-    if (usersPriorReview) {
-      setStarRating(usersPriorReview.stars);
-      setReviewText(usersPriorReview.text);
+    /**If prevRevObj exists, pre-set the rating to that*/
+    if (appContext.user && reviews && reviews.length > 0) {
+      let priorReview = reviews.find((rev) => {
+        return rev.userId === appContext.user.uid;
+      });
+      setPrevRevObj(priorReview);
+      setStarRating(priorReview.stars);
+      setReviewText(priorReview.text);
+    }else{
+      setPrevRevObj();
+      setStarRating(0);
+      setReviewText();
     }
-  }, [usersPriorReview]);
+  }, [reviews, appContext.user]);
 
   /*Detect if clicked outside of element to close it*/
   function useOutsideAlerter(ref) {
@@ -30,31 +40,39 @@ export default function MovieRater({ movieObject, usersPriorReview }) {
         }
       }
       // Bind the event listener
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
       return () => {
         // Unbind the event listener on clean up
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside);
       };
     }, [ref]);
   }
 
   function close() {
-    if (raterOn) document.querySelector('.reviewTextArea').value = '';
+    if (raterOn) document.querySelector(".reviewTextArea").value = "";
     setStarRating(0);
     setHover(0);
     setRaterOn(false);
   }
 
+  /* Edit: if prevRevObj exists, find and change that in the db. 
+  Otherwise, add a new review. */
   function submitReview(e) {
     e.preventDefault();
-    let reviewText = document.querySelector('.reviewTextArea').value;
-    let reviewObj = {
+    let reviewText = document.querySelector(".reviewTextArea").value;
+    let newRevObj = {
       movieId: movieObject.id,
       title: movieObject.title,
       stars: starRating,
       text: reviewText,
     };
-    appContext.submitMovieReview(reviewObj);
+    // console.log(newRevObj);
+
+    if (prevRevObj) {
+      appContext.editPrevReview(prevRevObj, newRevObj);
+    } else {
+      appContext.submitNewReview(newRevObj);
+    }
     close();
   }
 
@@ -62,7 +80,7 @@ export default function MovieRater({ movieObject, usersPriorReview }) {
     <div ref={wrapperRef}>
       <button
         disabled={appContext.user ? false : true}
-        className='moviePageAddBtn'
+        className="moviePageAddBtn"
         onClick={() => {
           setRaterOn(!raterOn);
         }}
@@ -76,24 +94,24 @@ export default function MovieRater({ movieObject, usersPriorReview }) {
       </button>
 
       {raterOn && (
-        <div className='popupAdder'>
-          <form className='reviewForm' onSubmit={submitReview}>
+        <div className="popupAdder">
+          <form className="reviewForm" onSubmit={submitReview}>
             <div>
-              {usersPriorReview
+              {prevRevObj
                 ? `You have previously rated this movie as shown below. Would you
                 like to change it?`
                 : `Choose a star rating: ${starRating}`}
             </div>
             {/*  https://w3collective.com/react-star-rating-component/ */}
-            <div className='starRating'>
+            <div className="starRating">
               {[...Array(10)].map((star, index) => {
                 index += 1;
                 return (
                   <button
-                    type='button'
+                    type="button"
                     key={index}
                     className={`starButton ${
-                      index <= (hover || starRating) ? 'starOn' : 'starOff'
+                      index <= (hover || starRating) ? "starOn" : "starOff"
                     }`}
                     onMouseEnter={() => {
                       setHover(index);
@@ -105,22 +123,23 @@ export default function MovieRater({ movieObject, usersPriorReview }) {
                       setStarRating(index);
                     }}
                   >
-                    <span className='star'>&#9733;</span>
+                    <span className="star">&#9733;</span>
                   </button>
                 );
               })}
             </div>
             <textarea
-              className='reviewTextArea'
-              type='text'
-              placeholder='Write a review'
+              className="reviewTextArea"
+              defaultValue={reviewText ? reviewText : ""}
+              type="text"
+              placeholder="Write a review"
             >
-              {reviewText}
+              {/* {reviewText} */}
             </textarea>
             <div>
               <button
-                className='submitReviewBtn'
-                type='submit'
+                className="submitReviewBtn"
+                type="submit"
                 disabled={starRating === 0 ? true : false}
               >
                 Submit
@@ -128,8 +147,8 @@ export default function MovieRater({ movieObject, usersPriorReview }) {
             </div>
           </form>
           <button
-            className='closeBtn'
-            style={{ position: 'absolute', top: '5px', right: '5px' }}
+            className="closeBtn"
+            style={{ position: "absolute", top: "5px", right: "5px" }}
             onClick={() => {
               close();
             }}

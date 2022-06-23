@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import { AppContext } from './contexts/AppContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

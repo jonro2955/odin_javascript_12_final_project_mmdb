@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../contexts/AppContext';
 import MovieCarousel from '../MovieCarousel';
 import ListAdder from '../ListAdder';

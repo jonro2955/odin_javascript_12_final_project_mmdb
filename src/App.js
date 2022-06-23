@@ -1,30 +1,24 @@
-import Navbar from './components/Navbar';
-import HomePage from './components/pages/HomePage';
-import MoviePage from './components/pages/MoviePage';
-import ActorPage from './components/pages/ActorPage';
-import PosterPage from './components/pages/PosterPage';
-import LoginPage from './components/pages/LoginPage';
-import ListsPage from './components/pages/ListsPage';
+import Navbar from "./components/Navbar";
+import HomePage from "./components/pages/HomePage";
+import MoviePage from "./components/pages/MoviePage";
+import ActorPage from "./components/pages/ActorPage";
+import PosterPage from "./components/pages/PosterPage";
+import LoginPage from "./components/pages/LoginPage";
+import ListsPage from "./components/pages/ListsPage";
 
-import { AppContext } from './components/contexts/AppContext';
-import { useEffect, useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import {
-  getFirestore,
-  collection,
-  setDoc,
-  getDoc,
-  doc,
-} from 'firebase/firestore';
+import { AppContext } from "./components/contexts/AppContext";
+import React, { useEffect, useState } from "react";
+import { HashRouter, Routes, Route } from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, setDoc, getDoc, doc } from "firebase/firestore";
 const firebaseConfig = {
-  apiKey: 'AIzaSyDmnDmYKukf4pvEC6QecqF4cSlUmSNeijY',
-  authDomain: 'mmdb-97518.firebaseapp.com',
-  projectId: 'mmdb-97518',
-  storageBucket: 'mmdb-97518.appspot.com',
-  messagingSenderId: '456054498165',
-  appId: '1:456054498165:web:f31e82fd20ce940728293c',
+  apiKey: "AIzaSyDmnDmYKukf4pvEC6QecqF4cSlUmSNeijY",
+  authDomain: "mmdb-97518.firebaseapp.com",
+  projectId: "mmdb-97518",
+  storageBucket: "mmdb-97518.appspot.com",
+  messagingSenderId: "456054498165",
+  appId: "1:456054498165:web:f31e82fd20ce940728293c",
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -48,7 +42,8 @@ export default function App() {
     userReviews,
     WLIDArray,
     fetchUserData,
-    submitMovieReview,
+    submitNewReview,
+    editPrevReview,
     createNewList,
     deleteList,
     addToList,
@@ -87,12 +82,13 @@ export default function App() {
         userLists,
         userReviews,
         WLIDArray: () => {
-          return userLists['Watch List'].map((item) => {
+          return userLists["Watch List"].map((item) => {
             return item.id;
           });
         },
         fetchUserData,
-        submitMovieReview,
+        submitNewReview,
+        editPrevReview,
         createNewList,
         deleteList,
         addToList,
@@ -108,12 +104,12 @@ export default function App() {
   // fetch user's firestore 'lists' doc
   async function fetchUserData() {
     // user lists
-    const docRef1 = doc(db, user.uid, 'lists');
+    const docRef1 = doc(db, user.uid, "lists");
     const docSnap1 = await getDoc(docRef1);
     if (!docSnap1.exists()) {
       // if no doc, initialize one with default watch list
       const defaultDoc = {
-        'Watch List': [Date.now()],
+        "Watch List": [Date.now()],
       };
       updateUserLists(defaultDoc);
       // console.log(`Initialized default watch list for new user ${user.uid}`);
@@ -122,7 +118,7 @@ export default function App() {
       // console.log(`Fetch user lists doc: `, docSnap1.data());
     }
     //user reviews
-    const docRef2 = doc(db, user.uid, 'reviews');
+    const docRef2 = doc(db, user.uid, "reviews");
     const docSnap2 = await getDoc(docRef2);
     if (docSnap2.exists()) {
       setUserReviews(docSnap2.data());
@@ -130,71 +126,32 @@ export default function App() {
     }
   }
 
-  // reviewObj example: {stars: 10, text: 'Good', movieId: 752623}
-  async function submitMovieReview(reviewObj) {
-    addToUserReviewsCollection(reviewObj);
-    addToMovieReviewsCollection(reviewObj);
+  /*  Each review for a movie exists in 2 collections: one for user 
+  and another for movie. 
+  This is to make reviews viewable to non logged in users*/
+  async function submitNewReview(reviewObj) {
+    addReviewToUser(reviewObj);
+    addReviewToMovie(reviewObj);
   }
 
-  // Add review to separate movie collection
-  async function addToMovieReviewsCollection(reviewObj) {
-    let collName = reviewObj.movieId.toString();
-    const docRef = doc(db, collName, 'reviews');
+  // add review to user collection's `reviews` doc
+  async function addReviewToUser(reviewObj) {
+    const docRef = doc(db, user.uid, "reviews");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      // add review to existing doc array
-      let coll = docSnap.data()['coll'];
-      coll.push({
+      let coll = docSnap.data()["coll"];
+      coll[reviewObj.movieId] = {
+        movieId: reviewObj.movieId,
         stars: reviewObj.stars,
         text: reviewObj.text,
         title: reviewObj.title,
         userName: user.displayName,
-        userId: user.uid,
         email: user.email,
-      });
-      const collectionRef = collection(db, collName);
-      await setDoc(doc(collectionRef, 'reviews'), { coll });
+      };
+      const collectionRef = collection(db, user.uid);
+      await setDoc(doc(collectionRef, "reviews"), { coll });
+      setUserReviews(coll);
     } else {
-      // create new doc as an array
-      let coll = [
-        {
-          stars: reviewObj.stars,
-          text: reviewObj.text,
-          title: reviewObj.title,
-          userName: user.displayName,
-          userId: user.uid,
-          email: user.email,
-        },
-      ];
-      const collectionRef = collection(db, collName);
-      await setDoc(doc(collectionRef, 'reviews'), { coll });
-    }
-  }
-
-  // add review to user collection's `reviews` doc
-  async function addToUserReviewsCollection(reviewObj) {
-    const docRef = doc(db, user.uid, 'reviews');
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      // add to doc
-      let coll = docSnap.data()['coll'];
-      // if (coll[reviewObj.movieId]) {
-      //   alert('You have already reviewed this movie.');
-      // } else {
-        coll[reviewObj.movieId] = {
-          movieId: reviewObj.movieId,
-          stars: reviewObj.stars,
-          text: reviewObj.text,
-          title: reviewObj.title,
-          userName: user.displayName,
-          email: user.email,
-        };
-        const collectionRef = collection(db, user.uid);
-        await setDoc(doc(collectionRef, 'reviews'), { coll });
-        setUserReviews(coll);
-      // }
-    } else {
-      // create doc
       let coll = {};
       coll[reviewObj.movieId] = {
         movieId: reviewObj.movieId,
@@ -205,15 +162,102 @@ export default function App() {
         email: user.email,
       };
       const collectionRef = collection(db, user.uid);
-      await setDoc(doc(collectionRef, 'reviews'), { coll });
+      await setDoc(doc(collectionRef, "reviews"), { coll });
       setUserReviews(coll);
+    }
+  }
+
+  // Add review to a separate collection for each reviewed movie
+  async function addReviewToMovie(reviewObj) {
+    let collName = reviewObj.movieId.toString();
+    const docRef = doc(db, collName, "reviews");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // add review to existing doc array
+      let coll = docSnap.data()["coll"];
+      coll.push({
+        movieId: reviewObj.movieId,
+        stars: reviewObj.stars,
+        text: reviewObj.text,
+        title: reviewObj.title,
+        userName: user.displayName,
+        userId: user.uid,
+        email: user.email,
+      });
+      const collectionRef = collection(db, collName);
+      await setDoc(doc(collectionRef, "reviews"), { coll });
+    } else {
+      // create new doc as an array
+      let coll = [
+        {
+          movieId: reviewObj.movieId,
+          stars: reviewObj.stars,
+          text: reviewObj.text,
+          title: reviewObj.title,
+          userName: user.displayName,
+          userId: user.uid,
+          email: user.email,
+        },
+      ];
+      const collectionRef = collection(db, collName);
+      await setDoc(doc(collectionRef, "reviews"), { coll });
+    }
+  }
+
+  /* Like submitNewReview(), editing a review must be done in 
+  2 different collections: the user collection and the movie one*/
+  async function editPrevReview(prevRevObj, newRevObj) {
+    // console.log("call editPrevReview(prevRevObj, newRevObj)", prevRevObj, newRevObj);
+    editUserReview(prevRevObj, newRevObj);
+    editMovieReview(prevRevObj, newRevObj);
+  }
+
+  async function editUserReview(prevRevObj, newRevObj){
+    const docRef = doc(db, user.uid, "reviews");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      let coll = docSnap.data()["coll"];
+      coll[prevRevObj.movieId] = {
+        movieId: prevRevObj.movieId,
+        stars: newRevObj.stars, // new
+        text: newRevObj.text, // new
+        title: prevRevObj.title,
+        userName: user.displayName,
+        email: user.email,
+      };
+      const collectionRef = collection(db, user.uid);
+      await setDoc(doc(collectionRef, "reviews"), { coll });
+      setUserReviews(coll);
+    }
+  }
+
+  async function editMovieReview(prevRevObj, newRevObj){
+    let collName = prevRevObj.movieId.toString();
+    const docRef = doc(db, collName, "reviews");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      let coll = docSnap.data()["coll"]; // array of review objects
+      let targetIndex = coll.findIndex(rev=>{
+        return rev.movieId === prevRevObj.movieId;
+      })
+      coll[targetIndex]={
+        movieId: prevRevObj.movieId,
+        stars: newRevObj.stars, // new
+        text: newRevObj.text, // new
+        title: prevRevObj.title,
+        userName: user.displayName,
+        userId: user.uid,
+        email: user.email,
+      };
+      const collectionRef = collection(db, collName);
+      await setDoc(doc(collectionRef, "reviews"), { coll });
     }
   }
 
   //update both firestore doc and local state
   async function updateUserLists(newListObj) {
     const collectionRef = collection(db, user.uid);
-    await setDoc(doc(collectionRef, 'lists'), newListObj);
+    await setDoc(doc(collectionRef, "lists"), newListObj);
     setUserLists(newListObj);
   }
 
@@ -224,7 +268,7 @@ export default function App() {
         return;
       }
       if (!listExists(listName)) {
-        const docRef = doc(db, user.uid, 'lists');
+        const docRef = doc(db, user.uid, "lists");
         const docSnap = await getDoc(docRef);
         // get copy of user doc
         let tempLists = docSnap.data();
@@ -233,15 +277,15 @@ export default function App() {
         //set everything to the altered version
         updateUserLists(tempLists);
       } else {
-        alert('Cannot create duplicate lists.');
+        alert("Cannot create duplicate lists.");
       }
     } else {
-      alert('You must be logged in to save movies.');
+      alert("You must be logged in to save movies.");
     }
   }
 
   async function deleteList(listName) {
-    const docRef = doc(appContext.db, user.uid, 'lists');
+    const docRef = doc(appContext.db, user.uid, "lists");
     const docSnap = await getDoc(docRef);
     // get copy of user doc
     let tempLists = docSnap.data();
@@ -258,7 +302,7 @@ export default function App() {
   async function addToList(movieObj, listName) {
     let alreadyAdded = movieIsInLocalList(movieObj, listName);
     if (!alreadyAdded) {
-      const docRef = doc(db, user.uid, 'lists');
+      const docRef = doc(db, user.uid, "lists");
       const docSnap = await getDoc(docRef);
       let tempLists = docSnap.data();
       tempLists[listName].push(movieObj);
@@ -269,7 +313,7 @@ export default function App() {
   }
 
   async function removeFromList(movieObj, listName) {
-    const docRef = doc(db, user.uid, 'lists');
+    const docRef = doc(db, user.uid, "lists");
     const docSnap = await getDoc(docRef);
     // get copy of user doc
     let tempLists = docSnap.data();
@@ -309,25 +353,25 @@ export default function App() {
 
   function getGenre(idNum) {
     const genreList = [
-      { id: 28, name: 'Action' },
-      { id: 12, name: 'Adventure' },
-      { id: 16, name: 'Animation' },
-      { id: 35, name: 'Comedy' },
-      { id: 80, name: 'Crime' },
-      { id: 99, name: 'Documentary' },
-      { id: 18, name: 'Drama' },
-      { id: 10751, name: 'Family' },
-      { id: 14, name: 'Fantasy' },
-      { id: 36, name: 'History' },
-      { id: 27, name: 'Horror' },
-      { id: 10402, name: 'Music' },
-      { id: 9648, name: 'Mystery' },
-      { id: 10749, name: 'Romance' },
-      { id: 878, name: 'Science Fiction' },
-      { id: 10770, name: 'TV Movie' },
-      { id: 53, name: 'Thriller' },
-      { id: 10752, name: 'War' },
-      { id: 37, name: 'Western' },
+      { id: 28, name: "Action" },
+      { id: 12, name: "Adventure" },
+      { id: 16, name: "Animation" },
+      { id: 35, name: "Comedy" },
+      { id: 80, name: "Crime" },
+      { id: 99, name: "Documentary" },
+      { id: 18, name: "Drama" },
+      { id: 10751, name: "Family" },
+      { id: 14, name: "Fantasy" },
+      { id: 36, name: "History" },
+      { id: 27, name: "Horror" },
+      { id: 10402, name: "Music" },
+      { id: 9648, name: "Mystery" },
+      { id: 10749, name: "Romance" },
+      { id: 878, name: "Science Fiction" },
+      { id: 10770, name: "TV Movie" },
+      { id: 53, name: "Thriller" },
+      { id: 10752, name: "War" },
+      { id: 37, name: "Western" },
     ];
     const target = genreList.find((obj) => {
       return obj.id === idNum;
@@ -340,15 +384,15 @@ export default function App() {
       {/* All children of <AppContext.Provider ... /> get the appContext 
       state as a prop through the context api*/}
       <AppContext.Provider value={appContext}>
-        <HashRouter basename='/'>
+        <HashRouter basename="/">
           <Navbar />
           <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/movie/:movieId' element={<MoviePage />} />
-            <Route path='/poster/:path' element={<PosterPage />} />
-            <Route path='/actor/:actorId' element={<ActorPage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/lists' element={<ListsPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/movie/:movieId" element={<MoviePage />} />
+            <Route path="/poster/:path" element={<PosterPage />} />
+            <Route path="/actor/:actorId" element={<ActorPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/lists" element={<ListsPage />} />
           </Routes>
         </HashRouter>
       </AppContext.Provider>

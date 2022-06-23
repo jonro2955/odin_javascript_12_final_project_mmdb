@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { AppContext } from '../contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -7,25 +7,25 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from 'firebase/auth';
-import facebookLogo from '../images/facebook-logo.png';
+// import facebookLogo from '../images/facebook-logo.png';
 import googleLogo from '../images/google-logo.png';
 
 export default function LoginPage() {
   const appContext = useContext(AppContext);
   let navigateTo = useNavigate();
 
-  async function signInWithFacebook() {
-    var provider = new FacebookAuthProvider();
-    await signInWithPopup(getAuth(), provider)
-      .then((cred) => {
-        console.log(
-          `Logged in using Google with firebase uid ${cred.user.uid}`
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  // async function signInWithFacebook() {
+  //   var provider = new FacebookAuthProvider();
+  //   await signInWithPopup(getAuth(), provider)
+  //     .then((cred) => {
+  //       console.log(
+  //         `Logged in using Google with firebase uid ${cred.user.uid}`
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
   async function signInWithGoogle() {
     var provider = new GoogleAuthProvider();

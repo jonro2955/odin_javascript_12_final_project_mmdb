@@ -44,7 +44,7 @@ https://developers.themoviedb.org/3/getting-started/introduction
    messagingSenderId: '638858031859',
    appId: '1:638858031859:web:bccf0ab7669ed7946a7d86',
    };
-4. Configure the authentication providers: In the Build section at the left panel of Firebase console, click Authentication, then click the Sign-in method tab. Enable the sign-in providers you want to use for your site.
+4. Configure the authentication providers in firebase: In the Build section at the left panel of Firebase console, click Authentication, then click the Sign-in method tab. Enable the sign-in providers you want to use for your site.
 5. a) To configure fb auth, go to https://developers.facebook.com/ and go to my apps > create app > (create an app with the same name as your project). In the new app's settings, copy the app id and secret. In your firebase project dashboard, go to authentication > sign-in method > facebook and paste the fb app id and secret where it asks for those values. On that same page, copy the OAuth redirect URI (i.e. It looks like this: https://mmdb-5e9fd.firebaseapp.com/__/auth/handler) and go to your FB Developers dashboard, goto Facebook Login > settings > and paste the URI into the field labeled: 'Valid OAuth Redirect URIs' and save.
 6. Enable Firestore database to save JSON data collections for each user: In the Build section at the left panel, click Firestore Database. Click Create. Select "Start in test mode" so we can freely write to the database during development. Select your region.
 7. Install the Firebase command-line interface:
