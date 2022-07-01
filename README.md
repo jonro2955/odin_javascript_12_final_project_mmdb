@@ -2,11 +2,11 @@
 
 [Live Site](https://mmdb-97518.web.app)
 
-This app showcases my skills in developing responsive, aesthetic and functional web application using HTML, CSS and ReactJS.
+This app showcases my skills in developing responsive, interactive and visually engaging web application using HTML, CSS and ReactJS.
 
-MMDB is a movie entertainment database using the [TMDB api](https://www.developers.themoviedb.org). Users can look up, review, and save from approximately 777.000 movies. These features are typical of video streaming sites.
+MMDB is a movie entertainment database where users can look up, review, and save custom movie lists from approximately 775,600 titles. These are features which are typical of video streaming sites. The movie information was obtained by consuming the [TMDB API](https://www.developers.themoviedb.org). 
 
-Emphasis was placed on developing features for logged in users, such as the ability to submit movie reviews. Each review submission affects the total combined score calculated with data obtained from the TMDB api.   
+A significant portion of the development effort was placed on implementing back end features for logged in users. These include the ability to submit or edit movie reviews and saving custom movie lists using the Firebase SDK. Each review submission affects the total combined score calculated with data obtained from the TMDB api. Each movie review submitted is made public to all visitors to that particular movie page.
 
 <hr/>
 
