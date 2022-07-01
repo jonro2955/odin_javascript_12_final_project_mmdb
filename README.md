@@ -8,6 +8,8 @@ MMDB is a movie entertainment database where users can look up, review, and save
 
 A significant portion of the development effort was placed on implementing back end features for logged in users. These include the ability to submit or edit movie reviews and saving custom movie lists using the Firebase SDK. Each review submission affects the total combined score calculated with data obtained from the TMDB api. Each movie review submitted is made public to all visitors to that particular movie page.
 
+A key lesson leraned from this exercise is the importance of planning out robust back end data structures to facilitate all desired features including those that haven't yet been realized. For this particular case, a data collection was required for each authenticated user to enable review editing, as well as for each reviewed movie so that all reviews for that particular movie can be displayed on its page. 
+
 <hr/>
 
 ### Focus Areas
