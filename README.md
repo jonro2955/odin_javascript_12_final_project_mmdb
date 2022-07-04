@@ -1,14 +1,14 @@
 # odin_javascript_12_mmdb
 
-[Live Site](https://mmdb-97518.web.app)
-
-This app showcases my skills in developing responsive, interactive and visually engaging web application using HTML, CSS and ReactJS.
+## [Live Site](https://mmdb-97518.web.app)
 
 MMDB is a movie entertainment database where users can look up, review, and save custom movie lists from approximately 775,600 titles. These are features which are typical of video streaming sites. The movie information was obtained by consuming the [TMDB API](https://www.developers.themoviedb.org). 
 
-A significant portion of the development effort was placed on implementing back end features for logged in users. These include the ability to submit or edit movie reviews and saving custom movie lists using the Firebase SDK. Each review submission affects the total combined score calculated with data obtained from the TMDB api. Each movie review submitted is made public to all visitors to that particular movie page.
+This app showcases my skills in developing responsive, interactive and visually engaging web application using HTML, CSS and ReactJS.
 
-A key lesson leraned from this exercise is the importance of planning out robust back end data structures to facilitate all desired features including those that haven't yet been realized. For this particular case, separate data collections were required for each authenticated user to enable review editing, as well as for each reviewed movie so that all reviews for that particular movie can be displayed on its page. 
+A significant portion of the development effort was placed on implementing back end features for logged in users. These include the ability to submit or edit movie reviews and saving custom movie lists using the Firebase SDK. Each review submission affects the total combined score calculated with data obtained from the TMDB API. Each movie review submitted is made public to all visitors to that particular movie page.
+
+A key lesson from this exercise is the importance of planning out a robust back end data structure to facilitate desired features. For this particular case, separate data collections were required for each authenticated user and for each reviewed movie, where each collection contains separate copies of the submitted review data. This enables logged in users to edit their own reviews as well as allowing logged out users to view all submitted reviews for a particular movie, since the movie data collection has public read access. 
 
 <hr/>
 
