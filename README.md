@@ -6,9 +6,9 @@ MMDB is a movie entertainment database where users can look up, review, and save
 
 This app showcases my skills in developing responsive, interactive and visually engaging web application using HTML, CSS and ReactJS.
 
-A significant portion of the development effort was placed on implementing back end features for logged in users. These include the ability to submit or edit movie reviews and saving custom movie lists using the Firebase SDK. Each review submission affects the total combined score calculated with data obtained from the TMDB API. Each movie review submitted is made public to all visitors to that particular movie page.
+Emphasis was placed on implementing back end features for logged in users. These include the ability to submit or edit movie reviews and saving custom movie lists using the Firebase SDK. Each review submission affects the total combined score calculated with data obtained from the TMDB API. Each movie review submitted is made public to all visitors to that particular movie page.
 
-A key lesson from this exercise is the importance of carefully planning out back end data structures to facilitate all desired features. For this particular case, separate data collections were required for each authenticated user and for each reviewed movie, where each collection contains separate copies of the submitted review data. This enables logged in users to edit their own reviews as well as allowing logged out users to view all submitted reviews for a particular movie, since the movie data collection has public read access. 
+A key lesson from this exercise is the importance of carefully planning out back end data structures to facilitate desired features. For this particular case, separate data collections were required for each authenticated user and for each reviewed movie, where each collection contains separate copies of the submitted review data. This enables logged in users to edit their own reviews as well as allowing logged out users to view all submitted reviews for a particular movie, since the movie data collection has public read access but the user user data collection does not. 
 
 <hr/>
 
