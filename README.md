@@ -1,4 +1,4 @@
-# odin_javascript_12_mmdb
+# My Movie Database
 
 ## [Live Site](https://mmdb-97518.web.app)
 
