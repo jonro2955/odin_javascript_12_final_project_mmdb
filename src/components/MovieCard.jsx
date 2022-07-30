@@ -25,6 +25,7 @@ export default function MovieCard(props) {
           src={`https://image.tmdb.org/t/p/original${props.movie.poster_path}`}
           width='200'
           height='300'
+          loading="lazy"
         ></img>
         <div className='cardDetail'>
           <div className='movieCardTitle'>
