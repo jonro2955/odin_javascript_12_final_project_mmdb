@@ -14,7 +14,6 @@ export default function MoviePage() {
   let movieId = useParams().movieId;
   const appContext = useContext(AppContext);
   const [reviews, setReviews] = useState([]);
-  const [usersPriorReview, setUsersPriorReview] = useState();
   const [movieObject, setMovieObject] = useState();
   const [videoKeys, setVideoKeys] = useState(); //array
   const [castList, setCastList] = useState(); //array
@@ -106,9 +105,8 @@ export default function MoviePage() {
           <h1>{movieObject.title}</h1>
           <div>
             <FontAwesomeIcon icon={faStar} style={{ color: "gold" }} />
-            {` ${getAverageScore(reviews, movieObject)} (${
-              movieObject.vote_count + reviews.length
-            })`}
+            {` ${getAverageScore(reviews, movieObject)} (${movieObject.vote_count +
+              reviews.length})`}
           </div>
           <div className="movieInfoGrid">
             <div>

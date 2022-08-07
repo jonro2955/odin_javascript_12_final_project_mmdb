@@ -5,7 +5,7 @@ import avatar from './images/avatar.png';
 export default function ActorCard({ actor }) {
   return (
     <div className='actorCard'>
-      <Link to={`/actor/${actor.id}`} className='cardLink'>
+      <Link to={`/actor/${actor.id}`} target="_blank" rel="noopener noreferrer" className='cardLink'>
         <img
           className='actorImg'
           alt={actor.name}
@@ -16,6 +16,7 @@ export default function ActorCard({ actor }) {
           }
           width='100'
           height='150'
+          loading="lazy"
         ></img>
         <div className='actorCardDetail'>
           <div>{actor.name}</div>

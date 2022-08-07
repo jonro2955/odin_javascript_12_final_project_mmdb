@@ -5,7 +5,6 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-  FacebookAuthProvider,
 } from 'firebase/auth';
 // import facebookLogo from '../images/facebook-logo.png';
 import googleLogo from '../images/google-logo.png';

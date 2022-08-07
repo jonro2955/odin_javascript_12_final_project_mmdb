@@ -1,6 +1,6 @@
-import { Link, useParams } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import avatar from '../images/avatar.png';
+import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import avatar from "../images/avatar.png";
 
 export default function ActorPage() {
   let actorId = useParams().actorId;
@@ -18,12 +18,13 @@ export default function ActorPage() {
 
   return (
     actor && (
-      <div id='ActorPage' className='page'>
-        <div className='sideBarContainer'>
+      <div id="ActorPage" className="page">
+        <div className="sideBarContainer">
           <h1>{actor.name}</h1>
           <Link to={`/poster${actor.profile_path}`}>
             <img
-              width='300'
+              style={{ borderRadius: "15px", border: "2px solid #b30000" }}
+              width="300"
               alt={actor.name}
               src={
                 actor.profile_path
@@ -37,18 +38,18 @@ export default function ActorPage() {
           <div>{actor.biography}</div>
           {actor.homepage && (
             <a
-              className='actorLink'
-              rel='noreferrer'
-              target='_blank'
+              className="actorLink"
+              target="_blank"
+              rel="noopener noreferrer"
               href={actor.homepage}
             >
               <h3>Website</h3>
             </a>
           )}
           <a
-            className='actorLink'
-            target='_blank'
-            rel='noreferrer'
+            className="actorLink"
+            target="_blank"
+            rel="noopener noreferrer"
             href={`https://www.themoviedb.org/person/${actor.id}`}
           >
             <h3>TMDB Profile</h3>

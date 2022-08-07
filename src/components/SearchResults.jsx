@@ -4,33 +4,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { AppContext } from './contexts/AppContext';
 
-export default function Navbar(props) {
+export default function Navbar({searchInputValue,}) {
   const appContext = useContext(AppContext);
   const [fetchedResults, setFetchedResults] = useState([]);
-  const sampleFetchedResultEntry = {
-    adult: false,
-    backdrop_path: '/hcNM0HjfPonIzOVy6LVTDBXSfMq.jpg',
-    genre_ids: (3)[(28, 53, 80)],
-    id: 864116,
-    original_language: 'en',
-    original_title: 'A Day to Die',
-    overview:
-      "A disgraced parole officer is indebted to a local gang leader and forced to pull off a series of dangerous drug heists within twelve hours in order to pay the $2 million dollars he owes, rescue his kidnapped pregnant wife, and settle a score with the city's corrupt police chief, who is working with the gang leader and double-crossed him years ago.",
-    popularity: 1812.82,
-    poster_path: '/8Kce1utfytAG5m1PbtVoDzmDZJH.jpg',
-    release_date: '2022-03-04',
-    title: 'A Day to Die',
-    video: false,
-    vote_average: 5.8,
-    vote_count: 41,
-  };
   /**The following useEffect sets the fetchedResults state to an array of
    * objects with the above structure.*/
   useEffect(() => {
-    if (props.searchInputValue) {
+    if (searchInputValue) {
       (async function fetchSearch() {
         const packet = await fetch(
-          `https://api.themoviedb.org/3/search/movie?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&query=${props.searchInputValue}`
+          `https://api.themoviedb.org/3/search/movie?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&query=${searchInputValue}`
         );
         const json = await packet.json();
         const results = json.results;
@@ -41,7 +24,7 @@ export default function Navbar(props) {
       document.querySelector('.searchResultWindow').scrollTop = 0; // For Safari
       document.querySelector('.searchResultWindow').scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
-  }, [props]);
+  }, [searchInputValue]);
 
   /** Make search result window disappear only when clicking not button*/
   useEffect(() => {
@@ -55,7 +38,7 @@ export default function Navbar(props) {
   return (
     <div
       className='searchResultWindow'
-      style={{ display: props.searchInputValue ? 'initial' : 'none' }}
+      style={{ display: searchInputValue ? 'initial' : 'none' }}
     >
       {fetchedResults &&
         fetchedResults.map((movie) => (
