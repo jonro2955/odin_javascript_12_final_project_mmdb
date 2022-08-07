@@ -2,5 +2,6 @@
   "projects": {
     "default": "mmdb-97518"
   },
-  "targets": {}
+  "targets": {},
+  "etags": {}
 }
