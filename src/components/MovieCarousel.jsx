@@ -11,7 +11,7 @@ callbacks to this particular Carousel. The movieList prop must
 be in the form of an array of TMDB movie objects.
 listName and deletable props are optional. They are passed down to 
 <MovieCard/> to enable the optional 'delete from list' option.*/
-export default function MovieCarousel({ movieList: id, movieList, listName, deletable }) {
+export default function MovieCarousel({ id, movieList, listName, deletable }) {
   const appContext = useContext(AppContext);
   const [WLIDArray, setWLIDArray] = useState();
   useEffect(() => {
