@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { AppContext } from './contexts/AppContext';
-import { ListsContext } from './contexts/ListsContext';
+import { AppContext } from '../contexts/AppContext';
+import { ListsContext } from '../contexts/ListsContext';
 
 export default function ListCreator() {
   const appContext = useContext(AppContext);

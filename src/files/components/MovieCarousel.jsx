@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import MovieCard from "./MovieCard";
-import { AppContext } from "./contexts/AppContext";
+import { AppContext } from "../contexts/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 

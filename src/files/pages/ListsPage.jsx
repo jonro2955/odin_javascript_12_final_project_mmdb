@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../contexts/AppContext';
-import MovieCarousel from '../MovieCarousel';
-import ListAdder from '../ListAdder';
+import MovieCarousel from '../components/MovieCarousel';
+import ListAdder from '../components/ListAdder';
 import { ListsContext } from '../contexts/ListsContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

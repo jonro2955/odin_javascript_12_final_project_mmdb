@@ -1,12 +1,12 @@
-import Navbar from "./components/Navbar";
-import HomePage from "./components/pages/HomePage";
-import MoviePage from "./components/pages/MoviePage";
-import ActorPage from "./components/pages/ActorPage";
-import PosterPage from "./components/pages/PosterPage";
-import LoginPage from "./components/pages/LoginPage";
-import ListsPage from "./components/pages/ListsPage";
+import Navbar from "./files/components/Navbar";
+import HomePage from "./files/pages/HomePage";
+import MoviePage from "./files/pages/MoviePage";
+import ActorPage from "./files/pages/ActorPage";
+import PosterPage from "./files/pages/PosterPage";
+import LoginPage from "./files/pages/LoginPage";
+import ListsPage from "./files/pages/ListsPage";
 
-import { AppContext } from "./components/contexts/AppContext";
+import { AppContext } from "./files/contexts/AppContext";
 import React, { useEffect, useState } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "firebase/app";

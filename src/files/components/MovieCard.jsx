@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext } from "react";
-import { AppContext } from "./contexts/AppContext";
+import React, { useContext, useState, useEffect } from "react";
+import { AppContext } from "../contexts/AppContext";
+import logo512 from "../images/logo512.png";
 
 export default function MovieCard({ movie, deletable, listName, watchListAdded }) {
   const appContext = useContext(AppContext);
 
-  // Secrets of Dumbledore
   function shortenedTitle(title) {
     let arr = title.split("");
     if (arr.length > 22) {
@@ -23,10 +23,13 @@ export default function MovieCard({ movie, deletable, listName, watchListAdded }
           className="posterImg"
           alt={movie.title}
           src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+          onError={(e) => {
+            e.target.src = logo512;
+          }}
           width="200"
           height="300"
           loading="lazy"
-        ></img>
+        />
         <div className="cardDetail">
           <div className="movieCardTitle">{shortenedTitle(movie.title)}</div>
           <div style={{ fontSize: "smaller" }}>{movie.release_date}</div>

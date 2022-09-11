@@ -4,11 +4,12 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDoc, doc } from "firebase/firestore";
 import { AppContext } from "../contexts/AppContext";
-import MovieCarousel from "../MovieCarousel";
-import ActorCarousel from "../ActorCarousel";
-import MovieAdder from "../MovieAdder";
-import MovieRater from "../MovieRater";
-import MovieReviews from "../MovieReviews";
+import MovieCarousel from "../components/MovieCarousel";
+import ActorCarousel from "../components/ActorCarousel";
+import MovieAdder from "../components/MovieAdder";
+import MovieRater from "../components/MovieRater";
+import MovieReviews from "../components/MovieReviews";
+import logo512 from "../images/logo512.png";
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
@@ -129,11 +130,11 @@ export default function MoviePage() {
             <div className="visualsContainer">
               <Link to={`/poster${movieObject.poster_path}`}>
                 <img
-                  src={`https://image.tmdb.org/t/p/original${movieObject.poster_path}`}
+                  src={movieObject.poster_path?`https://image.tmdb.org/t/p/original${movieObject.poster_path}`:logo512}
                   alt={movieObject.title}
                   height="400"
                   className="moviePagePoster"
-                ></img>
+                />
               </Link>
               {trailerKey ? (
                 <iframe

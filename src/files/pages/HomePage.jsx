@@ -1,4 +1,4 @@
-import MovieCarousel from '../MovieCarousel';
+import MovieCarousel from '../components/MovieCarousel';
 import React, { useState, useEffect } from 'react';
 
 export default function HomePage() {

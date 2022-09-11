@@ -31,7 +31,7 @@ export default function ActorPage() {
                   ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
                   : avatar
               }
-            ></img>
+            />
           </Link>
           <h3>Birthday: {actor.birthday}</h3>
           <h3>Place of birth: {actor.place_of_birth}</h3>

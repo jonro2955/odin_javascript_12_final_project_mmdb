@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { AppContext } from './contexts/AppContext';
+import { AppContext } from '../contexts/AppContext';
 import { Link } from 'react-router-dom';
 import SearchResults from './SearchResults';
 
