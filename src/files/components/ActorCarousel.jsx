@@ -1,29 +1,29 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActorCard from './ActorCard';
-import React from 'react';
-
-function scrollLeft(id) {
-  document.getElementById(id).scrollLeft -= 1000;
-}
-
-function scrollRight(id) {
-  document.getElementById(id).scrollLeft += 1000;
-}
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ActorCard from "./ActorCard";
+import React from "react";
 
 /*The id parameter is used to match the scrollLeft() and scrollRight()
 callbacks to this particular Carousel*/
 export default function ActorCarousel({ id, actorList }) {
+  function scrollLeft(id) {
+    document.getElementById(id).scrollLeft -= 1000;
+  }
+
+  function scrollRight(id) {
+    document.getElementById(id).scrollLeft += 1000;
+  }
+
   return (
-    <div className='flexCenteredRow'>
+    <div className="flexCenteredRow">
       <FontAwesomeIcon
         icon={faAngleLeft}
         onClick={() => {
           scrollLeft(id);
         }}
-        className='actorCarouselScrollArrow'
+        className="actorCarouselScrollArrow"
       />
-      <div id={id} className='actorCarousel'>
+      <div id={id} className="actorCarousel">
         {actorList.map((actor) => (
           <ActorCard key={actor.id} actor={actor} />
         ))}
@@ -33,7 +33,7 @@ export default function ActorCarousel({ id, actorList }) {
         onClick={() => {
           scrollRight(id);
         }}
-        className='actorCarouselScrollArrow'
+        className="actorCarouselScrollArrow"
       />
     </div>
   );

@@ -13,10 +13,11 @@ listName and deletable props are optional. They are passed down to
 <MovieCard/> to enable the optional 'delete from list' option.*/
 export default function MovieCarousel({ id, movieList, listName, deletable }) {
   const appContext = useContext(AppContext);
-  const [WLIDArray, setWLIDArray] = useState();
+  const [watchListIDArray, setWatchListIDArray] = useState();
+
   useEffect(() => {
     if (appContext.userLists) {
-      setWLIDArray(appContext.WLIDArray());
+      setWatchListIDArray(appContext.watchListIDArray());
     }
   }, [appContext]);
 
@@ -41,7 +42,7 @@ export default function MovieCarousel({ id, movieList, listName, deletable }) {
         {movieList.length > 0 ? (
           movieList.map((movie, i) => (
             <MovieCard
-              watchListAdded={WLIDArray ? WLIDArray.includes(movie.id) : false}
+              watchListAdded={watchListIDArray ? watchListIDArray.includes(movie.id) : false}
               key={i}
               movie={movie}
               listName={listName}

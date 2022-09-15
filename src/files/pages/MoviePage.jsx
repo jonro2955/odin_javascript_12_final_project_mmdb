@@ -54,9 +54,15 @@ export default function MoviePage() {
       setRecommendedList(recommendedJson.results);
       setSimilarList(similarJson.results);
       setVideoKeys(videoJson.results);
-      //Scroll to top everytime component mounts:
+      //Scroll everything to top and left everytime component mounts:
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      document.querySelectorAll(".carousel").forEach((div) => {
+        div.scrollTo(0, 0);
+      });
+      document.querySelectorAll(".actorCarousel").forEach((div) => {
+        div.scrollTo(0, 0);
+      });
     })();
   }, [movieId]);
 
