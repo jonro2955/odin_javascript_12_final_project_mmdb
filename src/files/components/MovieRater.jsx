@@ -20,10 +20,12 @@ export default function MovieRater({ movieObject, reviews }) {
       let priorReview = reviews.find((rev) => {
         return rev.userId === appContext.user.uid;
       });
-      setPrevRevObj(priorReview);
-      setStarRating(priorReview.stars);
-      setReviewText(priorReview.text);
-    }else{
+      if (priorReview) {
+        setPrevRevObj(priorReview);
+        setStarRating(priorReview.stars);
+        setReviewText(priorReview.text);
+      }
+    } else {
       setPrevRevObj();
       setStarRating(0);
       setReviewText();
