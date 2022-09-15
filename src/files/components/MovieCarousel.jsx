@@ -17,7 +17,7 @@ export default function MovieCarousel({ id, movieList, listName, deletable }) {
 
   useEffect(() => {
     if (appContext.userLists) {
-      setWatchListIDArray(appContext.watchListIDArray());
+      setWatchListIDArray(appContext.WLIDArray());
     }
   }, [appContext]);
 
