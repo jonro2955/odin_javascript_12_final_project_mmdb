@@ -19,6 +19,9 @@ export default function ActorCard({ actor }) {
           }
           onError={(e) => {
             e.target.src = avatar;
+            setTimeout(() => {
+              e.target.src = `https://image.tmdb.org/t/p/original${actor.profile_path}`;
+            }, 1000);
           }}
           width="100"
           height="150"
