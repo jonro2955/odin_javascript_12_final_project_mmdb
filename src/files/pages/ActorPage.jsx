@@ -21,7 +21,7 @@ export default function ActorPage() {
       <div id="ActorPage" className="page">
         <div className="sideBarContainer">
           <h1>{actor.name}</h1>
-          <Link to={`/poster${actor.profile_path}`}>
+          <Link target="_blank" to={`/poster${actor.profile_path}`}>
             <img
               style={{ borderRadius: "15px", border: "2px solid #b30000" }}
               width="300"

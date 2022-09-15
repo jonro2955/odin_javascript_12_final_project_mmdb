@@ -44,6 +44,11 @@ export default function MoviePage() {
       const recommendedJson = await recommendedPacket.json();
       const similarJson = await similarPacket.json();
       const videoJson = await videoPacket.json();
+      console.log(movieJson);
+      console.log(castJson);
+      console.log(recommendedJson);
+      console.log(similarJson);
+      console.log(videoJson);
       setMovieObject(movieJson);
       setCastList(castJson.cast);
       setRecommendedList(recommendedJson.results);
@@ -128,7 +133,7 @@ export default function MoviePage() {
           </div>
           <div style={{ width: "100%" }}>
             <div className="visualsContainer">
-              <Link to={`/poster${movieObject.poster_path}`}>
+              <Link target="_blank" to={`/poster${movieObject.poster_path}`}>
                 <img
                   src={movieObject.poster_path?`https://image.tmdb.org/t/p/original${movieObject.poster_path}`:logo512}
                   alt={movieObject.title}

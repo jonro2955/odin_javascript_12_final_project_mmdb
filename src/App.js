@@ -381,8 +381,7 @@ export default function App() {
 
   return (
     <>
-      {/* All children of <AppContext.Provider ... /> get the appContext 
-      state as a prop through the context api*/}
+      {/* All children of <AppContext.Provider ... /> get the appContext state as a prop through the context api*/}
       <AppContext.Provider value={appContext}>
         <HashRouter basename="/">
           <Navbar />

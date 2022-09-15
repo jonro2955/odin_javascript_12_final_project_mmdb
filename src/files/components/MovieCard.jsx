@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "../contexts/AppContext";
 import logo512 from "../images/logo512.png";
 

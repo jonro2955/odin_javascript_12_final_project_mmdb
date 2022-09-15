@@ -45,7 +45,7 @@ button {
 }
 .searchResultEntry {
   display: grid;
-  grid-template-areas: 'routeLink addButton';
+  grid-template-areas: "routeLink addButton";
 }
 .searchResultEntryLinkGrid {
   text-decoration: none;
@@ -311,7 +311,6 @@ button {
 .loginBtn {
   width: 300px;
 }
-
 .loginPageContent {
   position: absolute;
   top: 40%;

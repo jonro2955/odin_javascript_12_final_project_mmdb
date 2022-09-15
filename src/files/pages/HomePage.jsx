@@ -15,7 +15,7 @@ export default function HomePage() {
       const json = await packet.json();
       const results = json.results;
       setMostPopularList(results);
-      // console.log('popular:', results);
+      console.log('popular:', results);
     })();
     (async function fetchComingSoon() {
       const packet = await fetch(
@@ -24,6 +24,7 @@ export default function HomePage() {
       const json = await packet.json();
       const results = json.results;
       setComingSoonList(results);
+      console.log('coming soon:', results);
     })();
     (async function fetchBoxOffice() {
       const packet = await fetch(
@@ -32,6 +33,7 @@ export default function HomePage() {
       const json = await packet.json();
       const results = json.results;
       setNowPlayingList(results);
+      console.log('now playing:', results);
     })();
     (async function fetchTopRated() {
       const packet = await fetch(
@@ -40,6 +42,7 @@ export default function HomePage() {
       const json = await packet.json();
       const results = json.results;
       setTopRatedList(results);
+      console.log('top rated:', results);
     })();
     //Scroll to top everytime this component mounts
     document.body.scrollTop = 0; // For Safari

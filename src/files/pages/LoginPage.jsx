@@ -5,26 +5,27 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
 } from 'firebase/auth';
-// import facebookLogo from '../images/facebook-logo.png';
+import facebookLogo from '../images/facebook-logo.png';
 import googleLogo from '../images/google-logo.png';
 
 export default function LoginPage() {
   const appContext = useContext(AppContext);
   let navigateTo = useNavigate();
 
-  // async function signInWithFacebook() {
-  //   var provider = new FacebookAuthProvider();
-  //   await signInWithPopup(getAuth(), provider)
-  //     .then((cred) => {
-  //       console.log(
-  //         `Logged in using Google with firebase uid ${cred.user.uid}`
-  //       );
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
+  async function signInWithFacebook() {
+    var provider = new FacebookAuthProvider();
+    await signInWithPopup(getAuth(), provider)
+      .then((cred) => {
+        console.log(
+          `Logged in using Google with firebase uid ${cred.user.uid}`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   async function signInWithGoogle() {
     var provider = new GoogleAuthProvider();
@@ -100,7 +101,7 @@ export default function LoginPage() {
                 />
                 <div>Log in with Google</div>
               </button>
-              {/* <button
+              <button
                 id='facebookSignInBtn'
                 className='loginBtn'
                 onClick={signInWithFacebook}
@@ -112,7 +113,7 @@ export default function LoginPage() {
                   height='50'
                 />
                 <div>Log in with Facebook</div>
-              </button> */}
+              </button>
             </div>
           </>
         )}
