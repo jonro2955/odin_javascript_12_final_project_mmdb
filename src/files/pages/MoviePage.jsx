@@ -63,7 +63,7 @@ export default function MoviePage() {
   useEffect(() => {
     //Find trailer key. If not found, find any video key
     if (videoKeys) {
-      // console.log('videoKeys', videoKeys);
+      console.log("videoKeys", videoKeys);
       let trailerKey = videoKeys.find((key) => {
         return key.type === "Trailer";
       });
@@ -72,6 +72,8 @@ export default function MoviePage() {
       } else {
         if (videoKeys[0]) {
           setTrailerKey(videoKeys[0]);
+        } else {
+          setTrailerKey("");
         }
       }
     }
@@ -135,7 +137,11 @@ export default function MoviePage() {
             <div className="visualsContainer">
               <Link target="_blank" to={`/poster${movieObject.poster_path}`}>
                 <img
-                  src={movieObject.poster_path?`https://image.tmdb.org/t/p/original${movieObject.poster_path}`:logo512}
+                  src={
+                    movieObject.poster_path
+                      ? `https://image.tmdb.org/t/p/original${movieObject.poster_path}`
+                      : logo512
+                  }
                   alt={movieObject.title}
                   height="400"
                   className="moviePagePoster"
