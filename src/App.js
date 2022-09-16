@@ -51,6 +51,8 @@ export default function App() {
     listExists,
     movieIsInLocalList,
     getGenre,
+    updateUserGenres,
+    getUserGenres,
   });
 
   // getAuth().onAuthStateChanged((usr) => {
@@ -96,12 +98,14 @@ export default function App() {
         listExists,
         movieIsInLocalList,
         getGenre,
+        updateUserGenres,
+        getUserGenres,
       });
     }
     //user must be in dedendency list for proper log-out behaviour
   }, [user, userLists, userReviews]);
 
-  // fetch user's firestore 'lists' doc
+  // fetch user's firestore 'lists' and 'review' docs
   async function fetchUserData() {
     // user lists
     const docRef1 = doc(db, user.uid, "lists");
@@ -139,8 +143,9 @@ export default function App() {
     const docRef = doc(db, user.uid, "reviews");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      let coll = docSnap.data()["coll"];
-      coll[reviewObj.movieId] = {
+      console.log("docsnap exists");
+      let reviews = docSnap.data()["reviews"];
+      reviews[reviewObj.movieId] = {
         movieId: reviewObj.movieId,
         stars: reviewObj.stars,
         text: reviewObj.text,
@@ -149,11 +154,12 @@ export default function App() {
         email: user.email,
       };
       const collectionRef = collection(db, user.uid);
-      await setDoc(doc(collectionRef, "reviews"), { coll });
-      setUserReviews(coll);
+      await setDoc(doc(collectionRef, "reviews"), { reviews });
+      setUserReviews(reviews);
     } else {
-      let coll = {};
-      coll[reviewObj.movieId] = {
+      console.log("docsnap does not exist");
+      let reviews = {};
+      reviews[reviewObj.movieId] = {
         movieId: reviewObj.movieId,
         stars: reviewObj.stars,
         text: reviewObj.text,
@@ -162,20 +168,20 @@ export default function App() {
         email: user.email,
       };
       const collectionRef = collection(db, user.uid);
-      await setDoc(doc(collectionRef, "reviews"), { coll });
-      setUserReviews(coll);
+      await setDoc(doc(collectionRef, "reviews"), { reviews });
+      setUserReviews(reviews);
     }
   }
 
-  // Add review to a separate collection for each reviewed movie
+  // Add review to the movie's own collection
   async function addReviewToMovie(reviewObj) {
-    let collName = reviewObj.movieId.toString();
-    const docRef = doc(db, collName, "reviews");
+    let movieId = reviewObj.movieId.toString();
+    const docRef = doc(db, movieId, "reviews");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       // add review to existing doc array
-      let coll = docSnap.data()["coll"];
-      coll.push({
+      let reviews = docSnap.data()["reviews"];
+      reviews.push({
         movieId: reviewObj.movieId,
         stars: reviewObj.stars,
         text: reviewObj.text,
@@ -184,11 +190,11 @@ export default function App() {
         userId: user.uid,
         email: user.email,
       });
-      const collectionRef = collection(db, collName);
-      await setDoc(doc(collectionRef, "reviews"), { coll });
+      const collectionRef = collection(db, movieId);
+      await setDoc(doc(collectionRef, "reviews"), { reviews });
     } else {
       // create new doc as an array
-      let coll = [
+      let reviews = [
         {
           movieId: reviewObj.movieId,
           stars: reviewObj.stars,
@@ -199,8 +205,8 @@ export default function App() {
           email: user.email,
         },
       ];
-      const collectionRef = collection(db, collName);
-      await setDoc(doc(collectionRef, "reviews"), { coll });
+      const collectionRef = collection(db, movieId);
+      await setDoc(doc(collectionRef, "reviews"), { reviews });
     }
   }
 
@@ -212,12 +218,12 @@ export default function App() {
     editMovieReview(prevRevObj, newRevObj);
   }
 
-  async function editUserReview(prevRevObj, newRevObj){
+  async function editUserReview(prevRevObj, newRevObj) {
     const docRef = doc(db, user.uid, "reviews");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      let coll = docSnap.data()["coll"];
-      coll[prevRevObj.movieId] = {
+      let reviews = docSnap.data()["reviews"];
+      reviews[prevRevObj.movieId] = {
         movieId: prevRevObj.movieId,
         stars: newRevObj.stars, // new
         text: newRevObj.text, // new
@@ -226,21 +232,21 @@ export default function App() {
         email: user.email,
       };
       const collectionRef = collection(db, user.uid);
-      await setDoc(doc(collectionRef, "reviews"), { coll });
-      setUserReviews(coll);
+      await setDoc(doc(collectionRef, "reviews"), { reviews });
+      setUserReviews(reviews);
     }
   }
 
-  async function editMovieReview(prevRevObj, newRevObj){
-    let collName = prevRevObj.movieId.toString();
-    const docRef = doc(db, collName, "reviews");
+  async function editMovieReview(prevRevObj, newRevObj) {
+    let movieId = prevRevObj.movieId.toString();
+    const docRef = doc(db, movieId, "reviews");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      let coll = docSnap.data()["coll"]; // array of review objects
-      let targetIndex = coll.findIndex(rev=>{
+      let reviews = docSnap.data()["reviews"]; // array of review objects
+      let targetIndex = reviews.findIndex((rev) => {
         return rev.movieId === prevRevObj.movieId;
-      })
-      coll[targetIndex]={
+      });
+      reviews[targetIndex] = {
         movieId: prevRevObj.movieId,
         stars: newRevObj.stars, // new
         text: newRevObj.text, // new
@@ -249,8 +255,8 @@ export default function App() {
         userId: user.uid,
         email: user.email,
       };
-      const collectionRef = collection(db, collName);
-      await setDoc(doc(collectionRef, "reviews"), { coll });
+      const collectionRef = collection(db, movieId);
+      await setDoc(doc(collectionRef, "reviews"), { reviews });
     }
   }
 
@@ -349,6 +355,54 @@ export default function App() {
     return targetList.find((movie) => {
       return movie.id === movieId;
     });
+  }
+
+  // Collect data on user's genre preferences based on movies they looked up
+  async function updateUserGenres(genreInputArray) {
+    const docRef = doc(db, user.uid, "genres");
+    const collectionRef = collection(db, user.uid);
+    const docSnap = await getDoc(docRef);
+    let genres = {};
+    console.log("adding genres to user's genres list:", genreInputArray);
+    if (docSnap.exists()) {
+      let existingGenres = docSnap.data()["genres"];
+      /* 
+        genreInputArray format:
+        [{id: 28, name: 'Action'}, ...]
+        existingGenres format:
+        [{id: 28, name: 'Action', occurance: 1}, ...]
+        */
+      genreInputArray.forEach((genre) => {
+        let newGenre = true;
+        existingGenres.forEach((existingGenre) => {
+          if (existingGenre.id === genre.id) {
+            newGenre = false;
+            existingGenre.occurance++;
+          }
+        });
+        if (newGenre) {
+          existingGenres.push({ ...genre, occurance: 1 });
+        }
+      });
+      genres = existingGenres;
+    } else {
+      //  if user doesn't have genre list yet, create one using the input array
+      genreInputArray.forEach((genre) => {
+        genre.occurance = 1;
+      });
+      genres = genreInputArray;
+    }
+    await setDoc(doc(collectionRef, "genres"), { genres });
+  }
+
+  async function getUserGenres() {
+    const docRef = doc(db, user.uid, "genres");
+    // const collectionRef = collection(db, user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // console.log("getUserGenres", docSnap.data()["genres"]);
+      return docSnap.data()["genres"];
+    }
   }
 
   function getGenre(idNum) {

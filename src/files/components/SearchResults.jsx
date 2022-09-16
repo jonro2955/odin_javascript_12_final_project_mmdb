@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../contexts/AppContext";
+import logo512 from "../images/logo512.png";
 
 export default function Navbar({ searchInputValue }) {
   const appContext = useContext(AppContext);
@@ -47,6 +48,9 @@ export default function Navbar({ searchInputValue }) {
                 width="120"
                 alt={movie.title}
                 src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                onError={(e) => {
+                  e.target.src = logo512;
+                }}      
               />
               <div className="searchResultDetail">
                 <h4>{movie.title}</h4>

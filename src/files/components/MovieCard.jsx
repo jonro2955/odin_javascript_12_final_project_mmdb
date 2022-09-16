@@ -25,9 +25,11 @@ export default function MovieCard({ movie, deletable, listName, watchListAdded }
           src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
           onError={(e) => {
             e.target.src = logo512;
-            setTimeout(() => {
-              e.target.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
-            }, 1000);
+            if (movie.poster_path) {
+              setTimeout(() => {
+                e.target.src = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+              }, 1000);
+            }
           }}
           width="200"
           height="300"

@@ -1,14 +1,10 @@
-import React, { useContext } from 'react';
-import { AppContext } from '../contexts/AppContext';
-import { useNavigate } from 'react-router-dom';
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-} from 'firebase/auth';
-import facebookLogo from '../images/facebook-logo.png';
-import googleLogo from '../images/google-logo.png';
+import React, { useContext } from "react";
+import { AppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import facebookLogo from "../images/facebook-logo.png";
+import googleLogo from "../images/google-logo.png";
+import UserStatistics from "../components/UserStatistics";
 
 export default function LoginPage() {
   const appContext = useContext(AppContext);
@@ -18,9 +14,7 @@ export default function LoginPage() {
     var provider = new FacebookAuthProvider();
     await signInWithPopup(getAuth(), provider)
       .then((cred) => {
-        console.log(
-          `Logged in using Google with firebase uid ${cred.user.uid}`
-        );
+        console.log(`Logged in using Google with firebase uid ${cred.user.uid}`);
       })
       .catch((err) => {
         console.log(err);
@@ -31,9 +25,7 @@ export default function LoginPage() {
     var provider = new GoogleAuthProvider();
     await signInWithPopup(getAuth(), provider)
       .then((cred) => {
-        console.log(
-          `Logged in using Google with firebase uid ${cred.user.uid}`
-        );
+        console.log(`Logged in using Google with firebase uid ${cred.user.uid}`);
       })
       .catch((err) => {
         console.log(err);
@@ -44,33 +36,33 @@ export default function LoginPage() {
     await getAuth()
       .signOut()
       .then(
-        function () {
-          console.log('Signed Out');
+        function() {
+          console.log("Signed Out");
         },
-        function (error) {
-          console.error('Sign Out Error', error);
+        function(error) {
+          console.error("Sign Out Error", error);
         }
       );
   }
 
   return (
-    <div className='page '>
-      <div className='loginPageContent'>
+    <div className="page ">
+      <div className="loginPageContent">
         {appContext.user ? (
           // signed in
           <div>
-            <h3>
-              {'You are signed in using ' +
+            <h2>
+              {"You are signed in using " +
                 appContext.user.providerData[0].providerId +
-                ' as ' +
+                " as " +
                 appContext.user.displayName}
-            </h3>
-            <div className='loginPgBtnsContainer'>
+            </h2>
+            <div className="loginPgBtnsContainer">
               <button
                 onClick={() => {
-                  navigateTo('/lists');
+                  navigateTo("/lists");
                 }}
-                className='loginPgBtn'
+                className="loginPgBtn"
               >
                 My Lists
               </button>
@@ -78,40 +70,23 @@ export default function LoginPage() {
                 onClick={() => {
                   logMeOut();
                 }}
-                className='loginPgBtn'
+                className="loginPgBtn"
               >
                 Log Out
               </button>
             </div>
+            <UserStatistics />
           </div>
         ) : (
           // signed out
           <>
-            <div className='loginPageContent'>
-              <button
-                id='googleSignInBtn'
-                className='loginBtn'
-                onClick={signInWithGoogle}
-              >
-                <img
-                  src={googleLogo}
-                  alt='google logo'
-                  width='50'
-                  height='50'
-                />
+            <div className="loginPageContent">
+              <button id="googleSignInBtn" className="loginBtn" onClick={signInWithGoogle}>
+                <img src={googleLogo} alt="google logo" width="50" height="50" />
                 <div>Log in with Google</div>
               </button>
-              <button
-                id='facebookSignInBtn'
-                className='loginBtn'
-                onClick={signInWithFacebook}
-              >
-                <img
-                  src={facebookLogo}
-                  alt='google logo'
-                  width='50'
-                  height='50'
-                />
+              <button id="facebookSignInBtn" className="loginBtn" onClick={signInWithFacebook}>
+                <img src={facebookLogo} alt="google logo" width="50" height="50" />
                 <div>Log in with Facebook</div>
               </button>
             </div>

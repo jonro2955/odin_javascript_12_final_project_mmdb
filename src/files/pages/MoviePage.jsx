@@ -44,11 +44,11 @@ export default function MoviePage() {
       const recommendedJson = await recommendedPacket.json();
       const similarJson = await similarPacket.json();
       const videoJson = await videoPacket.json();
-      console.log(movieJson);
-      console.log(castJson);
-      console.log(recommendedJson);
-      console.log(similarJson);
-      console.log(videoJson);
+      console.log("movie:", movieJson);
+      console.log("cast:", castJson.cast);
+      console.log("recommended:", recommendedJson.results);
+      console.log("similar:", similarJson.results);
+      console.log("videos:", videoJson.results);
       setMovieObject(movieJson);
       setCastList(castJson.cast);
       setRecommendedList(recommendedJson.results);
@@ -67,9 +67,8 @@ export default function MoviePage() {
   }, [movieId]);
 
   useEffect(() => {
-    //Find trailer key. If not found, find any video key
+    //Find a trailer key and set the state
     if (videoKeys) {
-      console.log("videoKeys", videoKeys);
       let trailerKey = videoKeys.find((key) => {
         return key.type === "Trailer";
       });
@@ -85,19 +84,22 @@ export default function MoviePage() {
     }
   }, [videoKeys]);
 
-  /* get movie reviews from db to pass to <MovieRater>. Putting this in App.js 
-  may improve maintainability.*/
   useEffect(() => {
     if (movieObject) {
+      /* get movie reviews from db to pass to <MovieRater> */
       (async function getReviews() {
         const docRef = doc(appContext.db, movieId, "reviews");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setReviews(docSnap.data().coll);
+          setReviews(docSnap.data().reviews);
         } else {
           setReviews([]);
         }
       })();
+      // If logged in, update user's genre list
+      if (appContext.user) {
+        appContext.updateUserGenres(movieObject.genres);
+      }
     }
   }, [movieObject, appContext.userReviews]);
 
@@ -124,11 +126,13 @@ export default function MoviePage() {
           </div>
           <div className="movieInfoGrid">
             <div>
-              {movieObject.genres.map((genre) => (
-                <div key={genre.name} style={{ fontSize: "small" }}>
-                  {genre.name}
-                </div>
-              ))}
+              {movieObject.genres.map((genre) => {
+                return (
+                  <div key={genre.name} style={{ fontSize: "small" }}>
+                    {genre.name}
+                  </div>
+                );
+              })}
             </div>
             <div>
               <div>Released: </div>
@@ -141,7 +145,10 @@ export default function MoviePage() {
           </div>
           <div style={{ width: "100%" }}>
             <div className="visualsContainer">
-              <Link target="_blank" to={`/poster${movieObject.poster_path}`}>
+              <Link
+                target="_blank"
+                to={movieObject.poster_path ? `/poster${movieObject.poster_path}` : `/poster/null`}
+              >
                 <img
                   src={
                     movieObject.poster_path
