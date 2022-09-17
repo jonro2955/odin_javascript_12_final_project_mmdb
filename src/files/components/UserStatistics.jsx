@@ -1,6 +1,6 @@
 import { AppContext } from "../contexts/AppContext";
 import React, { useEffect, useState, useContext } from "react";
-import { getFirestore, collection, setDoc, getDoc, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 export default function UserStatistics() {
   const appContext = useContext(AppContext);
@@ -18,9 +18,7 @@ export default function UserStatistics() {
               return b.occurance - a.occurance;
             })
           );
-        } else {
-          setUserGenres([]);
-        }
+        } 
       })();
     }
   }, [appContext.user]);
