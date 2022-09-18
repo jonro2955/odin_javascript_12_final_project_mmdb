@@ -5,6 +5,7 @@ import ActorPage from "./files/pages/ActorPage";
 import PosterPage from "./files/pages/PosterPage";
 import LoginPage from "./files/pages/LoginPage";
 import ListsPage from "./files/pages/ListsPage";
+import Footer from "./files/components/Footer";
 
 import { AppContext } from "./files/contexts/AppContext";
 import React, { useEffect, useState } from "react";
