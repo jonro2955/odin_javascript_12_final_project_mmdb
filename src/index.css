@@ -526,12 +526,12 @@ nav {
   .reviewBox::-webkit-scrollbar {
     display: none;
   }
-  .actorCarousel::-webkit-scrollbar {
+  /* .actorCarousel::-webkit-scrollbar {
     display: none;
   }
   .carousel::-webkit-scrollbar {
     display: none;
-  }
+  } */
   .carouselScrollArrow,
   .actorCarouselScrollArrow {
     display: none;
