@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { AppContext } from '../contexts/AppContext';
-import MovieCarousel from '../components/MovieCarousel';
-import ListAdder from '../components/ListAdder';
-import { ListsContext } from '../contexts/ListsContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useContext, useEffect } from "react";
+import { AppContext } from "../contexts/AppContext";
+import MovieCarousel from "../components/MovieCarousel";
+import ListAdder from "../components/ListAdder";
+import { ListsContext } from "../contexts/ListsContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Footer from "../components/Footer";
 
 /** <ListsPage/> has many jobs to do.
  * `userListsArr` will be set to Object.entries(appContext.userLists)
@@ -42,18 +43,18 @@ export default function ListsPage() {
 
   return (
     <ListsContext.Provider value={listsContext}>
-      <div className='page'>
+      <div className="page">
         {appContext.user ? (
           // signed in
           <>
             <button
-              className='addListBtn'
+              className="addListBtn"
               onClick={() => {
                 setCreatorOn(!creatorOn);
               }}
             >
               <div>New List</div>
-              <FontAwesomeIcon className='addIcon' icon={faPlus} />
+              <FontAwesomeIcon className="addIcon" icon={faPlus} />
             </button>
 
             {userListsArr &&
@@ -61,13 +62,11 @@ export default function ListsPage() {
                 <div key={i}>
                   {/* list[0] is each lists' key string because the list object was
                 converted from json to an array using Object.entries()*/}
-                  <h1>
-                    {list[0] === 'Watch List' ? `Your ${list[0]}` : list[0]}
-                  </h1>
+                  <h1>{list[0] === "Watch List" ? `Your ${list[0]}` : list[0]}</h1>
                   {/* Place a delete button for lists other than 'Watch List' */}
-                  {list[0] !== 'Watch List' && (
+                  {list[0] !== "Watch List" && (
                     <button
-                      className='deleteListBtn'
+                      className="deleteListBtn"
                       onClick={() => {
                         appContext.deleteList(list[0]);
                       }}
@@ -100,16 +99,17 @@ export default function ListsPage() {
           <>
             <h1
               style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
               }}
             >
               You must be logged in to create and edit custom lists.
             </h1>
           </>
         )}
+        <Footer />
       </div>
     </ListsContext.Provider>
   );

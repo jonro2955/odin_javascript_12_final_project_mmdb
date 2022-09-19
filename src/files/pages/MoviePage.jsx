@@ -10,6 +10,7 @@ import MovieAdder from "../components/MovieAdder";
 import MovieRater from "../components/MovieRater";
 import MovieReviews from "../components/MovieReviews";
 import logo512 from "../images/logo512.png";
+import Footer from "../components/Footer";
 
 export default function MoviePage() {
   let movieId = useParams().movieId;
@@ -203,6 +204,7 @@ export default function MoviePage() {
             <MovieCarousel movieList={similarList} id="similarList" />
           </>
         )}
+        <Footer/>
       </div>
     )
   );
