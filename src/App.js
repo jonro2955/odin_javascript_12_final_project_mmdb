@@ -5,7 +5,6 @@ import ActorPage from "./files/pages/ActorPage";
 import PosterPage from "./files/pages/PosterPage";
 import LoginPage from "./files/pages/LoginPage";
 import ListsPage from "./files/pages/ListsPage";
-import Footer from "./files/components/Footer";
 
 import { AppContext } from "./files/contexts/AppContext";
 import React, { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, setDoc, getDoc, doc } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDmnDmYKukf4pvEC6QecqF4cSlUmSNeijY",
   authDomain: "mmdb-97518.firebaseapp.com",
@@ -30,9 +30,9 @@ to all comonents below its component hierarchy using the useContext api*/
 export default function App() {
   const [userLists, setUserLists] = useState();
   const [userReviews, setUserReviews] = useState();
-  /*`WLIDArray` is short for 'Watch List movie IDs Array' and it is 
-  for setting the `disabled` value of `Watchlist+` buttons in <MovieCard/>*/
-  const [WLIDArray] = useState([]);
+  /*`watchListIdArray` is short for 'Watch List movie IDs Array' and it is 
+  for setting the `disabled` value of `Watchlist+` button in <MovieCard/>*/
+  const [watchListIdArray] = useState([]);
   const [user, setUser] = useState(() => {
     return getAuth().currentUser || undefined;
   });
@@ -41,7 +41,7 @@ export default function App() {
     user,
     userLists,
     userReviews,
-    WLIDArray,
+    watchListIdArray,
     fetchUserData,
     submitNewReview,
     editPrevReview,
@@ -84,7 +84,7 @@ export default function App() {
         user,
         userLists,
         userReviews,
-        WLIDArray: () => {
+        watchListIdArray: () => {
           return userLists["Watch List"].map((item) => {
             return item.id;
           });
