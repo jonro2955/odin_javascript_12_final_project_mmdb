@@ -5,7 +5,6 @@ import ListAdder from "../components/ListAdder";
 import { ListsContext } from "../contexts/ListsContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../components/Footer";
 
 /** <ListsPage/> has many jobs to do.
  * `userListsArr` will be set to Object.entries(appContext.userLists)
@@ -109,7 +108,6 @@ export default function ListsPage() {
             </h1>
           </>
         )}
-        <Footer />
       </div>
     </ListsContext.Provider>
   );
