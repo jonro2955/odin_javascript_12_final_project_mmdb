@@ -6,14 +6,6 @@ import { ListsContext } from "../contexts/ListsContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-/** <ListsPage/> has many jobs to do.
- * `userListsArr` will be set to Object.entries(appContext.userLists)
- * Each array `item` is an array corresponding
- * to a list. item[0] is the name of
- * the list, string. item[1] is another array whose first item,
- * item[1][0], is the timestamp from when the list was created.
- * The rest of the array, itemL1[1].slice(1), are movie id numbers.
- */
 export default function ListsPage() {
   const appContext = useContext(AppContext);
   const [creatorOn, setCreatorOn] = useState(false);
@@ -32,8 +24,8 @@ export default function ListsPage() {
   }
 
   useEffect(() => {
-    if (appContext.userLists) {
-      let arrayConversion = Object.entries(appContext.userLists);
+    if (appContext.userListsState) {
+      let arrayConversion = Object.entries(appContext.userListsState);
       // sort by timestamps
       arrayConversion.sort((a, b) => a[1][0] - b[1][0]);
       setUserListsArr(arrayConversion);

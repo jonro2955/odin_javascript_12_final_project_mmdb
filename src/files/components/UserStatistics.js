@@ -8,7 +8,7 @@ export default function UserStatistics() {
 
   useEffect(() => {
     if (appContext.user) {
-      (async function getUserGenres() {
+      (async () => {
         const docRef = doc(appContext.db, appContext.user.uid, "genres");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -18,7 +18,7 @@ export default function UserStatistics() {
               return b.occurance - a.occurance;
             })
           );
-        } 
+        }
       })();
     }
   }, [appContext.user]);

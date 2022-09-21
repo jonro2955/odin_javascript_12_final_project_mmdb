@@ -36,8 +36,8 @@ export default function MovieAdder({ movieObject }) {
 
   /*Get user's list names from appContext*/
   useEffect(() => {
-    if (appContext.userLists) {
-      const arrayConversion = Object.entries(appContext.userLists);
+    if (appContext.userListsState) {
+      const arrayConversion = Object.entries(appContext.userListsState);
       arrayConversion.sort((a, b) => a[1][0] - b[1][0]);
       let returnArray = [];
       let inactives = [];

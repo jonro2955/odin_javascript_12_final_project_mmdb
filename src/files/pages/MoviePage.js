@@ -4,6 +4,11 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDoc, doc } from "firebase/firestore";
 import { AppContext } from "../contexts/AppContext";
+import {
+  db,
+  getCollectionDoc,
+  setCollectionDoc,
+} from "/home/pc/Documents/TOP/github_projects/odin_javascript_12_mmdb/src/db.js";
 import MovieCarousel from "../components/MovieCarousel";
 import ActorCarousel from "../components/ActorCarousel";
 import MovieAdder from "../components/MovieAdder";
@@ -89,7 +94,7 @@ export default function MoviePage() {
     if (movieObject) {
       /* get movie reviews from db to pass to <MovieRater> */
       (async function getReviews() {
-        const docRef = doc(appContext.db, movieId, "reviews");
+        const docRef = doc(db, movieId, "reviews");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setReviews(docSnap.data().reviews);
@@ -97,12 +102,12 @@ export default function MoviePage() {
           setReviews([]);
         }
       })();
-      // If logged in, update user's genre list
+      // If logged in user visits a new movie, update their genre list
       if (appContext.user) {
-        appContext.updateUserGenres(movieObject.genres);
+        updateUserGenres(movieObject.genres);
       }
     }
-  }, [movieObject, appContext.userReviews]);
+  }, [movieObject, appContext.userReviewsState]);
 
   function getAverageScore(reviews, movieObject) {
     let mmdbPoints = 0;
@@ -111,6 +116,33 @@ export default function MoviePage() {
     }
     let tmdbPoints = movieObject.vote_average * movieObject.vote_count;
     return ((mmdbPoints + tmdbPoints) / (reviews.length + movieObject.vote_count)).toFixed(1);
+  }
+
+  async function updateUserGenres(genreInputArray) {
+    const docSnap = await getCollectionDoc(appContext.user.uid, "4genres");
+    let genres = {};
+    if (docSnap.exists()) {
+      let existingGenres = docSnap.data()["genres"];
+      genreInputArray.forEach((genre) => {
+        let newGenre = true;
+        existingGenres.forEach((existingGenre) => {
+          if (existingGenre.id === genre.id) {
+            newGenre = false;
+            existingGenre.occurance++;
+          }
+        });
+        if (newGenre) {
+          existingGenres.push({ ...genre, occurance: 1 });
+        }
+      });
+      genres = existingGenres;
+    } else {
+      genreInputArray.forEach((genre) => {
+        genre.occurance = 1;
+      });
+      genres = genreInputArray;
+    }
+    setCollectionDoc(appContext.user.uid, "4genres", { genres });
   }
 
   return (
@@ -122,8 +154,9 @@ export default function MoviePage() {
           <h1>{movieObject.title}</h1>
           <div>
             <FontAwesomeIcon icon={faStar} style={{ color: "gold" }} />
-            {` ${getAverageScore(reviews, movieObject)} (${movieObject.vote_count +
-              reviews.length})`}
+            {` ${getAverageScore(reviews, movieObject)} (${
+              movieObject.vote_count + reviews.length
+            })`}
           </div>
           <div className="movieInfoGrid">
             <div>
@@ -204,7 +237,7 @@ export default function MoviePage() {
             <MovieCarousel movieList={similarList} id="similarList" />
           </>
         )}
-        <Footer/>
+        <Footer />
       </div>
     )
   );
