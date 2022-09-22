@@ -9,7 +9,7 @@ export default function UserStatistics() {
   useEffect(() => {
     if (appContext.user) {
       (async () => {
-        const docRef = doc(appContext.db, appContext.user.uid, "genres");
+        const docRef = doc(appContext.db, appContext.user.uid, "4genres");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           let genreStatsArray = docSnap.data()["genres"];
