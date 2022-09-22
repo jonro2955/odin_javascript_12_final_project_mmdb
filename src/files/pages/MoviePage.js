@@ -8,7 +8,7 @@ import {
   db,
   getCollectionDoc,
   setCollectionDoc,
-} from "/home/pc/Documents/TOP/github_projects/odin_javascript_12_mmdb/src/db.js";
+} from "/home/pc/Documents/TOP/github_projects/odin_javascript_12_mmdb/src/Db.js";
 import MovieCarousel from "../components/MovieCarousel";
 import ActorCarousel from "../components/ActorCarousel";
 import MovieAdder from "../components/MovieAdder";

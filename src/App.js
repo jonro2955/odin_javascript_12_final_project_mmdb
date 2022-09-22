@@ -9,7 +9,7 @@ import { AppContext } from "./files/contexts/AppContext";
 import React, { useEffect, useState } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { db, getCollectionDoc, setCollectionDoc } from "./db"
+import { db, getCollectionDoc, setCollectionDoc } from "./Db"
 
 export default function App() {
   const [userListsState, setUserListsState] = useState();
