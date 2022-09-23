@@ -9,7 +9,7 @@ export default function HomePage() {
   const [topRatedList, setTopRatedList] = useState([]);
 
   useEffect(() => {
-    (async function fetchPopular() {
+    (async () => {
       const packet = await fetch(
         "https://api.themoviedb.org/3/movie/popular?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1"
       );
@@ -18,7 +18,7 @@ export default function HomePage() {
       setMostPopularList(results);
       console.log("popular:", results);
     })();
-    (async function fetchComingSoon() {
+    (async () => {
       const packet = await fetch(
         "https://api.themoviedb.org/3/movie/upcoming?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1"
       );
@@ -27,7 +27,7 @@ export default function HomePage() {
       setComingSoonList(results);
       console.log("coming soon:", results);
     })();
-    (async function fetchBoxOffice() {
+    (async () => {
       const packet = await fetch(
         "https://api.themoviedb.org/3/movie/now_playing?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1"
       );
@@ -36,7 +36,7 @@ export default function HomePage() {
       setNowPlayingList(results);
       console.log("now playing:", results);
     })();
-    (async function fetchTopRated() {
+    (async () => {
       const packet = await fetch(
         "https://api.themoviedb.org/3/movie/top_rated?api_key=ee3bf23ca6ee40ece5d8b91daed50a29&language=en-US&page=1"
       );

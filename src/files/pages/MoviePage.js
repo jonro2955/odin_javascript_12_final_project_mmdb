@@ -17,6 +17,15 @@ import MovieReviews from "../components/MovieReviews";
 import logo512 from "../images/logo512.png";
 import Footer from "../components/Footer";
 
+function getAverageScore(reviews, movieObject) {
+  let mmdbPoints = 0;
+  for (let i = 0; i < reviews.length; i++) {
+    mmdbPoints += reviews[i].stars;
+  }
+  let tmdbPoints = movieObject.vote_average * movieObject.vote_count;
+  return ((mmdbPoints + tmdbPoints) / (reviews.length + movieObject.vote_count)).toFixed(1);
+}
+
 export default function MoviePage() {
   let movieId = useParams().movieId;
   const appContext = useContext(AppContext);
@@ -109,14 +118,6 @@ export default function MoviePage() {
     }
   }, [movieObject, appContext.userReviewsState]);
 
-  function getAverageScore(reviews, movieObject) {
-    let mmdbPoints = 0;
-    for (let i = 0; i < reviews.length; i++) {
-      mmdbPoints += reviews[i].stars;
-    }
-    let tmdbPoints = movieObject.vote_average * movieObject.vote_count;
-    return ((mmdbPoints + tmdbPoints) / (reviews.length + movieObject.vote_count)).toFixed(1);
-  }
 
   async function updateUserGenres(genreInputArray) {
     const docSnap = await getCollectionDoc(appContext.user.uid, "4genres");
@@ -242,3 +243,5 @@ export default function MoviePage() {
     )
   );
 }
+
+export { getAverageScore };
