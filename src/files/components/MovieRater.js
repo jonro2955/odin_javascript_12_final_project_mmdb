@@ -11,6 +11,8 @@ export default function MovieRater({ movieObject, reviews }) {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
   const [starRating, setStarRating] = useState(0);
+  const [starMemory, setStarMemory] = useState(0);
+
   const [hover, setHover] = useState(0);
   const [reviewText, setReviewText] = useState();
 
@@ -23,6 +25,7 @@ export default function MovieRater({ movieObject, reviews }) {
       if (priorReview) {
         setPrevRevObj(priorReview);
         setStarRating(priorReview.stars);
+        setStarMemory(priorReview.stars)
         setReviewText(priorReview.text);
       }
     } else {
@@ -113,7 +116,7 @@ export default function MovieRater({ movieObject, reviews }) {
                     type="button"
                     key={index}
                     className={`starButton ${
-                      index <= (hover || starRating) ? "starOn" : "starOff"
+                      index <= (hover || starMemory) ? "starOn" : "starOff"
                     }`}
                     onMouseEnter={() => {
                       setHover(index);
