@@ -12,7 +12,6 @@ export default function MovieRater({ movieObject, reviews }) {
   useOutsideAlerter(wrapperRef);
   const [starRating, setStarRating] = useState(0);
   const [starMemory, setStarMemory] = useState(0);
-
   const [hover, setHover] = useState(0);
   const [reviewText, setReviewText] = useState();
 
@@ -33,6 +32,9 @@ export default function MovieRater({ movieObject, reviews }) {
       setStarRating(0);
       setReviewText();
     }
+    return () => {
+      setHover(0)
+  };
   }, [reviews, appContext.user]);
 
   /*Detect if clicked outside of element to close it*/
@@ -119,14 +121,16 @@ export default function MovieRater({ movieObject, reviews }) {
                       index <= (hover || starMemory) ? "starOn" : "starOff"
                     }`}
                     onMouseEnter={() => {
+                      setStarRating(index);
                       setHover(index);
                     }}
-                    onMouseLeave={() => {
-                      setHover(0);
-                    }}
-                    onMouseDown={() => {
-                      setStarRating(index);
-                    }}
+                    // onMouseLeave={() => {
+                    //   setHover(index);
+                    // }}
+                    // onMouseDown={() => {
+                    //   setStarRating(index);
+                    //   setHover(index);
+                    // }}
                   >
                     <span className="star">&#9733;</span>
                   </button>
