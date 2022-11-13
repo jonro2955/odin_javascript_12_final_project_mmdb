@@ -127,10 +127,10 @@ export default function MovieRater({ movieObject, reviews }) {
                     // onMouseLeave={() => {
                     //   setHover(index);
                     // }}
-                    // onMouseDown={() => {
-                    //   setStarRating(index);
-                    //   setHover(index);
-                    // }}
+                    onMouseDown={() => {
+                      setStarRating(index);
+                      setHover(index);
+                    }}
                   >
                     <span className="star">&#9733;</span>
                   </button>
